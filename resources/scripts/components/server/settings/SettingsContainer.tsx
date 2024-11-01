@@ -35,9 +35,7 @@ export default () => {
                             </div>
                         </CopyOnClick>
                     </TitledGreyBox>
-                    {deletion && (
-                        <DeleteServerBox />
-                    )}
+                    {deletion && <DeleteServerBox />}
                     <ChangeBackgroundBox />
                 </div>
                 <div className={'w-full mt-6 md:flex-1 md:mt-0'}>
