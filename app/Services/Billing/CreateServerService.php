@@ -12,6 +12,7 @@ use Everest\Models\Billing\Order;
 use Everest\Models\Billing\Product;
 use Everest\Exceptions\DisplayException;
 use Everest\Services\Servers\ServerCreationService;
+use Everest\Services\Servers\VariableValidatorService;
 use Everest\Exceptions\Service\Deployment\NoViableAllocationException;
 
 class CreateServerService
@@ -21,6 +22,7 @@ class CreateServerService
      */
     public function __construct(
         private ServerCreationService $creation,
+        private VariableValidatorService $variableValidator
     ) {
     }
 
@@ -30,8 +32,10 @@ class CreateServerService
     public function process(Request $request, Product $product, StripeObject $metadata, Order $order): Server
     {
         $egg = Egg::findOrFail($product->category->egg_id);
-
         $allocation = $this->getAllocation($metadata->node_id);
+        
+        // Get all environment variables with their default values
+        $environment = $this->getEnvironmentWithDefaults($egg->id);
 
         try {
             $server = $this->creation->handle([
@@ -47,7 +51,7 @@ class CreateServerService
                 'io' => 500,
                 'cpu' => $product->cpu_limit,
                 'startup' => $egg->startup,
-                'environment' => [], // todo(jex): pass environment through to backend
+                'environment' => $environment,
                 'image' => current($egg->docker_images),
                 'order_id' => $order->id,
                 'days_until_renewal' => 30,
@@ -55,12 +59,28 @@ class CreateServerService
                 'backup_limit' => $product->backup_limit,
                 'allocation_limit' => $product->allocation_limit,
                 'subuser_limit' => 3,
+                'skip_scripts' => false, // Ensure installation scripts run
             ]);
         } catch (DisplayException $ex) {
             throw new DisplayException('Unable to create server: ' . $ex->getMessage());
         }
 
         return $server;
+    }
+
+    /**
+     * Get all environment variables with their default values for an egg.
+     */
+    private function getEnvironmentWithDefaults(int $eggId): array
+    {
+        $variables = [];
+        $defaults = EggVariable::where('egg_id', $eggId)->get();
+
+        foreach ($defaults as $variable) {
+            $variables[$variable->env_variable] = $variable->default_value;
+        }
+
+        return $variables;
     }
 
     /**

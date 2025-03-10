@@ -84,23 +84,28 @@ class StripeController extends ClientApiController
     /**
      * Update a Payment Intent with new data from the UI.
      */
-    public function updateIntent(Request $request, ?int $id = null): Response
-    {
-        $intent = $this->stripe->paymentIntents->retrieve($request->input('intent'));
-
-        $intent->metadata = [
-            'customer_email' => $request->user()->email,
-            'customer_name' => $request->user()->username,
-            'product_id' => $id,
-            'variables' => $request->input('variables') ?? [],
-            'node_id' => $request->input('node_id') ?? null,
-            'server_id' => $request->input('server_id') ?? 0,
-        ];
-
-        $intent->save();
-
-        return $this->returnNoContent();
-    }
+	public function updateIntent(Request $request, ?int $id = null): Response
+	{
+		$intent = $this->stripe->paymentIntents->retrieve($request->input('intent'));
+	
+		// For simple values, don't json_encode them
+		$metadata = [
+			'customer_email' => $request->user()->email,
+			'customer_name' => $request->user()->username,
+			'product_id' => (string) $id,
+			'node_id' => (string) ($request->input('node_id') ?? ''),
+			'server_id' => (string) ($request->input('server_id') ?? 0),
+		];
+		
+		// Only json_encode the variables array since it's complex
+		$variables = $request->input('variables') ?? [];
+		$metadata['variables'] = !empty($variables) ? json_encode($variables) : '';
+	
+		$intent->metadata = $metadata;
+		$intent->save();
+	
+		return $this->returnNoContent();
+	}
 
     /**
      * Process a successful subscription purchase.
@@ -140,7 +145,14 @@ class StripeController extends ClientApiController
         } else {
             $product = Product::findOrFail($intent->metadata->product_id);
 
-            $this->serverCreation->process($request, $product, $intent->metadata, $order);
+            // If you're passing metadata to serverCreation->process, 
+            // you might need to decode variables:
+            $metadata = $intent->metadata;
+            if (!empty($metadata->variables)) {
+                $metadata->variables = json_decode($metadata->variables, true) ?? [];
+            }
+			
+            $this->serverCreation->process($request, $product, $metadata, $order);
         }
 
         $order->update([
