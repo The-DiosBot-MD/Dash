@@ -8,6 +8,7 @@ use Everest\Http\Middleware\Activity\AccountSubject;
 use Everest\Http\Middleware\RequireTwoFactorAuthentication;
 use Everest\Http\Middleware\Api\Client\Server\ResourceBelongsToServer;
 use Everest\Http\Middleware\Api\Client\Server\AuthenticateServerAccess;
+use Everest\Http\Controllers\Api\Client\ExchangeRateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,7 @@ use Everest\Http\Middleware\Api\Client\Server\AuthenticateServerAccess;
 Route::get('/', [Client\ClientController::class, 'index'])->name('api:client.index');
 Route::get('/permissions', [Client\ClientController::class, 'permissions']);
 Route::get('links', [Client\LinkController::class, 'index']);
+Route::get('/exchange-rates', [ExchangeRateController::class, 'index']);
 
 Route::prefix('/groups')->group(function () {
     Route::get('/', [Client\ServerGroupController::class, 'index']);
@@ -83,6 +85,7 @@ Route::prefix('/billing')->group(function () {
 
     Route::get('/orders', [Client\Billing\OrderController::class, 'index']);
     Route::get('/orders/{id}', [Client\Billing\OrderController::class, 'view']);
+
 });
 
 /*

@@ -51,5 +51,11 @@ class Kernel extends ConsoleKernel
             $schedule->command(CleanupOrdersCommand::class)->daily();
             $schedule->command(ProcessBillableServersCommand::class)->daily();
         }
+
+        // Update exchange rates every 12 hours for main currencies
+        $schedule->call(function () {
+            $service = app(ExchangeRateService::class);
+            $service->refreshExchangeRates(config('billing.currency.code', 'USD'));
+        })->twiceDaily();
     }
 }

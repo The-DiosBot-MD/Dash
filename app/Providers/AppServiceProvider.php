@@ -4,6 +4,7 @@ namespace Everest\Providers;
 
 use Everest\Models;
 use Everest\Models\User;
+use Everest\Services\ExchangeRateService;
 use Illuminate\Support\Str;
 use Laravel\Cashier\Cashier;
 use Illuminate\Support\Facades\URL;
@@ -62,5 +63,10 @@ class AppServiceProvider extends ServiceProvider
             $this->app->register(SettingsServiceProvider::class);
             $this->app->register(ThemeServiceProvider::class);
         }
+
+        // Register the ExchangeRateService as a singleton
+        $this->app->singleton(ExchangeRateService::class, function ($app) {
+            return new ExchangeRateService();
+        });
     }
 }
