@@ -48,9 +48,15 @@ function RegisterContainer() {
             return;
         }
 
-        register({ ...values, recaptchaData: token })
+        register({ 
+            ...values, 
+            'g-recaptcha-response': token 
+        })
             .then(() => {
-                login({ ...values, recaptchaData: token }).then(() => {
+                login({ 
+                    ...values, 
+                    'g-recaptcha-response': token  // Use the correct parameter name here
+                }).then(() => {
                     // @ts-expect-error this is valid
                     window.location = '/';
                 });
@@ -106,7 +112,9 @@ function RegisterContainer() {
                             sitekey={siteKey || '_invalid_key'}
                             onVerify={response => {
                                 setToken(response);
-                                submitForm();
+                                setTimeout(() => {
+                                    submitForm();
+                                }, 50);
                             }}
                             onExpire={() => {
                                 setSubmitting(false);

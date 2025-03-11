@@ -9,7 +9,7 @@ import { useStoreState } from '@/state/hooks';
 import RegisterContainer from '@/components/auth/RegisterContainer';
 
 const Container = styled.div`
-    ${tw`h-screen bg-login bg-cover`};
+    ${tw`h-screen bg-login bg-cover flex justify-center items-center`};
     background-repeat: no-repeat;
     background-blend-mode: darken;
 `;
@@ -20,7 +20,7 @@ export default () => {
 
     return (
         <Container>
-            <div className="pt-8 xl:pt-32">
+            <div className="w-full max-w-2xl">
                 <Routes>
                     <Route path="login" element={<LoginContainer />} />
                     <Route path="login/checkpoint/*" element={<LoginCheckpointContainer />} />

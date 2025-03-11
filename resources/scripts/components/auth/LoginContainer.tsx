@@ -53,19 +53,31 @@ function LoginContainer() {
         clearFlashes();
 
         // If there is no token in the state yet, request the token and then abort this submit request
-        // since it will be re-submitted when the recaptcha data is returned by the component.
         if (recaptchaEnabled && !token) {
-            ref.current!.execute().catch(error => {
-                console.error(error);
-
+            try {
+                if (ref.current) {
+                    ref.current.execute().catch(error => {
+                        setSubmitting(false);
+                        clearAndAddHttpError({ error });
+                    });
+                } else {
+                    setSubmitting(false);
+                }
+            } catch (error) {
                 setSubmitting(false);
-                clearAndAddHttpError({ error });
-            });
-
+            }
             return;
         }
-
-        login({ ...values, recaptchaData: token })
+        
+        const loginData = {
+            username: values.username,
+            password: values.password,
+            recaptchaData: token  // This gets mapped to 'g-recaptcha-response' in the API call
+        };
+        
+        clearFlashes();
+        
+        login(loginData)
             .then(response => {
                 if (response.complete) {
                     // @ts-expect-error this is valid
@@ -76,8 +88,6 @@ function LoginContainer() {
                 navigate('/auth/login/checkpoint', { state: { token: response.confirmationToken } });
             })
             .catch(error => {
-                console.error(error);
-
                 setToken('');
                 if (ref.current) ref.current.reset();
 
@@ -122,7 +132,9 @@ function LoginContainer() {
                             sitekey={siteKey || '_invalid_key'}
                             onVerify={response => {
                                 setToken(response);
-                                submitForm();
+                                setTimeout(() => {
+                                    submitForm();
+                                }, 50);
                             }}
                             onExpire={() => {
                                 setSubmitting(false);
@@ -130,30 +142,17 @@ function LoginContainer() {
                             }}
                         />
                     )}
-                    <p className={'text-xs text-gray-300 uppercase font-medium text-center my-3'}>
-                        Or, authenticate with
-                    </p>
-                    <div className={'w-full flex flex-wrap gap-4 grid-cols-6 justify-center items-center'}>
-                        {modules.discord.enabled && (
-                            <Tooltip content={'Register and login with Discord'}>
-                                <Button.Info onClick={() => useOauth('discord')} className={'w-12 h-12'}>
-                                    <FontAwesomeIcon icon={faDiscord} />
-                                </Button.Info>
-                            </Tooltip>
-                        )}
-                        {modules.google.enabled && (
-                            <Tooltip content={'Register and login with Google'}>
-                                <Button.Info onClick={() => useOauth('google')} className={'w-12 h-12'}>
-                                    <FontAwesomeIcon icon={faGoogle} />
-                                </Button.Info>
-                            </Tooltip>
-                        )}
+                    <div css={tw`mt-6 text-center`}>
                         {registration && (
-                            <Tooltip content={'Register with your email address'}>
-                                <Button.Text onClick={() => navigate('/auth/register')} className={'w-12 h-12'}>
-                                    <FontAwesomeIcon icon={faEnvelope} />
-                                </Button.Text>
-                            </Tooltip>
+                            <p css={tw`text-xs text-neutral-500`}>
+                                Don't have an account?&nbsp;
+                                <Link
+                                    to={'/auth/register'}
+                                    css={tw`text-green-400 hover:text-green-200 duration-300`}
+                                >
+                                    Register
+                                </Link>
+                            </p>
                         )}
                     </div>
                 </LoginFormContainer>

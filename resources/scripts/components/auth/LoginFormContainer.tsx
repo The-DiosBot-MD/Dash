@@ -30,7 +30,7 @@ const Container = styled.div`
 
 export default forwardRef<HTMLFormElement, Props>(({ title, ...props }, ref) => (
     <Container>
-        <div className={'w-full grid lg:grid-cols-2'}>
+        <div className={'w-full'}>
             <div className={'lg:w-1/2 lg:mx-auto'}>
                 {title && <h2 css={tw`text-3xl text-center text-neutral-100 font-medium py-4`}>{title}</h2>}
                 <FlashMessageRender css={tw`mb-2 px-1`} />
