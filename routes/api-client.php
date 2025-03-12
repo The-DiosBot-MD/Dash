@@ -6,9 +6,9 @@ use Everest\Http\Middleware\SuspendedAccount;
 use Everest\Http\Middleware\Activity\ServerSubject;
 use Everest\Http\Middleware\Activity\AccountSubject;
 use Everest\Http\Middleware\RequireTwoFactorAuthentication;
+use Everest\Http\Controllers\Api\Client\ExchangeRateController;
 use Everest\Http\Middleware\Api\Client\Server\ResourceBelongsToServer;
 use Everest\Http\Middleware\Api\Client\Server\AuthenticateServerAccess;
-use Everest\Http\Controllers\Api\Client\ExchangeRateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,7 +85,6 @@ Route::prefix('/billing')->group(function () {
 
     Route::get('/orders', [Client\Billing\OrderController::class, 'index']);
     Route::get('/orders/{id}', [Client\Billing\OrderController::class, 'view']);
-
 });
 
 /*

@@ -12,12 +12,12 @@ class BaseController extends Controller
     public function index(Request $request): View
     {
         $user = $request->user();
-        
+
         // Ensure only admins can access this panel
         if (!$user || !$user->root_admin) {
             throw new AccessDeniedHttpException('You do not have permission to access this area.');
         }
-        
+
         return view('templates/base.core');
     }
 }

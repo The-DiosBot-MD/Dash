@@ -34,18 +34,16 @@ class DiscordLoginController extends AbstractLoginController
             $this->fireLockoutEvent($request);
             $this->sendLockoutResponse($request);
         }
-		
-		// get request ip address
-		$ip = encrypt($request->ip());
 
-		
+        // get request ip address
+        $ip = encrypt($request->ip());
 
         return 'https://discord.com/api/oauth2/authorize?'
             . 'client_id=' . $this->settings->get('settings::modules:auth:discord:client_id')
             . '&redirect_uri=' . route('auth.modules.discord.authenticate')
             . '&response_type=code&scope=identify%20email'
-			// add the recaptcha token to the query string
-			. '&state=' . $ip;
+            // add the recaptcha token to the query string
+            . '&state=' . $ip;
     }
 
     /**

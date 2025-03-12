@@ -5,7 +5,7 @@ return [
         'code' => env('BILLING_CURRENCY', 'USD'),
         'symbol' => env('BILLING_CURRENCY_SYMBOL', '$'),
     ],
-    
+
     'exchange_rates' => [
         /*
         |--------------------------------------------------------------------------
@@ -21,7 +21,7 @@ return [
         | - fixer (requires API key)
         */
         'provider' => env('EXCHANGE_RATE_PROVIDER', 'exchangerate'),
-        
+
         /*
         |--------------------------------------------------------------------------
         | Exchange Rate API Key
@@ -31,7 +31,7 @@ return [
         | Required for all providers.
         */
         'api_key' => env('EXCHANGE_RATE_API_KEY', 'api_key_here'),
-        
+
         /*
         |--------------------------------------------------------------------------
         | Cache Duration
@@ -41,6 +41,6 @@ return [
         */
         'cache_duration' => env('EXCHANGE_RATE_CACHE_DURATION', 12),
     ],
-    
+
     // Add other billing settings here
 ];

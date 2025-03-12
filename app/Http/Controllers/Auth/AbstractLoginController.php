@@ -4,7 +4,6 @@ namespace Everest\Http\Controllers\Auth;
 
 use Carbon\Carbon;
 use Everest\Models\User;
-use Everest\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Http\JsonResponse;

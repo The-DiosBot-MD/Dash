@@ -4,13 +4,13 @@ namespace Everest\Providers;
 
 use Everest\Models;
 use Everest\Models\User;
-use Everest\Services\ExchangeRateService;
 use Illuminate\Support\Str;
 use Laravel\Cashier\Cashier;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Everest\Services\ExchangeRateService;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 class AppServiceProvider extends ServiceProvider

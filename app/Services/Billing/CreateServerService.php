@@ -33,7 +33,7 @@ class CreateServerService
     {
         $egg = Egg::findOrFail($product->category->egg_id);
         $allocation = $this->getAllocation($metadata->node_id);
-        
+
         // Get all environment variables with their default values
         $environment = $this->getEnvironmentWithDefaults($egg->id);
 
