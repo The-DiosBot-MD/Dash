@@ -36,3 +36,4 @@ result
 docker-compose.yaml
 .pnpm-store
 
+resources/scripts/assets/images/logo.png
