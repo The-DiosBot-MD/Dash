@@ -29,7 +29,20 @@ class VerifyReCaptcha
         }
 
         $recaptchaResponse = $request->input('g-recaptcha-response');
-        
+        // check if there a state parameter in the query string if g-recaptcha-response is empty
+		$recaptchaState = $request->input('state');
+		if ($recaptchaState) {
+			// decrypt the state parameter
+			$recaptchaResponse = decrypt($recaptchaState);
+		}
+
+		// check if its a valid ip address
+		if (filter_var($recaptchaResponse, FILTER_VALIDATE_IP)) {
+			return $next($request);
+		}
+
+
+
         if (!$recaptchaResponse) {
             return response()->json(['error' => 'Missing ReCaptcha token'], 400);
         }
