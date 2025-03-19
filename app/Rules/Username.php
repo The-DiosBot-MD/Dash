@@ -40,6 +40,6 @@ class Username implements Rule
      */
     public function __toString(): string
     {
-        return 'p_username';
+        return 'required|username'; // Uses a custom rule name
     }
 }

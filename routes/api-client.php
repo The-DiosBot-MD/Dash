@@ -66,7 +66,7 @@ Route::prefix('/account')->middleware([AccountSubject::class, SuspendedAccount::
         Route::post('/{ticket}/messages', [Client\TicketController::class, 'message']);
     });
 
-    Route::post('/setup', [Client\AccountController::class, 'setup']);
+    Route::post('/setup', [Client\AccountController::class, 'setup'])->withoutMiddleware(RequireTwoFactorAuthentication::class);
 });
 
 Route::prefix('/billing')->group(function () {
