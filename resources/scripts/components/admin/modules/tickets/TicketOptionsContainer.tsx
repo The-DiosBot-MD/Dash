@@ -11,6 +11,7 @@ import FlashMessageRender from '@/components/FlashMessageRender';
 import Label from '@elements/Label';
 import { faFirstOrder } from '@fortawesome/free-brands-svg-icons';
 import updateTicketSettings from '@/api/admin/tickets/updateTicketSettings';
+import ToggleTicketsButton from './ToggleTicketsButton';
 
 export interface TicketSettings {
     maxCount: number;
@@ -72,6 +73,7 @@ export default () => {
                     </div>
 
                     <div css={tw`flex ml-auto`}>
+                        <ToggleTicketsButton />
                         <Button type="submit">Save Changes</Button>
                     </div>
                 </div>

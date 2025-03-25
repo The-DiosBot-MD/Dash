@@ -18,7 +18,6 @@ import CopyOnClick from '@elements/CopyOnClick';
 import { differenceInHours, format, formatDistanceToNow } from 'date-fns';
 import classNames from 'classnames';
 import { useStoreState } from '@/state/hooks';
-import ToggleTicketsButton from './ToggleTicketsButton';
 
 export const statusToColor = (status: TicketStatus): string => {
     switch (status) {
@@ -63,7 +62,6 @@ export default () => {
                     </p>
                 </div>
                 <div css={tw`flex ml-auto pl-4`}>
-                    <ToggleTicketsButton />
                     <Link to={'/admin/tickets/new'}>
                         <Button>New Ticket</Button>
                     </Link>

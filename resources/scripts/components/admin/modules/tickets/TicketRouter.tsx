@@ -15,6 +15,8 @@ export default () => {
     const theme = useStoreState(state => state.theme.data!);
     const enabled = useStoreState(state => state.everest.data!.tickets.enabled);
 
+    if (!enabled) return <EnableTicketsContainer />;
+
     return (
         <AdminContentBlock title={'Ticket Dashboard'}>
             <FlashMessageRender byKey={'admin:tickets'} className={'mb-4'} />
@@ -39,18 +41,13 @@ export default () => {
                 </SubNavigationLink>
             </SubNavigation>
             <Routes>
-                {enabled ? (
-                    <>
-                        <Route path={'/'} element={<TicketsContainer />} />
+                <Route path={'/'} element={<TicketsContainer />} />
 
-                        <Route path={'/new'} element={<NewTicketForm />} />
-                        <Route path={'/:id'} element={<ViewTicketContainer />} />
+                <Route path={'/new'} element={<NewTicketForm />} />
+                <Route path={'/:id'} element={<ViewTicketContainer />} />
 
-                        <Route path={'/options'} element={<TicketOptionsContainer />} />
-                    </>
-                ) : (
-                    <Route path={'/'} element={<EnableTicketsContainer />} />
-                )}
+                <Route path={'/options'} element={<TicketOptionsContainer />} />
+
                 <Route path={'/*'} element={<NotFound />} />
             </Routes>
         </AdminContentBlock>
