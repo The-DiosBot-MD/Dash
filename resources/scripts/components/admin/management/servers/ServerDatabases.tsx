@@ -1,8 +1,8 @@
-import { useServerFromRoute } from '@/api/admin/server';
+// import { useServerFromRoute } from '@/api/admin/server';
 import DatabasesTable from '@admin/management/databases/DatabasesTable';
 
 function ServerDatabases() {
-    const { data: server } = useServerFromRoute();
+    // const { data: server } = useServerFromRoute();
     // todo(jex): only show databases that this server is linked to!
 
     return <DatabasesTable />;

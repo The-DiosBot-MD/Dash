@@ -65,7 +65,9 @@ function DashboardRouter() {
                 <MobileSidebar.Link icon={faTerminal} text={'SSH'} linkTo={'/account/ssh'} />
                 <MobileSidebar.Link icon={faEye} text={'Activity'} linkTo={'/account/activity'} />
                 {tickets.enabled && <MobileSidebar.Link icon={faTicket} text={'Tickets'} linkTo={'/account/tickets'} />}
-                {billing.enabled && <MobileSidebar.Link icon={faShoppingBag} text={'Billing'} linkTo={'/billing/order'} />}
+                {billing.enabled && (
+                    <MobileSidebar.Link icon={faShoppingBag} text={'Billing'} linkTo={'/billing/order'} />
+                )}
                 <MobileSidebar.Link icon={faCog} text={'Admin'} linkTo={'/admin'} />
             </MobileSidebar>
             <Sidebar className={'flex-none'} $collapsed={collapsed} theme={theme}>
@@ -194,7 +196,7 @@ function DashboardRouter() {
 
                         <Route path="*" element={<NotFound />} />
                     </Routes>
-                </Suspense> 
+                </Suspense>
             </div>
         </div>
     );
