@@ -87,15 +87,18 @@ class StripeController extends ClientApiController
     {
         $intent = $this->stripe->paymentIntents->retrieve($request->input('intent'));
 
-        $intent->metadata = [
+        $metadata = [
             'customer_email' => $request->user()->email,
             'customer_name' => $request->user()->username,
-            'product_id' => $id,
-            'variables' => $request->input('variables') ?? [],
-            'node_id' => $request->input('node_id') ?? null,
-            'server_id' => $request->input('server_id') ?? 0,
+            'product_id' => (string) $id,
+            'node_id' => (string) ($request->input('node_id') ?? ''),
+            'server_id' => (string) ($request->input('server_id') ?? 0),
         ];
 
+        $variables = $request->input('variables') ?? [];
+        $metadata['variables'] = !empty($variables) ? json_encode($variables) : '';
+
+        $intent->metadata = $metadata;
         $intent->save();
 
         return $this->returnNoContent();
@@ -126,7 +129,7 @@ class StripeController extends ClientApiController
         }
 
         // If the payment wasn't successful, mark the order as failed
-        if ($intent->status !== 'succeeded') {
+        if ($intent->status !== 'requires_capture') {
             $order->update(['status' => Order::STATUS_FAILED]);
             throw new DisplayException('The order has been canceled.');
         }
@@ -142,7 +145,12 @@ class StripeController extends ClientApiController
         } else {
             $product = Product::findOrFail($intent->metadata->product_id);
 
-            $this->serverCreation->process($request, $product, $intent->metadata, $order);
+            $metadata = $intent->metadata;
+            if (!empty($metadata->variables)) {
+                $metadata->variables = json_decode($metadata->variables, true) ?? [];
+            }
+
+            $this->serverCreation->process($request, $product, $metadata, $order);
         }
 
         // Capture the payment after processing the order
