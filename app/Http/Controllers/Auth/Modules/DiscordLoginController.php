@@ -30,6 +30,7 @@ class DiscordLoginController extends AbstractLoginController
      */
     public function requestToken(Request $request): string
     {
+
         if ($this->hasTooManyLoginAttempts($request)) {
             $this->fireLockoutEvent($request);
             $this->sendLockoutResponse($request);
@@ -38,7 +39,8 @@ class DiscordLoginController extends AbstractLoginController
         return 'https://discord.com/api/oauth2/authorize?'
             . 'client_id=' . $this->settings->get('settings::modules:auth:discord:client_id')
             . '&redirect_uri=' . route('auth.modules.discord.authenticate')
-            . '&response_type=code&scope=identify%20email';
+            . '&response_type=code&scope=identify%20email'
+            . '&state=' . encrypt($request->ip());
     }
 
     /**

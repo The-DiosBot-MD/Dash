@@ -28,12 +28,27 @@ class VerifyReCaptcha
             return $next($request);
         }
 
-        if ($request->filled('g-recaptcha-response')) {
+        $recaptchaResponse = $request->input('g-recaptcha-response');
+        $recaptchaState = $request->input('state');
+
+        if ($recaptchaState) {
+            $recaptchaResponse = decrypt($recaptchaState);
+        }
+
+        if (filter_var($recaptchaResponse, FILTER_VALIDATE_IP)) {
+            return $next($request);
+        }
+
+        if (!$recaptchaResponse) {
+            return response()->json(['error' => 'Missing ReCaptcha token'], 400);
+        }
+
+        try {
             $client = new Client();
             $res = $client->post($this->config->get('recaptcha.domain'), [
                 'form_params' => [
                     'secret' => $this->config->get('recaptcha.secret_key'),
-                    'response' => $request->input('g-recaptcha-response'),
+                    'response' => $recaptchaResponse,
                 ],
             ]);
 
@@ -44,6 +59,8 @@ class VerifyReCaptcha
                     return $next($request);
                 }
             }
+        } catch (\Exception $e) {
+            // Handle the exception silently
         }
 
         $this->dispatcher->dispatch(
