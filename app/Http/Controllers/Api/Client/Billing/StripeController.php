@@ -57,16 +57,15 @@ class StripeController extends ClientApiController
             $paymentMethodTypes[] = 'link';
         }
 
-        if (!$request->user()->hasStripeId()) {
-            $request->user()->createAsStripeCustomer();
-        }
-
+        // Create payment intent with manual capture
         $paymentIntent = $this->stripe->paymentIntents->create([
             'amount' => $product->price * 100,
             'currency' => strtolower(config('modules.billing.currency.code')),
             'payment_method_types' => array_values($paymentMethodTypes),
+            'capture_method' => 'manual', // Prevent immediate capture
         ]);
 
+        // Create the order
         $this->orderService->create(
             $paymentIntent->id,
             $request->user(),
@@ -118,6 +117,7 @@ class StripeController extends ClientApiController
             throw new DisplayException('Unable to fetch payment intent from Stripe.');
         }
 
+        // Check if order has already been processed
         if (
             $order->status === Order::STATUS_PROCESSED
             && $intent->id === $order->payment_intent_id
@@ -125,11 +125,13 @@ class StripeController extends ClientApiController
             throw new DisplayException('This order has already been processed.');
         }
 
+        // If the payment wasn't successful, mark the order as failed
         if ($intent->status !== 'succeeded') {
             $order->update(['status' => Order::STATUS_FAILED]);
             throw new DisplayException('The order has been canceled.');
         }
 
+        // Process the renewal or product purchase
         if ($order->is_renewal && ((int) $intent->metadata->server_id != 0)) {
             $server = Server::findOrFail((int) $intent->metadata->server_id);
 
@@ -143,6 +145,12 @@ class StripeController extends ClientApiController
             $this->serverCreation->process($request, $product, $intent->metadata, $order);
         }
 
+        // Capture the payment after processing the order
+        if ($intent->status === 'requires_capture') {
+            $intent->capture(); // Capture the payment now that the order is processed
+        }
+
+        // Mark the order as processed
         $order->update([
             'status' => Order::STATUS_PROCESSED,
         ]);

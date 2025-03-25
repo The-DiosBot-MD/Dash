@@ -30,6 +30,10 @@ import { getLinks } from '@/api/getLinks';
 import http from '@/api/http';
 import ProductsContainer from '@/components/billing/ProductsContainer';
 import OrdersContainer from '@/components/billing/orders/OrdersContainer';
+import Processing from '@/components/billing/order/summary/Processing';
+import OrderContainer from '@/components/billing/order/OrderContainer';
+import Cancel from '@/components/billing/order/summary/Cancel';
+import Success from '@/components/billing/order/summary/Success';
 
 function DashboardRouter() {
     const user = useStoreState(s => s.user.data!);
@@ -179,13 +183,18 @@ function DashboardRouter() {
                         {billing.enabled && (
                             <>
                                 <Route path={'/billing/order'} element={<ProductsContainer />} />
+                                <Route path={'/billing/order/:id'} element={<OrderContainer />} />
                                 <Route path={'/billing/orders'} element={<OrdersContainer />} />
+
+                                <Route path={'/billing/processing'} element={<Processing />} />
+                                <Route path={'/billing/success'} element={<Success />} />
+                                <Route path={'/billing/cancel'} element={<Cancel />} />
                             </>
                         )}
 
                         <Route path="*" element={<NotFound />} />
                     </Routes>
-                </Suspense>
+                </Suspense> 
             </div>
         </div>
     );

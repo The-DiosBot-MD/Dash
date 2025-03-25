@@ -4,7 +4,6 @@ namespace Everest\Models;
 
 use Everest\Rules\Username;
 use Everest\Facades\Activity;
-use Laravel\Cashier\Billable;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\Rules\In;
 use Illuminate\Auth\Authenticatable;
@@ -100,7 +99,6 @@ class User extends Model implements
     use CanResetPassword;
     use HasAccessTokens;
     use Notifiable;
-    use Billable;
 
     public const USER_LEVEL_USER = 0;
     public const USER_LEVEL_ADMIN = 1;

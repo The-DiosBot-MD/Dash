@@ -56,6 +56,7 @@ function InternalForm({ category, visible, setVisible }: Props) {
                                 id={'name'}
                                 name={'name'}
                                 type={'text'}
+                                placeholder={'Minecraft Java'}
                                 label={'Category Name'}
                                 description={'A simple title for this category.'}
                             />
@@ -63,6 +64,7 @@ function InternalForm({ category, visible, setVisible }: Props) {
                                 id={'description'}
                                 name={'description'}
                                 type={'text'}
+                                placeholder={'With support for 1.21'}
                                 label={'Description'}
                                 description={'A tagline or description for this product category.'}
                             />
@@ -180,9 +182,9 @@ export default ({ category }: { category?: Category }) => {
             <Formik
                 onSubmit={category ? update : submit}
                 initialValues={{
-                    name: category?.name ?? 'Minecraft: Java Edition',
+                    name: category?.name ?? '',
                     icon: category?.icon ?? '',
-                    description: category?.description ?? 'Supports Minecraft 1.20.1',
+                    description: category?.description ?? '',
                     visible: category?.visible ?? false,
                     eggId: category?.eggId ?? 0,
                 }}
