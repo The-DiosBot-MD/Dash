@@ -27,7 +27,7 @@ const NodesContainer = () => {
     const { colors } = useStoreState(state => state.theme.data!);
     const { setPage, setFilters, sort, setSort, sortDirection } = useContext(NodesContext);
     const { clearFlashes, clearAndAddHttpError } = useFlash();
-    const { data: nodes, error, isValidating } = getNodes(['location']);
+    const { data: nodes, error, isValidating } = getNodes();
 
     useEffect(() => {
         if (!error) {
@@ -91,11 +91,6 @@ const NodesContainer = () => {
                                         onClick={() => setSort('name')}
                                     />
                                     <TableHeader
-                                        name={'Location'}
-                                        direction={sort === 'location_id' ? (sortDirection ? 1 : 2) : null}
-                                        onClick={() => setSort('location_id')}
-                                    />
-                                    <TableHeader
                                         name={'FQDN'}
                                         direction={sort === 'fqdn' ? (sortDirection ? 1 : 2) : null}
                                         onClick={() => setSort('fqdn')}
@@ -138,23 +133,6 @@ const NodesContainer = () => {
                                                         {node.name}
                                                     </NavLink>
                                                 </td>
-
-                                                {/* TODO: Have permission check for displaying location information. */}
-                                                <td css={tw`px-6 text-sm text-left whitespace-nowrap`}>
-                                                    <NavLink
-                                                        to={`/admin/locations/${node.relations.location?.id}`}
-                                                        css={tw`text-primary-400 hover:text-primary-300`}
-                                                    >
-                                                        <div css={tw`text-sm text-neutral-200`}>
-                                                            {node.relations.location?.short}
-                                                        </div>
-
-                                                        <div css={tw`text-sm text-neutral-400`}>
-                                                            {node.relations.location?.long}
-                                                        </div>
-                                                    </NavLink>
-                                                </td>
-
                                                 <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
                                                     <CopyOnClick text={node.fqdn}>
                                                         <code css={tw`font-mono bg-neutral-900 rounded py-1 px-2`}>

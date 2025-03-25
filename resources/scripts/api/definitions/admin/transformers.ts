@@ -3,7 +3,6 @@ import { Allocation, Node } from '@/api/admin/node';
 import { Server, ServerVariable } from '@/api/admin/server';
 import { FractalResponseData, FractalResponseList } from '@/api/http';
 import * as Models from '@definitions/admin/models';
-import { Location } from '@/api/admin/location';
 import { Egg, EggVariable } from '@/api/admin/egg';
 import { Nest } from '@/api/admin/nest';
 import { Category } from '@/api/admin/billing/categories';
@@ -81,7 +80,6 @@ export default class Transformers {
             id: attributes.id,
             uuid: attributes.uuid,
             isPublic: attributes.public,
-            locationId: attributes.location_id,
             databaseHostId: attributes.database_host_id,
             name: attributes.name,
             description: attributes.description,
@@ -107,9 +105,7 @@ export default class Transformers {
             daemonBase: attributes.daemonBase,
             createdAt: new Date(attributes.created_at),
             updatedAt: new Date(attributes.updated_at),
-            relationships: {
-                location: transform(attributes.relationships?.location as FractalResponseData, this.toLocation),
-            },
+            relationships: {},
         };
     };
 
@@ -171,17 +167,6 @@ export default class Transformers {
             },
         };
     };
-
-    static toLocation = ({ attributes }: FractalResponseData): Location => ({
-        id: attributes.id,
-        short: attributes.short,
-        long: attributes.long,
-        createdAt: new Date(attributes.created_at),
-        updatedAt: new Date(attributes.updated_at),
-        relationships: {
-            nodes: transform(attributes.relationships?.node as FractalResponseList, this.toNode),
-        },
-    });
 
     static toEgg = ({ attributes }: FractalResponseData): Egg => ({
         id: attributes.id,

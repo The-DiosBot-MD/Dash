@@ -43,9 +43,6 @@ return [
     'tasks' => [
         'chain_interval_too_long' => 'The maximum interval time for a chained task is 15 minutes.',
     ],
-    'locations' => [
-        'has_nodes' => 'Cannot delete a location that has active nodes attached to it.',
-    ],
     'users' => [
         'node_revocation_failed' => 'Failed to revoke keys on <a href=":link">Node #:node</a>. :error',
     ],

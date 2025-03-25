@@ -26,7 +26,6 @@ export default ({ node, selected, setSelected }: Props) => {
                 <ServerIcon className={'mr-2 w-8 h-8'} style={{ color: colors.primary }} />
                 <p className={'text-gray-200 font-semibold'}>
                     {node.name}
-                    <span className={'font-normal text-gray-400 ml-2'}>{node.relationships.location?.short}</span>
                 </p>
             </GreyRowBox>
         </div>

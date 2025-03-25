@@ -3,7 +3,6 @@ import { useContext } from 'react';
 import useSWR from 'swr';
 import { createContext } from '@/api/admin';
 import { Database, rawDataToDatabase } from '@/api/admin/databases/getDatabases';
-import { Location, rawDataToLocation } from '@/api/admin/locations/getLocations';
 
 export interface Node {
     id: number;
@@ -11,7 +10,6 @@ export interface Node {
     public: boolean;
     name: string;
     description: string | null;
-    locationId: number;
     databaseHostId: number | null;
     fqdn: string;
     listenPortHTTP: number;
@@ -33,7 +31,6 @@ export interface Node {
 
     relations: {
         databaseHost: Database | undefined;
-        location: Location | undefined;
     };
 }
 
@@ -43,7 +40,6 @@ export const rawDataToNode = ({ attributes }: FractalResponseData): Node => ({
     public: attributes.public,
     name: attributes.name,
     description: attributes.description,
-    locationId: attributes.location_id,
     databaseHostId: attributes.database_host_id,
     fqdn: attributes.fqdn,
     listenPortHTTP: attributes.listen_port_http,
@@ -69,10 +65,6 @@ export const rawDataToNode = ({ attributes }: FractalResponseData): Node => ({
             attributes.relationships?.database_host !== undefined &&
             attributes.relationships?.database_host?.object !== 'null_resource'
                 ? rawDataToDatabase(attributes.relationships.database_host as FractalResponseData)
-                : undefined,
-        location:
-            attributes.relationships?.location !== undefined
-                ? rawDataToLocation(attributes.relationships.location as FractalResponseData)
                 : undefined,
     },
 });

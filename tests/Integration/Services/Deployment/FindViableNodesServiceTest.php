@@ -5,7 +5,6 @@ namespace Everest\Tests\Integration\Services\Deployment;
 use Everest\Models\Node;
 use Everest\Models\Server;
 use Everest\Models\Database;
-use Everest\Models\Location;
 use Illuminate\Support\Collection;
 use Everest\Tests\Integration\IntegrationTestCase;
 use Everest\Services\Deployment\FindViableNodesService;
@@ -38,56 +37,22 @@ class FindViableNodesServiceTest extends IntegrationTestCase
         $this->getService()->setDisk(10)->handle();
     }
 
-    /**
-     * Ensure that errors are not thrown back when passing in expected values.
-     *
-     * @see https://github.com/pterodactyl/panel/issues/2529
-     */
-    public function testNoExceptionIsThrownIfStringifiedIntegersArePassedForLocations()
-    {
-        $this->getService()->setLocations([1, 2, 3]);
-        $this->getService()->setLocations(['1', '2', '3']);
-        $this->getService()->setLocations(['1', 2, 3]);
-
-        try {
-            $this->getService()->setLocations(['a']);
-            $this->fail('This expectation should not be called.');
-        } catch (\Exception $exception) {
-            $this->assertInstanceOf(\InvalidArgumentException::class, $exception);
-            $this->assertSame('An array of location IDs should be provided when calling setLocations.', $exception->getMessage());
-        }
-
-        try {
-            $this->getService()->setLocations(['1.2', '1', 2]);
-            $this->fail('This expectation should not be called.');
-        } catch (\Exception $exception) {
-            $this->assertInstanceOf(\InvalidArgumentException::class, $exception);
-            $this->assertSame('An array of location IDs should be provided when calling setLocations.', $exception->getMessage());
-        }
-    }
-
     public function testExpectedNodeIsReturnedForLocation()
     {
-        /** @var \Everest\Models\Location[] $locations */
-        $locations = Location::factory()->times(2)->create();
-
         /** @var \Everest\Models\Node[] $nodes */
         $nodes = [
             // This node should never be returned once we've completed the initial test which
             // runs without a location filter.
             Node::factory()->create([
-                'location_id' => $locations[0]->id,
                 'memory' => 2048,
                 'disk' => 1024 * 100,
             ]),
             Node::factory()->create([
-                'location_id' => $locations[1]->id,
                 'memory' => 1024,
                 'disk' => 10240,
                 'disk_overallocate' => 10,
             ]),
             Node::factory()->create([
-                'location_id' => $locations[1]->id,
                 'memory' => 1024 * 4,
                 'memory_overallocate' => 50,
                 'disk' => 102400,
@@ -171,7 +136,6 @@ class FindViableNodesServiceTest extends IntegrationTestCase
         // value of the second node.
         $response = $base()->setMemory(500)->handle();
         $this->assertCount(2, $response);
-        $this->assertSame(2, $response->where('location_id', $locations[1]->id)->count());
 
         // Expect that only the first node can support this server when we go over the remaining
         // memory for the second nodes overallocate calculation.

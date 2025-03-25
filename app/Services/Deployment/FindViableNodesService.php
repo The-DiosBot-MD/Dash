@@ -10,21 +10,8 @@ use Everest\Exceptions\Service\Deployment\NoViableNodeException;
 
 class FindViableNodesService
 {
-    protected array $locations = [];
     protected ?int $disk = null;
     protected ?int $memory = null;
-
-    /**
-     * Set the locations that should be searched through to locate available nodes.
-     */
-    public function setLocations(array $locations): self
-    {
-        Assert::allIntegerish($locations, 'An array of location IDs should be provided when calling setLocations.');
-
-        $this->locations = $locations;
-
-        return $this;
-    }
 
     /**
      * Set the amount of disk that will be used by the server being created. Nodes will be
@@ -76,10 +63,6 @@ class FindViableNodesService
             ->selectRaw('COALESCE(SUM(servers.disk), 0) as sum_disk')
             ->leftJoin('servers', 'servers.node_id', '=', 'nodes.id')
             ->where('nodes.public', 1);
-
-        if (!empty($this->locations)) {
-            $query = $query->whereIn('location_id', $this->locations);
-        }
 
         $results = $query->groupBy('nodes.id')
             ->havingRaw('(COALESCE(SUM(servers.memory), 0) + ?) <= (nodes.memory * (1.0 + (nodes.memory_overallocate / 100.0)))', [$this->memory])

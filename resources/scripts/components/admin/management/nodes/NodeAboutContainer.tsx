@@ -172,11 +172,6 @@ export default () => {
                             </div>
                         </div>
                         <div css={tw`md:w-full md:flex md:flex-row mb-6`}>
-                            <div css={tw`md:w-full md:flex md:flex-col md:mr-4 mb-6 md:mb-0`}>
-                                <Label>Location Name</Label>
-                                <Input disabled placeholder={node.relations.location!.short}></Input>
-                            </div>
-
                             <div css={tw`md:w-full md:flex md:flex-col md:ml-4 mb-6 md:mb-0`}>
                                 <Label>FQDN Address</Label>
                                 <Input disabled placeholder={node.fqdn}></Input>

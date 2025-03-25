@@ -49,7 +49,6 @@ class StoreNodeRequest extends ApplicationApiRequest
         return [
             'daemon_base' => 'Daemon Base Path',
             'upload_size' => 'File Upload Size Limit',
-            'location_id' => 'Location',
             'public' => 'Node Visibility',
         ];
     }

@@ -47,7 +47,7 @@ const NodeRouter = () => {
     useEffect(() => {
         clearFlashes('node');
 
-        getNode(Number(params.id), ['database_host', 'location'])
+        getNode(Number(params.id), ['database_host'])
             .then(node => setNode(node))
             .catch(error => {
                 console.error(error);

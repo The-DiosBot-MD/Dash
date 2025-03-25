@@ -1,5 +1,4 @@
-import { Model, UUID, WithRelationships, withRelationships } from '@/api/admin/index';
-import { Location } from '@/api/admin/location';
+import { Model, UUID, withRelationships } from '@/api/admin/index';
 import http, { QueryBuilderParams, withQueryBuilderParams } from '@/api/http';
 import { Transformers } from '@definitions/admin';
 import { Server } from '@/api/admin/server';
@@ -32,7 +31,6 @@ export interface Node extends Model {
     id: number;
     uuid: UUID;
     isPublic: boolean;
-    locationId: number;
     databaseHostId: number;
     name: string;
     description: string | null;
@@ -49,22 +47,15 @@ export interface Node extends Model {
     daemonBase: string;
     createdAt: Date;
     updatedAt: Date;
-    relationships: {
-        location?: Location;
-    };
 }
 
 /**
  * Gets a single node and returns it.
  */
-export const getNode = async (id: string | number): Promise<WithRelationships<Node, 'location'>> => {
-    const { data } = await http.get(`/api/application/nodes/${id}`, {
-        params: {
-            include: ['location'],
-        },
-    });
+export const getNode = async (id: string | number): Promise<Node> => {
+    const { data } = await http.get(`/api/application/nodes/${id}`);
 
-    return withRelationships(Transformers.toNode(data.data), 'location');
+    return withRelationships(Transformers.toNode(data.data));
 };
 
 export const searchNodes = async (params: QueryBuilderParams<'name'>): Promise<Node[]> => {

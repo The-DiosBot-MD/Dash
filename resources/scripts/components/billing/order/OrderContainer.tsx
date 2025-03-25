@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import { useStoreState } from '@/state/hooks';
 import { Product } from '@/api/billing/products';
 import { getProduct } from '@/api/billing/products';
-import { ServerEggVariable } from '@/api/server/types';
 import NodeBox from '@/components/billing/order/NodeBox';
 import PageContentBlock from '@elements/PageContentBlock';
 import VariableBox from '@/components/billing/order/VariableBox';
@@ -29,6 +28,7 @@ import PaymentButton from './PaymentButton';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { getPublicKey } from '@/api/billing/key';
+import { EggVariable } from '@/api/definitions/server';
 
 const LimitBox = ({ icon, content }: { icon: IconDefinition; content: string }) => {
     return (
@@ -50,7 +50,7 @@ export default () => {
     const [nodes, setNodes] = useState<Node[] | undefined>();
     const [selectedNode, setSelectedNode] = useState<number>(0);
     const [product, setProduct] = useState<Product | undefined>();
-    const [eggs, setEggs] = useState<ServerEggVariable[] | undefined>();
+    const [eggs, setEggs] = useState<EggVariable[] | undefined>();
 
     const { colors } = useStoreState(state => state.theme.data!);
 

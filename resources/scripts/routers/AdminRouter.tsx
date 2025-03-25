@@ -5,7 +5,6 @@ import {
     DatabaseIcon,
     EyeIcon,
     FolderIcon,
-    GlobeIcon,
     KeyIcon,
     LinkIcon,
     OfficeBuildingIcon,
@@ -32,8 +31,6 @@ import DatabaseEditContainer from '@admin/management/databases/DatabaseEditConta
 import NodesContainer from '@admin/management/nodes/NodesContainer';
 import NewNodeContainer from '@admin/management/nodes/NewNodeContainer';
 import NodeRouter from '@admin/management/nodes/NodeRouter';
-import LocationsContainer from '@admin/management/locations/LocationsContainer';
-import LocationEditContainer from '@admin/management/locations/LocationEditContainer';
 import ServersContainer from '@admin/management/servers/ServersContainer';
 import NewServerContainer from '@admin/management/servers/NewServerContainer';
 import ServerRouter from '@admin/management/servers/ServerRouter';
@@ -74,7 +71,6 @@ import {
     faKey,
     faLayerGroup,
     faLink,
-    faLocation,
     faPaintBrush,
     faServer,
     faTicket,
@@ -113,7 +109,6 @@ function AdminRouter() {
                 <MobileSidebar.Link icon={faPaintBrush} text={'Theme'} linkTo={'/admin/theme'} />
                 <MobileSidebar.Link icon={faLink} text={'Links'} linkTo={'/admin/links'} />
                 <MobileSidebar.Link icon={faDatabase} text={'Databases'} linkTo={'/admin/databases'} />
-                <MobileSidebar.Link icon={faLocation} text={'Locations'} linkTo={'/admin/locations'} />
                 <MobileSidebar.Link icon={faLayerGroup} text={'Nodes'} linkTo={'/admin/nodes'} />
                 <MobileSidebar.Link icon={faServer} text={'Servers'} linkTo={'/admin/servers'} />
                 <MobileSidebar.Link icon={faUser} text={'Users'} linkTo={'/admin/users'} />
@@ -196,10 +191,6 @@ function AdminRouter() {
                             <span>Databases</span>
                         </NavLink>
                     )}
-                    <NavLink to="/admin/locations">
-                        <GlobeIcon />
-                        <span>Locations</span>
-                    </NavLink>
                     <NavLink to="/admin/nodes">
                         <ServerIcon />
                         <span>Nodes</span>
@@ -259,8 +250,6 @@ function AdminRouter() {
                         <Route path="databases" element={<DatabasesContainer />} />
                         <Route path="databases/new" element={<NewDatabaseContainer />} />
                         <Route path="databases/:id" element={<DatabaseEditContainer />} />
-                        <Route path="locations" element={<LocationsContainer />} />
-                        <Route path="locations/:id" element={<LocationEditContainer />} />
                         <Route path="nodes" element={<NodesContainer />} />
                         <Route path="nodes/new" element={<NewNodeContainer />} />
                         <Route path="nodes/:id/*" element={<NodeRouter />} />

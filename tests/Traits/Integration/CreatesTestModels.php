@@ -8,7 +8,6 @@ use Everest\Models\Node;
 use Everest\Models\User;
 use Everest\Models\Server;
 use Everest\Models\Subuser;
-use Everest\Models\Location;
 use Everest\Models\Allocation;
 
 trait CreatesTestModels
@@ -33,14 +32,9 @@ trait CreatesTestModels
         }
 
         if (!isset($attributes['node_id'])) {
-            if (!isset($attributes['location_id'])) {
-                /** @var \Everest\Models\Location $location */
-                $location = Location::factory()->create();
-                $attributes['location_id'] = $location->id;
-            }
 
             /** @var \Everest\Models\Node $node */
-            $node = Node::factory()->create(['location_id' => $attributes['location_id']]);
+            $node = Node::factory()->create();
             $attributes['node_id'] = $node->id;
         }
 
@@ -71,7 +65,7 @@ trait CreatesTestModels
         Allocation::query()->where('id', $server->allocation_id)->update(['server_id' => $server->id]);
 
         return $server->fresh([
-            'location', 'user', 'node', 'allocation', 'nest', 'egg',
+            'user', 'node', 'allocation', 'nest', 'egg',
         ]);
     }
 

@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { ServerEggVariable } from '@/api/server/types';
+import { EggVariable } from '@/api/definitions/server';
 import TitledGreyBox from '@elements/TitledGreyBox';
 import Input from '@elements/Input';
 import Switch from '@elements/Switch';
@@ -8,7 +8,7 @@ import Select from '@elements/Select';
 import isEqual from 'react-fast-compare';
 
 interface Props {
-    variable: ServerEggVariable;
+    variable: EggVariable;
     vars: Map<string, string>;
 }
 

@@ -21,11 +21,6 @@ interface NodeRepositoryInterface extends RepositoryInterface
     public function getUsageStatsRaw(Node $node): array;
 
     /**
-     * Return a single node with location and server information.
-     */
-    public function loadLocationAndServerCount(Node $node, bool $refresh = false): Node;
-
-    /**
      * Attach a paginated set of allocations to a node mode including
      * any servers that are also attached to those allocations.
      */

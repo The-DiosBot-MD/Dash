@@ -5,7 +5,6 @@ import tw from 'twin.macro';
 import type { Node } from '@/api/admin/nodes/getNodes';
 import AdminBox from '@elements/AdminBox';
 import DatabaseSelect from '@admin/management/nodes/DatabaseSelect';
-import LocationSelect from '@admin/management/nodes/LocationSelect';
 import Label from '@elements/Label';
 import Field from '@elements/Field';
 import SpinnerOverlay from '@elements/SpinnerOverlay';
@@ -19,10 +18,6 @@ export default function NodeSettingsContainer({ node }: { node?: Node }) {
 
             <div css={tw`mb-6`}>
                 <Field id={'name'} name={'name'} label={'Name'} type={'text'} />
-            </div>
-
-            <div css={tw`mb-6`}>
-                <LocationSelect selected={node?.relations.location || null} />
             </div>
 
             <div css={tw`mb-6`}>

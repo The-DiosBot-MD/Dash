@@ -18,7 +18,6 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  * @property bool $public
  * @property string $name
  * @property string|null $description
- * @property int $location_id
  * @property int|null $database_host_id
  * @property string $scheme
  * @property string $fqdn
@@ -44,7 +43,6 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  * @property \Carbon\Carbon $updated_at
  * @property Allocation[]|Collection $allocations
  * @property \Everest\Models\DatabaseHost|null $databaseHost
- * @property Location $location
  * @property Mount[]|Collection $mounts
  * @property int[]|\Illuminate\Support\Collection $ports
  * @property Server[]|Collection $servers
@@ -81,7 +79,6 @@ class Node extends Model
      * Cast values to correct type.
      */
     protected $casts = [
-        'location_id' => 'integer',
         'database_host_id' => 'integer',
         'listen_port_http' => 'integer',
         'listen_port_sftp' => 'integer',
@@ -99,7 +96,7 @@ class Node extends Model
      * Fields that are mass assignable.
      */
     protected $fillable = [
-        'public', 'name', 'location_id', 'database_host_id',
+        'public', 'name', 'database_host_id',
         'listen_port_http', 'listen_port_sftp', 'public_port_http', 'public_port_sftp',
         'fqdn', 'scheme', 'behind_proxy',
         'memory', 'memory_overallocate', 'disk',
@@ -110,7 +107,6 @@ class Node extends Model
     public static array $validationRules = [
         'name' => 'required|regex:/^([\w .-]{1,100})$/',
         'description' => 'string|nullable',
-        'location_id' => 'required|exists:locations,id',
         'database_host_id' => 'sometimes|nullable|exists:database_hosts,id',
         'public' => 'boolean',
         'fqdn' => 'required|string',
@@ -230,14 +226,6 @@ class Node extends Model
     public function databaseHost(): BelongsTo
     {
         return $this->belongsTo(DatabaseHost::class);
-    }
-
-    /**
-     * Gets the location associated with a node.
-     */
-    public function location(): BelongsTo
-    {
-        return $this->belongsTo(Location::class);
     }
 
     /**

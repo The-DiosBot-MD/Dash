@@ -7,7 +7,6 @@ use Everest\Models\Node;
 use Everest\Models\User;
 use Everest\Models\Server;
 use Mockery\MockInterface;
-use Everest\Models\Location;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Everest\Models\Allocation;
@@ -57,20 +56,15 @@ class ServerCreationServiceTest extends IntegrationTestCase
         /** @var \Everest\Models\User $user */
         $user = User::factory()->create();
 
-        /** @var \Everest\Models\Location $location */
-        $location = Location::factory()->create();
-
         /** @var \Everest\Models\Node $node */
-        $node = Node::factory()->create([
-            'location_id' => $location->id,
-        ]);
+        $node = Node::factory()->create();
 
         /** @var \Everest\Models\Allocation[]|\Illuminate\Database\Eloquent\Collection $allocations */
         $allocations = Allocation::factory()->times(5)->create([
             'node_id' => $node->id,
         ]);
 
-        $deployment = (new DeploymentObject())->setDedicated(true)->setLocations([$node->location_id])->setPorts([
+        $deployment = (new DeploymentObject())->setDedicated(true)->setPorts([
             $allocations[0]->port,
         ]);
 
@@ -160,13 +154,8 @@ class ServerCreationServiceTest extends IntegrationTestCase
         /** @var \Everest\Models\User $user */
         $user = User::factory()->create();
 
-        /** @var \Everest\Models\Location $location */
-        $location = Location::factory()->create();
-
         /** @var \Everest\Models\Node $node */
-        $node = Node::factory()->create([
-            'location_id' => $location->id,
-        ]);
+        $node = Node::factory()->create();
 
         /** @var \Everest\Models\Allocation $allocation */
         $allocation = Allocation::factory()->create([

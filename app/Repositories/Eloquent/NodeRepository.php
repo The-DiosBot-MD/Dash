@@ -71,10 +71,6 @@ class NodeRepository extends EloquentRepository implements NodeRepositoryInterfa
      */
     public function loadLocationAndServerCount(Node $node, bool $refresh = false): Node
     {
-        if (!$node->relationLoaded('location') || $refresh) {
-            $node->load('location');
-        }
-
         // This is quite ugly and can probably be improved down the road.
         // And by probably, I mean it should.
         if (is_null($node->servers_count) || $refresh) {

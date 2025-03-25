@@ -4,8 +4,6 @@ import type { AdminAllocationStore } from '@/state/admin/allocations';
 import allocations from '@/state/admin/allocations';
 import type { AdminDatabaseStore } from '@/state/admin/databases';
 import databases from '@/state/admin/databases';
-import type { AdminLocationStore } from '@/state/admin/locations';
-import locations from '@/state/admin/locations';
 import type { AdminMountStore } from '@/state/admin/mounts';
 import mounts from '@/state/admin/mounts';
 import type { AdminNestStore } from '@/state/admin/nests';
@@ -27,7 +25,6 @@ interface AdminStore {
     allocations: AdminAllocationStore;
     api: AdminApiStore;
     databases: AdminDatabaseStore;
-    locations: AdminLocationStore;
     mounts: AdminMountStore;
     nests: AdminNestStore;
     nodes: AdminNodeStore;
@@ -41,7 +38,6 @@ export const AdminContext = createContextStore<AdminStore>({
     allocations,
     api,
     databases,
-    locations,
     mounts,
     nests,
     nodes,

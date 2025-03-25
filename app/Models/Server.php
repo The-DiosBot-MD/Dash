@@ -59,7 +59,6 @@ use Everest\Exceptions\Http\Server\ServerStateConflictException;
  * @property \Everest\Models\Egg|null $egg
  * @property \Illuminate\Database\Eloquent\Collection|\Everest\Models\Mount[] $mounts
  * @property int|null $mounts_count
- * @property \Everest\Models\Location $location
  * @property \Everest\Models\Nest $nest
  * @property \Everest\Models\Node $node
  * @property \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
@@ -315,16 +314,6 @@ class Server extends Model
     public function databases(): HasMany
     {
         return $this->hasMany(Database::class);
-    }
-
-    /**
-     * Returns the location that a server belongs to.
-     *
-     * @throws \Exception
-     */
-    public function location(): \Znck\Eloquent\Relations\BelongsToThrough
-    {
-        return $this->belongsToThrough(Location::class, Node::class);
     }
 
     /**

@@ -9,7 +9,6 @@ use Everest\Models\Model;
 use Everest\Models\Backup;
 use Everest\Models\Server;
 use Everest\Models\Database;
-use Everest\Models\Location;
 use Everest\Models\Schedule;
 use Everest\Models\Allocation;
 use Everest\Models\DatabaseHost;
@@ -31,7 +30,6 @@ abstract class ClientApiIntegrationTestCase extends IntegrationTestCase
         Backup::query()->forceDelete();
         Server::query()->forceDelete();
         Node::query()->forceDelete();
-        Location::query()->forceDelete();
         User::query()->forceDelete();
 
         parent::tearDown();

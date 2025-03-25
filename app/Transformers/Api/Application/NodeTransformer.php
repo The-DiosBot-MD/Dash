@@ -14,7 +14,7 @@ class NodeTransformer extends Transformer
     /**
      * List of resources that can be included.
      */
-    protected array $availableIncludes = ['allocations', 'location', 'servers'];
+    protected array $availableIncludes = ['allocations', 'servers'];
 
     /**
      * Return the resource name for the JSONAPI output.
@@ -55,18 +55,6 @@ class NodeTransformer extends Transformer
         }
 
         return $this->collection($node->allocations, new AllocationTransformer());
-    }
-
-    /**
-     * Return the location associated with this node.
-     */
-    public function includeLocation(Node $node): Item|NullResource
-    {
-        if (!$this->authorize(AdminAcl::RESOURCE_LOCATIONS)) {
-            return $this->null();
-        }
-
-        return $this->item($node->location, new LocationTransformer());
     }
 
     /**
