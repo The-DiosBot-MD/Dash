@@ -42,13 +42,15 @@ export default ({ open, setOpen, groups, setGroups }: Props) => {
             .catch(error => clearAndAddHttpError({ key: 'dashboard:groups', error }));
     };
 
-    const onAdd = () => {
+    const onAdd = (id: number) => {
         clearFlashes();
 
-        addServerToGroup(group!.id, open.serverId!)
+        addServerToGroup(id, open.serverId!)
             .then(() => {
                 addFlash({ type: 'success', key: 'dashboard:groups', message: 'Server group added successfully.' });
                 setOpen({ open: 'none', serverId: undefined });
+
+                window.location.reload();
             })
             .catch(error => clearAndAddHttpError({ key: 'dashboard:groups', error }));
     };
@@ -71,7 +73,7 @@ export default ({ open, setOpen, groups, setGroups }: Props) => {
                                     }
                                     onClick={() => {
                                         setGroup(group);
-                                        onAdd();
+                                        onAdd(group.id);
                                     }}
                                 >
                                     <FontAwesomeIcon icon={faPlusCircle} size={'sm'} />

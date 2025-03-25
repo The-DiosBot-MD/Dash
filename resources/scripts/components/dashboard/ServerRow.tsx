@@ -77,7 +77,7 @@ export default ({
     setOpen,
 }: {
     server: Server;
-    group?: ServerGroup;
+    group: ServerGroup;
     setOpen: React.Dispatch<React.SetStateAction<VisibleDialog>>;
 }) => {
     const { clearFlashes, addFlash, clearAndAddHttpError } = useFlash();
@@ -85,6 +85,7 @@ export default ({
     const colors = useStoreState(state => state.theme.data!.colors);
     const interval = useRef<Timer>(null) as React.MutableRefObject<Timer>;
     const [isSuspended, setIsSuspended] = useState(server.status === 'suspended');
+    const [removed, setRemoved] = useState(false);
 
     const onDelete = () => {
         clearFlashes();
@@ -93,6 +94,7 @@ export default ({
             .then(() => {
                 addFlash({ type: 'success', key: 'dashboard:groups', message: 'Server group removed successfully.' });
                 setOpen({ open: 'none', serverId: undefined });
+                setRemoved(true);
             })
             .catch(error => clearAndAddHttpError({ key: 'dashboard:groups', error }));
     };
@@ -146,7 +148,7 @@ export default ({
                     </div>
                 </Link>
                 <div className={'col-span-1 lg:col-span-2 my-auto mr-2'}>
-                    {group && group.id === server.groupId ? (
+                    {group && group.id === server.groupId && !removed ? (
                         <Pill size={'small'} type={'unknown'}>
                             <span style={{ color: group?.color }} className={'cursor-default ml-3'}>
                                 {group.name}
