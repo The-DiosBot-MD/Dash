@@ -19,17 +19,24 @@ import DashboardAlert from '@/components/dashboard/DashboardAlert';
 import ServerSvg from '@/assets/images/themed/ServerSvg';
 import { Button } from '@elements/button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleArrowRight, faList, faShield } from '@fortawesome/free-solid-svg-icons';
+import { faCircleArrowRight, faDollar, faEye, faHeart, faList, faLock } from '@fortawesome/free-solid-svg-icons';
 import { getServerGroups } from '@/api/server/groups';
 import { type ServerGroup } from '@/api/definitions/server';
 import ServerGroupDialog, { VisibleDialog } from '@/components/dashboard/groups/ServerGroupDialog';
+import TitledGreyBox from '../elements/TitledGreyBox';
+import { useActivityLogs } from '@/api/account/activity';
+import { getOrders, Order } from '@/api/billing/orders';
+import ActivityLogContainer from './activity/ActivityLogContainer';
 
 export default () => {
     const { search } = useLocation();
+    const activity = useActivityLogs();
     const defaultPage = Number(new URLSearchParams(search).get('page') || '1');
 
     const [open, setOpen] = useState<VisibleDialog>({ open: 'none', serverId: undefined });
     const colors = useStoreState(state => state.theme.data!.colors);
+
+    const [orders, setOrders] = useState<Order[]>([]);
     const [groups, setGroups] = useState<ServerGroup[]>([]);
     const [page, setPage] = useState(!isNaN(defaultPage) && defaultPage > 0 ? defaultPage : 1);
     const { clearFlashes, clearAndAddHttpError } = useFlash();
@@ -48,6 +55,8 @@ export default () => {
         getServerGroups()
             .then(data => setGroups(data))
             .catch(() => console.error());
+
+        getOrders().then(data => setOrders(data));
     }, []);
 
     useEffect(() => {
@@ -69,6 +78,8 @@ export default () => {
         if (!error) clearFlashes('dashboard');
     }, [error]);
 
+    const latestEvent = activity.data?.items[activity.data.items.length - 1];
+
     return (
         <PageContentBlock title={'Dashboard'}>
             <DashboardAlert />
@@ -76,6 +87,39 @@ export default () => {
             <div className={'text-3xl lg:text-5xl font-bold mt-8 mb-12'}>
                 Welcome to {name}
                 <p className={'text-gray-400 font-normal text-sm mt-1'}>Signed in as {user.email}</p>
+            </div>
+            <div className={'hidden lg:grid grid-cols-4 gap-8 my-12'}>
+                <TitledGreyBox title={'Support PIN'} icon={faLock}>
+                    <p className={'text-2xl font-bold text-center py-4'}>{user.uuid.slice(0, 8)}</p>
+                </TitledGreyBox>
+                <TitledGreyBox title={'Account State'} icon={faHeart}>
+                    <p className={'text-2xl font-bold text-center py-4 text-green-300'}>
+                        {user.state !== 'suspended' ? 'Normal' : 'Suspended'}
+                        <span className={'text-gray-400 text-sm italic font-normal ml-2'}>
+                            2FA is {user.useTotp ? 'enabled' : 'disabled'}
+                        </span>
+                    </p>
+                </TitledGreyBox>
+                <TitledGreyBox title={'Latest Activity'} icon={faEye}>
+                    <p className={'text-2xl font-bold text-center py-4'}>
+                        {!latestEvent ? (
+                            'Unknown'
+                        ) : (
+                            <>
+                                {latestEvent.event}
+                                <span className={'text-gray-400 text-sm italic font-normal ml-2'}>
+                                    {latestEvent.timestamp.toLocaleTimeString()}, {latestEvent.timestamp.toDateString()}
+                                </span>
+                            </>
+                        )}
+                    </p>
+                </TitledGreyBox>
+                <TitledGreyBox title={'Billing Orders'} icon={faDollar}>
+                    <p className={'text-2xl font-bold text-center py-4'}>
+                        {orders.filter(x => x.status === 'processed').length} completed,{' '}
+                        {orders.filter(x => x.status !== 'processed').length} total
+                    </p>
+                </TitledGreyBox>
             </div>
             <FlashMessageRender className={'my-4'} byKey={'dashboard'} />
             <div className={'grid lg:grid-cols-3 gap-4'}>
@@ -168,37 +212,8 @@ export default () => {
                         )}
                     </ContentBox>
                 </div>
-                <ContentBox title={'Account Summary'}>
-                    <div className={'grid grid-cols-2'}>
-                        <div className={'w-full h-full border-b-2 border-gray-400 border-r-2'}>
-                            <div className={'text-center text-gray-400 text-sm py-12'}>
-                                <h1 className={'text-3xl lg:text-5xl text-white font-bold'}>
-                                    <span className={user.useTotp ? 'text-green-400' : 'text-red-400'}>
-                                        <FontAwesomeIcon icon={faShield} /> 2FA
-                                    </span>
-                                </h1>
-                                <div className={'mt-2 italic'}>2-factor is {user.useTotp ? 'enabled' : 'disabled'}</div>
-                            </div>
-                        </div>
-                        <div className={'w-full h-full'}>
-                            <div className={'text-center text-gray-400 text-sm py-12'}>
-                                <h1 className={'text-3xl lg:text-5xl text-white font-bold'}>{servers?.items.length}</h1>
-                                <div className={'mt-1 italic'}>total server count</div>
-                            </div>
-                        </div>
-                        <div className={'w-full h-full'}>
-                            <div className={'text-center text-gray-400 text-sm py-12'}>
-                                <h1 className={'text-3xl lg:text-5xl text-white font-bold'}>---</h1>
-                                <div className={'mt-1 italic'}>pending orders</div>
-                            </div>
-                        </div>
-                        <div className={'w-full h-full border-gray-400 border-t-2 border-l-2'}>
-                            <div className={'text-center text-gray-400 text-sm py-12'}>
-                                <h1 className={'text-3xl lg:text-5xl text-white font-bold'}>---</h1>
-                                <div className={'mt-1 italic'}>unread tickets</div>
-                            </div>
-                        </div>
-                    </div>
+                <ContentBox title={'Account Activity'}>
+                    <ActivityLogContainer />
                 </ContentBox>
             </div>
         </PageContentBlock>

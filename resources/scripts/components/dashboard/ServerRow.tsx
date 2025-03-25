@@ -77,7 +77,7 @@ export default ({
     setOpen,
 }: {
     server: Server;
-    group: ServerGroup;
+    group?: ServerGroup;
     setOpen: React.Dispatch<React.SetStateAction<VisibleDialog>>;
 }) => {
     const { clearFlashes, addFlash, clearAndAddHttpError } = useFlash();

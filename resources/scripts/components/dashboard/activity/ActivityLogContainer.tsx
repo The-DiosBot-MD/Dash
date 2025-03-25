@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ActivityLogFilters, useActivityLogs } from '@/api/account/activity';
 import { useFlashKey } from '@/plugins/useFlash';
-import PageContentBlock from '@elements/PageContentBlock';
-import FlashMessageRender from '@/components/FlashMessageRender';
 import { Link } from 'react-router-dom';
 import PaginationFooter from '@elements/table/PaginationFooter';
 import { DesktopComputerIcon, XCircleIcon } from '@heroicons/react/solid';
@@ -31,12 +29,7 @@ export default () => {
     }, [error]);
 
     return (
-        <PageContentBlock title={'Account Activity Log'}>
-            <FlashMessageRender byKey={'account'} />
-            <div className={'text-3xl lg:text-5xl font-bold mt-8 mb-12'}>
-                Account Activity
-                <p className={'text-gray-400 font-normal text-sm mt-1'}>View recent activity on your account.</p>
-            </div>
+        <>
             {(filters.filters?.event || filters.filters?.ip) && (
                 <div className={'mb-2 flex justify-end'}>
                     <Link
@@ -71,6 +64,6 @@ export default () => {
                     onPageSelect={page => setFilters(value => ({ ...value, page }))}
                 />
             )}
-        </PageContentBlock>
+        </>
     );
 };

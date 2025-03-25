@@ -65,8 +65,11 @@ const PaginatedFooter = ({ pagination }: { pagination: UsePaginationResult<any> 
 };
 
 const Table = ({ children }: { children: ReactNode[] }) => {
+    const { colors } = useStoreState(s => s.theme.data!);
+
     return (
         <div className={'relative overflow-x-auto'}>
+            <div className={'py-5 rounded-t-lg'} style={{ backgroundColor: colors.secondary }}></div>
             <table className={'w-full text-sm text-left text-gray-400'}>{children}</table>
         </div>
     );
