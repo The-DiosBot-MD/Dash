@@ -20,6 +20,7 @@ import {
     ShoppingCartIcon,
     TerminalIcon,
     TicketIcon,
+    ViewListIcon,
 } from '@heroicons/react/outline';
 import Avatar from '@/components/Avatar';
 import MobileSidebar from '@elements/MobileSidebar';
@@ -27,6 +28,8 @@ import { faCog, faEye, faKey, faShoppingBag, faTerminal, faTicket, faUser } from
 import { CustomLink } from '@/api/admin/links';
 import { getLinks } from '@/api/getLinks';
 import http from '@/api/http';
+import ProductsContainer from '@/components/billing/ProductsContainer';
+import OrdersContainer from '@/components/billing/orders/OrdersContainer';
 
 function DashboardRouter() {
     const user = useStoreState(s => s.user.data!);
@@ -58,7 +61,7 @@ function DashboardRouter() {
                 <MobileSidebar.Link icon={faTerminal} text={'SSH'} linkTo={'/account/ssh'} />
                 <MobileSidebar.Link icon={faEye} text={'Activity'} linkTo={'/account/activity'} />
                 {tickets.enabled && <MobileSidebar.Link icon={faTicket} text={'Tickets'} linkTo={'/account/tickets'} />}
-                {billing.enabled && <MobileSidebar.Link icon={faShoppingBag} text={'Billing'} linkTo={'billing'} />}
+                {billing.enabled && <MobileSidebar.Link icon={faShoppingBag} text={'Billing'} linkTo={'/billing/order'} />}
                 <MobileSidebar.Link icon={faCog} text={'Admin'} linkTo={'/admin'} />
             </MobileSidebar>
             <Sidebar className={'flex-none'} $collapsed={collapsed} theme={theme}>
@@ -96,18 +99,27 @@ function DashboardRouter() {
                         <EyeIcon />
                         <span>Activity</span>
                     </NavLink>
-                    <Sidebar.Section>Modules</Sidebar.Section>
                     {tickets.enabled && (
-                        <NavLink to={'/account/tickets'}>
-                            <TicketIcon />
-                            <span>Tickets</span>
-                        </NavLink>
+                        <>
+                            <Sidebar.Section>Tickets</Sidebar.Section>
+                            <NavLink to={'/account/tickets'}>
+                                <TicketIcon />
+                                <span>Tickets</span>
+                            </NavLink>
+                        </>
                     )}
                     {billing.enabled && (
-                        <NavLink to={'/billing'}>
-                            <ShoppingCartIcon />
-                            <span>Billing</span>
-                        </NavLink>
+                        <>
+                            <Sidebar.Section>Billing</Sidebar.Section>
+                            <NavLink to={'/billing/order'}>
+                                <ShoppingCartIcon />
+                                <span>Billing</span>
+                            </NavLink>
+                            <NavLink to={'/billing/orders'}>
+                                <ViewListIcon />
+                                <span>Orders</span>
+                            </NavLink>
+                        </>
                     )}
                 </Sidebar.Wrapper>
                 <span className={'mt-auto mb-3 mr-auto'}>
@@ -161,6 +173,13 @@ function DashboardRouter() {
                             <>
                                 <Route path={'/account/tickets'} element={<TicketContainer />} />
                                 <Route path={'/account/tickets/:id'} element={<ViewTicketContainer />} />
+                            </>
+                        )}
+
+                        {billing.enabled && (
+                            <>
+                                <Route path={'/billing/order'} element={<ProductsContainer />} />
+                                <Route path={'/billing/orders'} element={<OrdersContainer />} />
                             </>
                         )}
 
