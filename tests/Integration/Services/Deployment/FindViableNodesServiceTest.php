@@ -82,7 +82,6 @@ class FindViableNodesServiceTest extends IntegrationTestCase
         // limits are below the allowed amount.
         $response = $base()->setMemory(512)->handle();
         $this->assertCount(2, $response);
-        $this->assertSame(2, $response->where('location_id', $locations[1]->id)->count());
 
         // Expect that we can only create this server on the second node since the memory
         // allocated is over the amount of memory available to the first node.

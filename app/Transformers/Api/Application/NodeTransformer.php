@@ -3,7 +3,6 @@
 namespace Everest\Transformers\Api\Application;
 
 use Everest\Models\Node;
-use League\Fractal\Resource\Item;
 use Everest\Services\Acl\Api\AdminAcl;
 use League\Fractal\Resource\Collection;
 use Everest\Transformers\Api\Transformer;

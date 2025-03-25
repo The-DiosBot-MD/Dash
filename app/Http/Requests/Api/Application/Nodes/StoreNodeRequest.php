@@ -16,7 +16,6 @@ class StoreNodeRequest extends ApplicationApiRequest
         return collect($rules ?? Node::getRules())->only([
             'name',
             'description',
-            'location_id',
             'database_host_id',
             'fqdn',
             'scheme',

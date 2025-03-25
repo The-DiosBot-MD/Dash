@@ -32,7 +32,6 @@ trait CreatesTestModels
         }
 
         if (!isset($attributes['node_id'])) {
-
             /** @var \Everest\Models\Node $node */
             $node = Node::factory()->create();
             $attributes['node_id'] = $node->id;
@@ -57,7 +56,7 @@ trait CreatesTestModels
             $attributes['nest_id'] = Egg::query()->findOrFail($attributes['egg_id'])->nest_id;
         }
 
-        unset($attributes['user_id'], $attributes['location_id']);
+        unset($attributes['user_id']);
 
         /** @var \Everest\Models\Server $server */
         $server = Server::factory()->create($attributes);

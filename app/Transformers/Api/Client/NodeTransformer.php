@@ -3,9 +3,7 @@
 namespace Everest\Transformers\Api\Client;
 
 use Everest\Models\Node;
-use League\Fractal\Resource\Item;
 use Everest\Transformers\Api\Transformer;
-use League\Fractal\Resource\NullResource;
 
 class NodeTransformer extends Transformer
 {
