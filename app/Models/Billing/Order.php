@@ -13,6 +13,7 @@ use Everest\Models\Model;
  * @property string $status
  * @property int $product_id
  * @property bool $is_renewal
+ * @property int $threat_index
  * @property string $payment_intent_id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
@@ -40,7 +41,7 @@ class Order extends Model
      */
     protected $fillable = [
         'name', 'user_id', 'description', 'payment_intent_id',
-        'total', 'status', 'product_id', 'is_renewal',
+        'total', 'status', 'product_id', 'is_renewal', 'threat_index',
     ];
 
     /**
@@ -51,6 +52,7 @@ class Order extends Model
         'total' => 'float',
         'product_id' => 'int',
         'is_renewal' => 'bool',
+        'threat_index' => 'int',
     ];
 
     public static array $validationRules = [
@@ -61,6 +63,7 @@ class Order extends Model
         'status' => 'required|in:expired,pending,failed,processed',
         'product_id' => 'exists:products,id',
         'is_renewal' => 'nullable|bool',
+        'threat_index' => 'nullable|int|min:-1|max:100',
         'payment_intent_id' => 'required|string|unique:orders,payment_intent_id',
     ];
 }

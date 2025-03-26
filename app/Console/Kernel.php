@@ -50,6 +50,7 @@ class Kernel extends ConsoleKernel
         if (config('modules.billing.enabled')) {
             $schedule->command(CleanupOrdersCommand::class)->daily();
             $schedule->command(ProcessBillableServersCommand::class)->daily();
+            $schedule->command(CalculateOrderThreatIndexCommand::class)->everyFiveMinutes();
         }
     }
 }

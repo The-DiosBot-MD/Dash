@@ -43,6 +43,12 @@ export function type(state: string): PillStatus {
     }
 }
 
+function getColor(index: number) {
+    if (index >= 50) return 'danger';
+    if (index >= 25) return 'warn';
+    else return 'success';
+}
+
 export default ({ data }: { data?: Order[] }) => {
     if (!data) return <Spinner centered />;
 
@@ -58,6 +64,7 @@ export default ({ data }: { data?: Order[] }) => {
                     <HeaderItem>Created At</HeaderItem>
                     <HeaderItem>Payment State</HeaderItem>
                     <HeaderItem>Order Type</HeaderItem>
+                    <HeaderItem>Risk Index</HeaderItem>
                 </Header>
                 <Body>
                     {pagination.paginatedItems.map(order => (
@@ -79,6 +86,21 @@ export default ({ data }: { data?: Order[] }) => {
                             <td className={'pr-12 py-4 text-right'}>
                                 <Pill size={'small'} type={order.is_renewal ? 'info' : 'success'}>
                                     {order.is_renewal ? 'Upgrade' : 'New Server'}
+                                </Pill>
+                            </td>
+                            <td className={'pr-12 py-4 text-right'}>
+                                <Pill
+                                    size={'small'}
+                                    type={order.threat_index > 0 ? getColor(order.threat_index) : 'unknown'}
+                                >
+                                    {order.threat_index < 0 ? (
+                                        <span className={'text-xs inline-flex my-1'}>
+                                            <Spinner size={'small'} />
+                                            &nbsp;Processing
+                                        </span>
+                                    ) : (
+                                        `${order.threat_index}/100`
+                                    )}
                                 </Pill>
                             </td>
                         </BodyItem>

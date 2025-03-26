@@ -11,6 +11,7 @@ export interface Order {
     status: OrderStatus;
     product_id: number;
     is_renewal: boolean;
+    threat_index: number;
     created_at: Date;
     updated_at?: Date | null;
 }
@@ -24,6 +25,7 @@ export const rawDataToOrder = ({ attributes: data }: FractalResponseData): Order
     status: data.status,
     product_id: data.product_id,
     is_renewal: data.is_renewal,
+    threat_index: data.threat_index,
     created_at: new Date(data.created_at),
     updated_at: data.updated_at ? new Date(data.updated_at) : null,
 });

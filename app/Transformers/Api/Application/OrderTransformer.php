@@ -30,6 +30,7 @@ class OrderTransformer extends Transformer
             'product_id' => $model->product_id,
             'is_renewal' => $model->is_renewal,
             'payment_intent_id' => $model->payment_intent_id,
+            'threat_index' => $model->threat_index,
             'created_at' => $model->created_at->toAtomString(),
             'updated_at' => $model->updated_at ? $model->updated_at->toAtomString() : null,
         ];
