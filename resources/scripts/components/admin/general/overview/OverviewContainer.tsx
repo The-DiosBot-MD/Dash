@@ -102,6 +102,11 @@ export default () => {
             <FlashMessageRender byKey={'overview'} css={tw`mb-4`} />
 
             <AdminBox title={'Version Information'} icon={faDesktop}>
+                {settings.debug && (
+                    <Alert type={'warning'} className={'mb-3'}>
+                        Jexactyl is running in debug mode. Do not use in production.
+                    </Alert>
+                )}
                 {loading ? (
                     <Spinner size={'large'} centered />
                 ) : (

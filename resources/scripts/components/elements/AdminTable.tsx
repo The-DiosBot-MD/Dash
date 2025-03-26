@@ -266,7 +266,7 @@ export const NoItems = ({ className }: { className?: string }) => {
 
     return (
         <div
-            css={tw`w-full flex flex-col items-center justify-center py-6 px-8`}
+            css={tw`w-full flex flex-col items-center justify-center py-6 px-8 rounded-b-lg`}
             className={className}
             style={{ backgroundColor: colors.secondary }}
         >

@@ -5,6 +5,7 @@ export type PanelMode = 'standard' | 'personal' | undefined;
 export interface SiteSettings {
     name: string;
     mode: PanelMode;
+    debug: boolean;
     locale: string;
     auto_update: boolean;
     indicators: boolean;

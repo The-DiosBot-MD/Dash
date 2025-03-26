@@ -14,6 +14,7 @@ class AssetComposer
         $view->with('siteConfiguration', [
             'name' => config('app.name') ?? 'Everest',
             'mode' => config('app.mode') ?? 'standard',
+            'debug' => env('APP_DEBUG') ?? false,
             'locale' => config('app.locale') ?? 'en',
             'auto_update' => boolval(config('app.auto_update', false)),
             'speed_dial' => boolval(config('app.speed_dial', false)),
