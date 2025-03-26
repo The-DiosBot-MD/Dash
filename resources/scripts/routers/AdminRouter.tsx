@@ -171,7 +171,7 @@ function AdminRouter() {
                             </NavLink>
                         </>
                     )}
-
+                    <Sidebar.Section>Appearance</Sidebar.Section>
                     <NavLink to="/admin/alerts">
                         <ShieldExclamationIcon />
                         <span>Alerts</span>
