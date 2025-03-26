@@ -12,7 +12,6 @@ import SettingsContainer from '@/components/server/settings/SettingsContainer';
 import AccountOverviewContainer from '@/components/dashboard/AccountOverviewContainer';
 import AccountApiContainer from '@/components/dashboard/AccountApiContainer';
 import AccountSSHContainer from '@/components/dashboard/ssh/AccountSSHContainer';
-import ActivityLogContainer from '@/components/dashboard/activity/ActivityLogContainer';
 import ServerActivityLogContainer from '@/components/server/ServerActivityLogContainer';
 import ServerBillingContainer from '@/components/server/billing/ServerBillingContainer';
 
@@ -73,12 +72,6 @@ export default {
             path: 'ssh',
             name: 'SSH Keys',
             component: AccountSSHContainer,
-        },
-        {
-            route: 'activity',
-            path: 'activity',
-            name: 'Activity',
-            component: ActivityLogContainer,
         },
     ],
     server: [
