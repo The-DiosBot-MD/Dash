@@ -24,6 +24,7 @@ export const statusToColor = (status: string): string => {
 };
 
 export default () => {
+    const { email } = useStoreState(state => state.user.data!);
     const { colors } = useStoreState(state => state.theme.data!);
     const { data: ticket, error, isLoading } = useTicketFromRoute();
     const { clearAndAddHttpError } = useFlashKey('account:tickets');
@@ -57,18 +58,18 @@ export default () => {
                             ) : (
                                 <>
                                     {ticket.relationships.messages
-                                        .map((message, index) => (
-                                            <>
+                                        .map(message => (
+                                            <div key={message.id} className={'mb-4'}>
                                                 <div
                                                     key={message.id}
                                                     style={{ backgroundColor: colors.headers }}
-                                                    className={classNames(
-                                                        index > 0 ? 'mt-4' : 'mt-0',
-                                                        'flex p-4 rounded-lg',
-                                                    )}
+                                                    className={'flex p-4 rounded-lg'}
                                                 >
                                                     <p className={'mr-2 font-semibold text-primary-400'}>
-                                                        {message.author ? message.author.email : 'You'}:
+                                                        {message.author.email === email
+                                                            ? 'You'
+                                                            : 'Support - Administrator'}
+                                                        :
                                                     </p>
                                                     {message.message.toString()}
                                                 </div>
@@ -79,7 +80,7 @@ export default () => {
                                                         addSuffix: true,
                                                     })}
                                                 </p>
-                                            </>
+                                            </div>
                                         ))
                                         .toReversed()}
                                 </>

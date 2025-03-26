@@ -7,8 +7,9 @@ import { Button } from '@elements/button';
 import Input, { Textarea } from '@elements/Input';
 import styled from 'styled-components';
 import { useFlashKey } from '@/plugins/useFlash';
-import { createTicket, useTickets } from '@/api/account/tickets';
+import { createTicket } from '@/api/account/tickets';
 import FlashMessageRender from '@/components/FlashMessageRender';
+import { useNavigate } from 'react-router-dom';
 
 interface Values {
     title: string;
@@ -21,15 +22,14 @@ const CustomTextarea = styled(Textarea)`
 
 export default () => {
     const { clearAndAddHttpError } = useFlashKey('account:tickets');
-    const { mutate } = useTickets();
+    const navigate = useNavigate();
 
-    const submit = (values: Values, { setSubmitting, resetForm }: FormikHelpers<Values>) => {
+    const submit = (values: Values, { setSubmitting }: FormikHelpers<Values>) => {
         clearAndAddHttpError();
 
         createTicket(values.title, values.message)
             .then(ticket => {
-                resetForm();
-                mutate(data => (data || []).concat(ticket));
+                navigate(`/account/tickets/${ticket.id}`);
             })
             .catch(error => clearAndAddHttpError(error))
             .then(() => setSubmitting(false));

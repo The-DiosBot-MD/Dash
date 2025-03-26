@@ -1,5 +1,5 @@
 import tw from 'twin.macro';
-import { useTicketFromRoute } from '@/api/admin/tickets/getTicket';
+import { getTicket } from '@/api/admin/tickets/getTicket';
 import AdminContentBlock from '@elements/AdminContentBlock';
 import { differenceInHours, format, formatDistanceToNow } from 'date-fns';
 import { statusToColor } from '@admin/modules/tickets/TicketsContainer';
@@ -16,34 +16,48 @@ import type { Values } from '@/api/admin/tickets/updateTicket';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import Select from '@elements/Select';
 import Label from '@elements/Label';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TicketStatus } from '@/api/admin/tickets/getTickets';
 import NewMessageDialog from '@admin/modules/tickets/view/NewMessageDialog';
 import MessageTable from './MessageTable';
-import { useNavigate } from 'react-router-dom';
 import DeleteTicketDialog from './DeleteTicketDialog';
 import { Alert } from '@elements/alert';
+import { Ticket } from '@/api/admin/tickets/getTickets';
+import Spinner from '@/components/elements/Spinner';
+import { useParams } from 'react-router-dom';
+import useStatus from '@/plugins/useStatus';
 
 export default () => {
-    const navigate = useNavigate();
-    const { data: ticket } = useTicketFromRoute();
+    const { id } = useParams();
+    const boxStatus = useStatus();
+
+    const [ticket, setTicket] = useState<Ticket | undefined>();
     const { clearFlashes, clearAndAddHttpError } = useFlash();
     const [status, setStatus] = useState<TicketStatus>('pending');
 
-    if (!ticket) return <></>;
-
     const submit = (values: Values, { setSubmitting }: FormikHelpers<Values>) => {
         clearFlashes();
+        boxStatus.setStatus('loading');
 
         values.status = status;
 
-        updateTicket(ticket.id, values)
+        updateTicket(ticket!.id, values)
             .then(() => {
                 setSubmitting(false);
-                navigate('/admin/tickets');
+                boxStatus.setStatus('success');
+                getTicket(Number(id)).then(data => setTicket(data));
             })
-            .catch(error => clearAndAddHttpError({ key: 'tickets:view', error }));
+            .catch(error => {
+                clearAndAddHttpError({ key: 'tickets:view', error });
+                boxStatus.setStatus('error');
+            });
     };
+
+    useEffect(() => {
+        getTicket(Number(id)).then(data => setTicket(data));
+    }, []);
+
+    if (!ticket) return <Spinner size={'large'} centered />;
 
     if (!ticket.user)
         return (
@@ -91,7 +105,7 @@ export default () => {
             >
                 {({ isSubmitting }) => (
                     <Form>
-                        <AdminBox title={'Ticket Options'} icon={faGears}>
+                        <AdminBox title={'Ticket Options'} icon={faGears} status={boxStatus.status}>
                             <div className={'grid lg:grid-cols-3 gap-4'}>
                                 <div>
                                     <Label>Update ticket status</Label>
