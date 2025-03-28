@@ -51,11 +51,6 @@ class CalculateOrderThreatIndexCommand extends Command
             $index = 0;
             $user = User::find($order->user_id);
 
-            if ($order->status === 'pending') {
-                $order->update(['threat_index' => $index]);
-                continue;
-            }
-
             if ($user->created_at->lt(Carbon::now()->subWeek())) {
                 $index += 30;
             };
