@@ -26,22 +26,12 @@ class UserControllerTest extends ApplicationApiIntegrationTestCase
                 ['object', 'attributes' => ['id', 'external_id', 'uuid', 'username', 'email', 'language', 'admin_role_id', 'root_admin', '2fa', 'avatar_url', 'role_name', 'created_at', 'updated_at']],
                 ['object', 'attributes' => ['id', 'external_id', 'uuid', 'username', 'email', 'language', 'admin_role_id', 'root_admin', '2fa', 'avatar_url', 'role_name', 'created_at', 'updated_at']],
             ],
-            'meta' => ['pagination' => ['total', 'count', 'per_page', 'current_page', 'total_pages']],
         ]);
 
         $response
             ->assertJson([
                 'object' => 'list',
                 'data' => [[], []],
-                'meta' => [
-                    'pagination' => [
-                        'total' => 2,
-                        'count' => 2,
-                        'per_page' => 60,
-                        'current_page' => 1,
-                        'total_pages' => 1,
-                    ],
-                ],
             ])
             ->assertJsonFragment([
                 'object' => 'user',

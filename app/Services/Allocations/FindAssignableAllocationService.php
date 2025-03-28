@@ -96,7 +96,7 @@ class FindAssignableAllocationService
         $port = $available[array_rand($available)];
 
         $this->service->handle($server->node, [
-            'allocation_ip' => $server->allocation->ip,
+            'ip' => $server->allocation->ip,
             'allocation_ports' => [$port],
         ]);
 

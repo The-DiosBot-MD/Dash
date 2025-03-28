@@ -73,31 +73,26 @@ class FindViableNodesServiceTest extends IntegrationTestCase
         $this->assertCount(1, $response);
         $this->assertSame($nodes[2]->id, $response[0]->id);
 
-        // Helper, I am lazy.
-        $base = function () use ($locations) {
-            return $this->getService()->setLocations([$locations[1]->id])->setDisk(512);
-        };
-
         // Expect that we can create this server on either node since the disk and memory
         // limits are below the allowed amount.
-        $response = $base()->setMemory(512)->handle();
-        $this->assertCount(2, $response);
+        $response = $this->getService()->setDisk(512)->setMemory(512)->handle();
+        $this->assertCount(3, $response);
 
         // Expect that we can only create this server on the second node since the memory
         // allocated is over the amount of memory available to the first node.
-        $response = $base()->setMemory(2048)->handle();
-        $this->assertCount(1, $response);
+        $response = $this->getService()->setDisk(512)->setMemory(2048)->handle();
+        $this->assertCount(2, $response);
         $this->assertSame($nodes[2]->id, $response[0]->id);
 
         // Expect that we can only create this server on the second node since the disk
         // allocated is over the limit assigned to the first node (even with the overallocate).
-        $response = $base()->setDisk(20480)->setMemory(256)->handle();
-        $this->assertCount(1, $response);
+        $response = $this->getService()->setDisk(20480)->setMemory(256)->handle();
+        $this->assertCount(2, $response);
         $this->assertSame($nodes[2]->id, $response[0]->id);
 
         // Expect that we could create the server on either node since the disk allocated is
         // right at the limit for Node 1 when the overallocate value is included in the calc.
-        $response = $base()->setDisk(11264)->setMemory(256)->handle();
+        $response = $this->getService()->setDisk(11264)->setMemory(256)->handle();
         $this->assertCount(2, $response);
 
         // Create two servers on the first node so that the disk space used is equal to the
@@ -109,7 +104,7 @@ class FindViableNodesServiceTest extends IntegrationTestCase
 
         // Expect that we cannot create a server with a 1GB disk on the first node since there
         // is not enough space (even with the overallocate) available to the node.
-        $response = $base()->setDisk(1024)->setMemory(256)->handle();
+        $response = $this->getService()->setDisk(1024)->setMemory(256)->handle();
         $this->assertCount(1, $response);
         $this->assertSame($nodes[2]->id, $response[0]->id);
 
@@ -120,7 +115,7 @@ class FindViableNodesServiceTest extends IntegrationTestCase
         // is greater than either node can support, even with the overallocation limits taken
         // into account.
         $this->expectException(NoViableNodeException::class);
-        $base()->setMemory(10000)->handle();
+        $this->getService()->setDisk(512)->setMemory(10000)->handle();
 
         // Create four servers so that the memory used for the second node is equal to the total
         // limit for that node (pre-overallocate calculation).
@@ -133,12 +128,12 @@ class FindViableNodesServiceTest extends IntegrationTestCase
 
         // Expect that either node can support this server when we account for the overallocate
         // value of the second node.
-        $response = $base()->setMemory(500)->handle();
+        $response = $this->getService()->setDisk(512)->setMemory(500)->handle();
         $this->assertCount(2, $response);
 
         // Expect that only the first node can support this server when we go over the remaining
         // memory for the second nodes overallocate calculation.
-        $response = $base()->setMemory(640)->handle();
+        $response = $this->getService()->setDisk(512)->setMemory(640)->handle();
         $this->assertCount(1, $response);
         $this->assertSame($nodes[1]->id, $response[0]->id);
     }

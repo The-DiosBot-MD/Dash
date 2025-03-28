@@ -11,7 +11,7 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::table('servers', function (Blueprint $table) {
-            $table->unsignedInteger('subuser_limit')->nullable()->default(0);
+            $table->integer('subuser_limit')->nullable()->default(-1);
         });
     }
 
