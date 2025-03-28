@@ -1,4 +1,6 @@
 Show admins the API token after creation
-Finish server grouping system
 Finish jGuard
 cleanup frontend api stack
+add billing exceptions where necessary
+finish database hosts
+finish mounts
