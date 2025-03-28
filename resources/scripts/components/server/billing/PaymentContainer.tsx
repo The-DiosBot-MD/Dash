@@ -16,7 +16,7 @@ export default ({ id }: { id?: number }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const intentData = await getIntent(id!, true);
+                const intentData = await getIntent(id!);
                 setIntent({ id: intentData.id, secret: intentData.secret });
 
                 const stripePublicKey = await getPublicKey(id!);
@@ -46,7 +46,7 @@ export default ({ id }: { id?: number }) => {
         <>
             {/* @ts-expect-error this is fine, stripe library is just weird */}
             <Elements stripe={stripe} options={options}>
-                <PaymentForm id={id} serverId={Number(serverId)} intent={intent.id} />
+                <PaymentForm id={id} serverId={Number(serverId)} intent={intent.id} renewal />
             </Elements>
         </>
     );

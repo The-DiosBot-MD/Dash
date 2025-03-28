@@ -5,7 +5,17 @@ import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import SpinnerOverlay from '@elements/SpinnerOverlay';
 import { updateIntent } from '@/api/billing/intent';
 
-export default ({ id, serverId, intent }: { id?: number; serverId: number; intent: string }) => {
+export default ({
+    id,
+    serverId,
+    intent,
+    renewal,
+}: {
+    id?: number;
+    serverId: number;
+    intent: string;
+    renewal?: boolean;
+}) => {
     const stripe = useStripe();
     const elements = useElements();
     const { clearFlashes } = useFlash();
@@ -19,7 +29,7 @@ export default ({ id, serverId, intent }: { id?: number; serverId: number; inten
 
         if (!stripe || !elements) return;
 
-        updateIntent({ id: id!, intent, serverId }).then(() => {
+        updateIntent({ id: id!, intent, serverId, renewal }).then(() => {
             stripe.confirmPayment({
                 elements,
                 confirmParams: {

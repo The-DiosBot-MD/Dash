@@ -76,15 +76,6 @@ class StripeController extends ClientApiController
             'capture_method' => 'manual', // Prevent immediate capture
         ]);
 
-        // Create the order
-        $this->orderService->create(
-            $paymentIntent->id,
-            $request->user(),
-            $product,
-            Order::STATUS_PENDING,
-            boolval($request->input('renewal') ?? false),
-        );
-
         if (!$paymentIntent->client_secret) {
             BillingException::create([
                 'exception_type' => BillingException::TYPE_STOREFRONT,
@@ -104,6 +95,7 @@ class StripeController extends ClientApiController
      */
     public function updateIntent(Request $request, ?int $id = null): Response
     {
+        $product = Product::findOrFail($id);
         $intent = $this->stripe->paymentIntents->retrieve($request->input('intent'));
         
         if (!$intent) {
@@ -127,6 +119,15 @@ class StripeController extends ClientApiController
 
         $intent->metadata = $metadata;
         $intent->save();
+
+        // Create the order
+        $this->orderService->create(
+            $intent->id,
+            $request->user(),
+            $product,
+            Order::STATUS_PENDING,
+            boolval($request->input('renewal') ?? false),
+        );
 
         return $this->returnNoContent();
     }
