@@ -5,7 +5,7 @@ import { BillingException } from '@/api/definitions/admin';
 import { getBillingExceptions, resolveAllBillingExceptions } from '@/api/admin/billing/exceptions';
 import BillingExceptionsTable from './BillingExceptionsTable';
 import TitledGreyBox from '@/components/elements/TitledGreyBox';
-import { faBank, faLayerGroup, faXmarkCircle } from '@fortawesome/free-solid-svg-icons';
+import { faBank, faDesktop, faLayerGroup, faXmarkCircle } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '@/components/elements/button';
 import { CheckCircleIcon } from '@heroicons/react/outline';
 
@@ -41,7 +41,7 @@ export default () => {
                     </Button>
                 </div>
             </div>
-            <div className={'grid lg:grid-cols-3 gap-6 mb-8'}>
+            <div className={'grid lg:grid-cols-4 gap-6 mb-8'}>
                 <TitledGreyBox icon={faXmarkCircle} title={'Total Exceptions'}>
                     <p className={'text-2xl font-bold text-center py-4'}>{exceptions.length}</p>
                 </TitledGreyBox>
@@ -53,6 +53,11 @@ export default () => {
                 <TitledGreyBox icon={faBank} title={'Exception Rate - Payment'}>
                     <p className={'text-2xl font-bold text-center py-4'}>
                         {exceptions.filter(x => x.exception_type === 'payment').length}
+                    </p>
+                </TitledGreyBox>
+                <TitledGreyBox icon={faDesktop} title={'Exception Rate - Storefront'}>
+                    <p className={'text-2xl font-bold text-center py-4'}>
+                        {exceptions.filter(x => x.exception_type === 'storefront').length}
                     </p>
                 </TitledGreyBox>
             </div>
