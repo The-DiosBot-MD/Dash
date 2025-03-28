@@ -1,11 +1,11 @@
 import Spinner from '@elements/Spinner';
-import { Link } from 'react-router-dom';
-import { Button } from '@elements/button';
 import AdminContentBlock from '@elements/AdminContentBlock';
 import { useEffect, useState } from 'react';
 import { Order } from '@/api/billing/orders';
 import { getOrders } from '@/api/admin/billing/orders';
 import OrdersTable from './OrdersTable';
+import TitledGreyBox from '@/components/elements/TitledGreyBox';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
 export default () => {
     const [orders, setOrders] = useState<Order[]>([]);
@@ -29,12 +29,13 @@ export default () => {
                         A list of the orders placed on this Panel.
                     </p>
                 </div>
-                <div className={'flex ml-auto pl-4'}>
-                    <Link to={`/admin/billing/orders/new`}>
-                        <Button>Create Order</Button>
-                    </Link>
-                </div>
             </div>
+            <TitledGreyBox icon={faExclamationTriangle} title={'Important Information'} className={'mb-8'}>
+                Pending orders are automatically set to expired and deleted after 7 days, making them no longer visible
+                in the admin area. If you wish to remove billing orders from Jexactyl manually, you must make a database
+                query to do so. Removing orders is NOT recommended, as users will not be able to renew their server if
+                their original order is deleted.
+            </TitledGreyBox>
             <OrdersTable data={orders} />
         </AdminContentBlock>
     );
