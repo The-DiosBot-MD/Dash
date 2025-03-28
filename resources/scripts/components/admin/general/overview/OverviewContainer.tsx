@@ -9,6 +9,7 @@ import useFlash from '@/plugins/useFlash';
 import {
     faArrowRight,
     faDesktop,
+    faHeart,
     faLayerGroup,
     faQuestionCircle,
     faRecycle,
@@ -31,6 +32,7 @@ interface SuggestionProps {
     title: string;
     description: string;
     link: string;
+    action?: string;
 }
 
 const Code = ({ children }: { children: ReactNode }) => {
@@ -41,7 +43,7 @@ const Code = ({ children }: { children: ReactNode }) => {
     );
 };
 
-const SuggestionCard = ({ icon, title, description, link }: SuggestionProps) => {
+const SuggestionCard = ({ icon, title, description, link, action }: SuggestionProps) => {
     const { colors } = useStoreState(state => state.theme.data!);
 
     return (
@@ -52,7 +54,7 @@ const SuggestionCard = ({ icon, title, description, link }: SuggestionProps) => 
             <p className={'text-gray-300'}>{description}</p>
             <p className={'mt-2 text-right text-sm'} style={{ color: colors.primary }}>
                 <Link to={link}>
-                    Manage <FontAwesomeIcon icon={faArrowRight} />
+                    {action ?? 'Manage'} <FontAwesomeIcon icon={faArrowRight} />
                 </Link>
             </p>
         </div>
@@ -182,6 +184,15 @@ export default () => {
                             )}
                         </>
                     )}
+                    <SuggestionCard
+                        icon={faHeart}
+                        link={'https://donate.stripe.com/6oE02Zftd9cC34IbIS'}
+                        title={'Donate to Jexactyl'}
+                        action={'Donate'}
+                        description={
+                            'Support the project by leaving a donation to help us pay for testing servers and domains.'
+                        }
+                    />
                 </div>
             </AdminBox>
         </AdminContentBlock>
