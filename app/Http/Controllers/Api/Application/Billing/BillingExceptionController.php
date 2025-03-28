@@ -3,6 +3,7 @@
 namespace Everest\Http\Controllers\Api\Application\Billing;
 
 use Illuminate\Http\Request;
+use Everest\Facades\Activity;
 use Illuminate\Http\Response;
 use Everest\Models\Billing\BillingException;
 use Everest\Transformers\Api\Application\BillingExceptionTransformer;
@@ -33,7 +34,14 @@ class BillingExceptionController extends ApplicationApiController
      */
     public function resolve(string $uuid): Response
     {
-        BillingException::where('uuid', $uuid)->delete();
+        $exception = BillingException::where('uuid', $uuid);
+
+        $exception->delete();
+
+        Activity::event('admin:billing:exception-resolve')
+            ->property('exception', $exception)
+            ->description('A billing exception was resolved')
+            ->log();
 
         return $this->returnNoContent();
     }
@@ -48,6 +56,10 @@ class BillingExceptionController extends ApplicationApiController
         foreach ($exceptions as $exception) {
             $exception->delete();
         };
+
+        Activity::event('admin:billing:exception-resolve-all')
+            ->description('All billing exceptions was resolved')
+            ->log();
 
         return $this->returnNoContent();
     }
