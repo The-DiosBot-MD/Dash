@@ -3,6 +3,7 @@
 namespace Everest\Http\Controllers\Api\Client\Billing;
 
 use Everest\Models\Billing\Product;
+use Everest\Models\Billing\BillingException;
 use Everest\Transformers\Api\Client\ProductTransformer;
 use Everest\Http\Controllers\Api\Client\ClientApiController;
 
@@ -19,6 +20,14 @@ class ProductController extends ClientApiController
     public function index(int $id): array
     {
         $products = Product::where('category_id', $id)->get();
+
+        if ($products->count() == 0) {
+            BillingException::create([
+                'title' => 'No products in category ' . $id . ' are visible',
+                'exception_type' => BillingException::TYPE_STOREFRONT,
+                'description' => 'Go to this category and create a visible product',
+            ]);
+        }
 
         return $this->fractal->collection($products)
             ->transformWith(ProductTransformer::class)

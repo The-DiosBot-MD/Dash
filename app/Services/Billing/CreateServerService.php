@@ -11,6 +11,7 @@ use Everest\Models\EggVariable;
 use Everest\Models\Billing\Order;
 use Everest\Models\Billing\Product;
 use Everest\Exceptions\DisplayException;
+use Everest\Models\Billing\BillingException;
 use Everest\Services\Servers\ServerCreationService;
 use Everest\Services\Servers\VariableValidatorService;
 use Everest\Exceptions\Service\Deployment\NoViableAllocationException;
@@ -33,7 +34,7 @@ class CreateServerService
     {
         $egg = Egg::findOrFail($product->category->egg_id);
 
-        $allocation = $this->getAllocation($metadata->node_id);
+        $allocation = $this->getAllocation($metadata->node_id, $order->id);
         $environment = $this->getEnvironmentWithDefaults($egg->id);
 
         try {
@@ -60,6 +61,13 @@ class CreateServerService
                 'subuser_limit' => 3,
             ]);
         } catch (DisplayException $ex) {
+            BillingException::create([
+                'order_id' => $order->id,
+                'exception_type' => BillingException::TYPE_DEPLOYMENT,
+                'title' => 'Failed to create billable server',
+                'description' => $ex->getMessage(),
+            ]);
+
             throw new DisplayException('Unable to create server: ' . $ex->getMessage());
         }
 
@@ -107,11 +115,18 @@ class CreateServerService
     /**
      * Get a suitable allocation to deploy to.
      */
-    private function getAllocation(int $id): int
+    private function getAllocation(int $nodeId, int $orderId): int
     {
-        $allocation = Allocation::where('node_id', $id)->where('server_id', null)->first();
+        $allocation = Allocation::where('node_id', $nodeId)->where('server_id', null)->first();
 
         if (!$allocation) {
+            BillingException::create([
+                'order_id' => $orderId,
+                'exception_type' => BillingException::TYPE_DEPLOYMENT,
+                'title' => 'Failed to find allocation to assign to server',
+                'description' => 'Create more allocations (ports) for node ' . $id,
+            ]);
+
             throw new NoViableAllocationException('No allocations are available for deployment.');
         }
 

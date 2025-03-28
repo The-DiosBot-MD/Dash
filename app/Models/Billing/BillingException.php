@@ -22,6 +22,7 @@ class BillingException extends Model
 
     public const TYPE_DEPLOYMENT = 'deployment';
     public const TYPE_PAYMENT = 'payment';
+    public const TYPE_STOREFRONT = 'storefront';
 
     /**
      * Fields that are mass assignable.
@@ -43,7 +44,7 @@ class BillingException extends Model
         'title' => 'string|required|min:3',
         'order_id' => 'required|exists:orders,id',
         'description' => 'required|string|min:3',
-        'exception_type' => 'required|string|in:deployment,payment',
+        'exception_type' => 'required|string|in:deployment,payment,storefront',
     ];
 
     /**

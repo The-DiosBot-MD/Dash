@@ -1,7 +1,7 @@
 import { ModelWithRelationships, Model, UUID } from '@/api/definitions';
 import { Server } from '@/api/admin/server';
 
-type BillingExceptionType = 'payment' | 'deployment';
+type BillingExceptionType = 'payment' | 'deployment' | 'storefront';
 
 interface User extends ModelWithRelationships {
     id: number;

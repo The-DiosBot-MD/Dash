@@ -10,6 +10,7 @@ use Everest\Models\Billing\Order;
 use Illuminate\Http\JsonResponse;
 use Everest\Models\Billing\Product;
 use Everest\Exceptions\DisplayException;
+use Everest\Models\Billing\BillingException;
 use Everest\Services\Billing\CreateOrderService;
 use Everest\Services\Billing\CreateServerService;
 use Everest\Http\Controllers\Api\Client\ClientApiController;
@@ -36,6 +37,16 @@ class StripeController extends ClientApiController
      */
     public function publicKey(Request $request, int $id): JsonResponse
     {
+        $publicKey = $this->settings->get('settings::modules:billing:keys:publishable') ?? null;
+
+        if (!$publicKey) {
+            BillingException::create([
+                'exception_type' => BillingException::TYPE_STOREFRONT,
+                'title' => 'The Stripe Public API key is missing',
+                'description' => 'Add the Stripe \'publishable\' key to your billing panel',
+            ]);
+        }
+
         return response()->json([
             'key' => $this->settings->get('settings::modules:billing:keys:publishable'),
         ]);
@@ -74,6 +85,14 @@ class StripeController extends ClientApiController
             boolval($request->input('renewal') ?? false),
         );
 
+        if (!$paymentIntent->client_secret) {
+            BillingException::create([
+                'exception_type' => BillingException::TYPE_STOREFRONT,
+                'title' => 'The PaymentIntent client secret was not generated',
+                'description' => 'Double check your billing API keys and Stripe Dashboard',
+            ]);
+        }
+
         return response()->json([
             'id' => $paymentIntent->id,
             'secret' => $paymentIntent->client_secret,
@@ -86,6 +105,14 @@ class StripeController extends ClientApiController
     public function updateIntent(Request $request, ?int $id = null): Response
     {
         $intent = $this->stripe->paymentIntents->retrieve($request->input('intent'));
+        
+        if (!$intent) {
+            BillingException::create([
+                'exception_type' => BillingException::TYPE_STOREFRONT,
+                'title' => 'The PaymentIntent requested does not exist',
+                'description' => 'Check Stripe Dashboard and ask in the Jexactyl Discord for support',
+            ]);
+        }
 
         $metadata = [
             'customer_email' => $request->user()->email,
@@ -118,6 +145,13 @@ class StripeController extends ClientApiController
 
         if (!$intent) {
             throw new DisplayException('Unable to fetch payment intent from Stripe.');
+
+            BillingException::create([
+                'order_id' => $order->id,
+                'exception_type' => BillingException::TYPE_DEPLOYMENT,
+                'title' => 'Unable to fetch PaymentIntent while processing order',
+                'description' => 'Check Stripe Dashboard and ask in the Jexactyl Discord for support',
+            ]);
         }
 
         // Check if order has already been processed
@@ -150,12 +184,25 @@ class StripeController extends ClientApiController
                 $metadata->variables = json_decode($metadata->variables, true) ?? [];
             }
 
-            $this->serverCreation->process($request, $product, $metadata, $order);
+            $server = $this->serverCreation->process($request, $product, $metadata, $order);
         }
 
         // Capture the payment after processing the order
         if ($intent->status === 'requires_capture') {
-            $intent->capture(); // Capture the payment now that the order is processed
+            try {
+                $intent->capture(); // Capture the payment now that the order is processed
+            } catch (DisplayException $ex) {
+                $server->delete();
+
+                BillingException::create([
+                    'order_id' => $order->id,
+                    'exception_type' => BillingException::TYPE_PAYMENT,
+                    'title' => 'Failed to capture payment via Stripe',
+                    'description' => 'Check Stripe Dashboard and ask in the Jexactyl Discord for support',
+                ]);
+
+                throw new DisplayException('Unable to capture payment for this order.');
+            }
         }
 
         // Mark the order as processed
