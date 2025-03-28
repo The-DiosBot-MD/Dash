@@ -124,7 +124,7 @@ class CreateServerService
                 'order_id' => $orderId,
                 'exception_type' => BillingException::TYPE_DEPLOYMENT,
                 'title' => 'Failed to find allocation to assign to server',
-                'description' => 'Create more allocations (ports) for node ' . $id,
+                'description' => 'Create more allocations (ports) for node ' . $nodeId,
             ]);
 
             throw new NoViableAllocationException('No allocations are available for deployment.');
