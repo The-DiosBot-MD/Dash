@@ -12,9 +12,10 @@ import CategoryTable from '@admin/modules/billing/products/CategoryTable';
 import OrdersContainer from '@admin/modules/billing/orders/OrdersContainer';
 import ProductContainer from '@admin/modules/billing/products/ProductContainer';
 import CategoryContainer from '@admin/modules/billing/products/CategoryContainer';
-import { CogIcon, DesktopComputerIcon, ShoppingCartIcon, ViewGridIcon } from '@heroicons/react/outline';
+import { CogIcon, DesktopComputerIcon, ShoppingCartIcon, ViewGridIcon, XCircleIcon } from '@heroicons/react/outline';
 import Unfinished from '@elements/Unfinished';
 import SettingsContainer from '@admin/modules/billing/SettingsContainer';
+import BillingExceptionsContainer from './exceptions/BillingExceptionsContainer';
 
 export default () => {
     const theme = useStoreState(state => state.theme.data!);
@@ -47,6 +48,9 @@ export default () => {
                 <SubNavigationLink to={'/admin/billing/orders'} name={'Orders'}>
                     <ShoppingCartIcon />
                 </SubNavigationLink>
+                <SubNavigationLink to={'/admin/billing/exceptions'} name={'Exceptions'}>
+                    <XCircleIcon />
+                </SubNavigationLink>
                 <SubNavigationLink to={'/admin/billing/settings'} name={'Settings'}>
                     <CogIcon />
                 </SubNavigationLink>
@@ -62,6 +66,8 @@ export default () => {
                 <Route path={'/categories/:id/products/:productId'} element={<ProductContainer />} />
 
                 <Route path={'/orders'} element={<OrdersContainer />} />
+
+                <Route path={'/exceptions'} element={<BillingExceptionsContainer />} />
 
                 <Route path={'/settings'} element={<SettingsContainer />} />
 

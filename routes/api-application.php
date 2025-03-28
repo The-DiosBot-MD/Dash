@@ -81,6 +81,13 @@ Route::middleware([AdminSubject::class])->group(function () {
         Route::group(['prefix' => '/orders'], function () {
             Route::get('/', [Application\Billing\OrderController::class, 'index']);
         });
+
+        Route::group(['prefix' => '/exceptions'], function () {
+            Route::get('/', [Application\Billing\BillingExceptionController::class, 'index']);
+
+            Route::delete('/', [Application\Billing\BillingExceptionController::class, 'resolveAll']);
+            Route::delete('/{billing_exception:uuid}', [Application\Billing\BillingExceptionController::class, 'resolve']);
+        });
     });
 
     /*

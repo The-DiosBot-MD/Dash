@@ -298,4 +298,14 @@ export default class Transformers {
             category: transform(attributes.relationships?.category as FractalResponseData, this.toCategory),
         },
     });
+
+    static toBillingException = ({ attributes }: FractalResponseData): Models.BillingException => ({
+        id: attributes.id,
+        uuid: attributes.uuid,
+        description: attributes.description,
+        title: attributes.title,
+        exception_type: attributes.exception_type,
+        created_at: new Date(attributes.created_at),
+        updated_at: new Date(attributes.last_used_at),
+    });
 }

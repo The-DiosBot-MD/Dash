@@ -1,6 +1,8 @@
 import { ModelWithRelationships, Model, UUID } from '@/api/definitions';
 import { Server } from '@/api/admin/server';
 
+type BillingExceptionType = 'payment' | 'deployment';
+
 interface User extends ModelWithRelationships {
     id: number;
     uuid: UUID;
@@ -48,4 +50,15 @@ interface ApiKey extends Model {
     allowedIps: string[];
     createdAt: Date | null;
     lastUsedAt: Date | null;
+}
+
+interface BillingException extends Model {
+    id: number;
+    uuid: string;
+    exception_type: BillingExceptionType;
+    order_id?: number;
+    title: string;
+    description: string;
+    created_at: Date;
+    updated_at?: Date | null;
 }
