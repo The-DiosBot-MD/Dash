@@ -31,9 +31,9 @@ class BillingExceptionController extends ApplicationApiController
     /**
      * Resolve a billing exception.
      */
-    public function resolve(BillingException $exception): Response
+    public function resolve(string $uuid): Response
     {
-        $exception->delete();
+        BillingException::where('uuid', $uuid)->delete();
 
         return $this->returnNoContent();
     }

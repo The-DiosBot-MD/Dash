@@ -7,10 +7,12 @@ import { BillingException } from '@/api/definitions/admin';
 import { Button } from '@/components/elements/button';
 import { CheckCircleIcon } from '@heroicons/react/outline';
 import { resolveBillingException } from '@/api/admin/billing/exceptions';
+import { useState } from 'react';
 
 export default ({ data }: { data?: BillingException[] }) => {
     if (!data) return <Spinner centered />;
 
+    const [resolved, setResolved] = useState<number[]>([]);
     const pagination = usePagination<BillingException>(data, 10);
 
     return (
@@ -32,13 +34,22 @@ export default ({ data }: { data?: BillingException[] }) => {
                                 {formatDistanceToNowStrict(exception.created_at, { addSuffix: true })}
                             </td>
                             <td className={'px-6 py-4'}>
-                                <Button
-                                    size={Button.Sizes.Small}
-                                    className={'text-white font-bold'}
-                                    onClick={() => resolveBillingException(exception.uuid)}
-                                >
-                                    <CheckCircleIcon className={'w-4 h-4 mt-[2px] mr-0.5'} /> Resolve
-                                </Button>
+                                {resolved.includes(exception.id) ? (
+                                    <Button.Text size={Button.Sizes.Small} className={'text-white font-bold'} disabled>
+                                        <CheckCircleIcon className={'w-4 h-4 mt-[2px] mr-0.5'} /> Resolved
+                                    </Button.Text>
+                                ) : (
+                                    <Button
+                                        size={Button.Sizes.Small}
+                                        className={'text-white font-bold'}
+                                        onClick={() => {
+                                            resolveBillingException(exception.uuid);
+                                            setResolved(prevResolved => [...prevResolved, exception.id]);
+                                        }}
+                                    >
+                                        <CheckCircleIcon className={'w-4 h-4 mt-[2px] mr-0.5'} /> Resolve
+                                    </Button>
+                                )}
                             </td>
                         </BodyItem>
                     ))}

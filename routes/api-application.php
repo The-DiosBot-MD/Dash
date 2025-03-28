@@ -86,7 +86,7 @@ Route::middleware([AdminSubject::class])->group(function () {
             Route::get('/', [Application\Billing\BillingExceptionController::class, 'index']);
 
             Route::delete('/', [Application\Billing\BillingExceptionController::class, 'resolveAll']);
-            Route::delete('/{billing_exception:uuid}', [Application\Billing\BillingExceptionController::class, 'resolve']);
+            Route::delete('/{uuid}', [Application\Billing\BillingExceptionController::class, 'resolve']);
         });
     });
 
