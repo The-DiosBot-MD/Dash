@@ -3,6 +3,7 @@
 namespace Everest\Http\Controllers\Api\Client\Billing;
 
 use Everest\Models\Billing\Product;
+use Everest\Models\Billing\Category;
 use Everest\Models\Billing\BillingException;
 use Everest\Transformers\Api\Client\ProductTransformer;
 use Everest\Http\Controllers\Api\Client\ClientApiController;
