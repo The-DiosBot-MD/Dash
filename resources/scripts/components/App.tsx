@@ -7,12 +7,11 @@ import { AdminContext } from '@/state/admin';
 import { ServerContext } from '@/state/server';
 import { SiteSettings } from '@/state/settings';
 import Spinner from '@elements/Spinner';
-import NotFoundSvg from '@/assets/images/not_found.svg';
 import ProgressBar from '@elements/ProgressBar';
 import GlobalStylesheet from '@/assets/css/GlobalStylesheet';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import AuthenticatedRoute from '@elements/AuthenticatedRoute';
-import ScreenBlock, { NotFound } from '@elements/ScreenBlock';
+import { NotFound } from '@elements/ScreenBlock';
 import { EverestSettings } from '@/state/everest';
 import Onboarding from '@/components/Onboarding';
 import SpeedDial from '@elements/SpeedDial';
@@ -74,11 +73,9 @@ function App() {
 
     if (PterodactylUser?.state === 'suspended') {
         return (
-            <ScreenBlock
-                image={NotFoundSvg}
-                title={'Account Suspended'}
-                message={'Your account has been suspended. Please contact an administrator.'}
-            />
+            <div style={{ color: 'white', fontWeight: 'bold', marginTop: '10px', marginLeft: '10px' }}>
+                Your account has been suspended and blocked by an administrator.
+            </div>
         );
     }
 
