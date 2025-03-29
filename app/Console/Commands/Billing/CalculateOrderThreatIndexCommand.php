@@ -31,7 +31,7 @@ class CalculateOrderThreatIndexCommand extends Command
         'msn.com',
         'sky.com',
         'me.com',
-        'btinternet.com'
+        'btinternet.com',
     ];
 
     /**
@@ -53,13 +53,13 @@ class CalculateOrderThreatIndexCommand extends Command
 
             if ($user->created_at->lt(Carbon::now()->subWeek())) {
                 $index += 30;
-            };
+            }
 
             if (!$order->is_renewal) {
                 $index += 10;
             }
 
-            if (in_array($domain = substr(strrchr($user->email, "@"), 1), $this->reputableProviders)) {
+            if (in_array($domain = substr(strrchr($user->email, '@'), 1), $this->reputableProviders)) {
                 $index += 25;
             }
 

@@ -2,10 +2,9 @@
 
 namespace Everest\Services\Billing;
 
-use Exception;
 use Illuminate\Support\Str;
-use Everest\Models\Billing\Category;
 use Everest\Models\Billing\Product;
+use Everest\Models\Billing\Category;
 
 class BillingConfigImportService
 {
@@ -18,23 +17,15 @@ class BillingConfigImportService
 
         // Create new categories and map old category UUIDs to new ones
         foreach ($import_data['categories'] as $category) {
-            // Skip existing categories if ignore_duplicates is true
-            $existing_category = Category::where('uuid', $category['uuid'])->first();
-            
-            if ($existing_category) {
-                if ($ignore_duplicates) {
-                    continue; // If duplicates are being ignored, skip this category
-                } else {
-                    // If not ignoring duplicates, map old UUID to new UUID (in case it's updated)
-                    $old_data[$category['uuid']] = $existing_category->uuid;
-                    continue;
-                }
+            // Skip existing categories if ignore_duplicates is true and a category with the same name exists
+            if ($ignore_duplicates && Category::where('name', $category['name'])->exists()) {
+                continue;  // Skip this category if it already exists
             } else {
                 $new_uuid = Str::uuid()->toString();
 
                 // Create the new category
                 $new_category = Category::create([
-                    'uuid' => $new_uuid, // Assign new UUID
+                    'uuid' => $new_uuid, // don't overlap UUIDs
                     'name' => $category['name'],
                     'icon' => $category['icon'] ?? null,
                     'description' => $category['description'],
@@ -50,33 +41,32 @@ class BillingConfigImportService
 
         // Create products and assign them to the correct new category
         foreach ($import_data['products'] as $product) {
-            // Skip existing products if ignore_duplicates is true
-            if (Product::where('uuid', $product['uuid'])->exists() && $ignore_duplicates) {
-                continue;
+            // Skip existing products if ignore_duplicates is true and a product with the same name exists in the same category
+            if ($ignore_duplicates && Product::where('name', $product['name'])
+                                            ->where('category_uuid', $product['category_uuid'])
+                                            ->exists()) {
+                continue;  // Skip this product if it already exists in the same category
             } else {
-                $category_uuid = null;
+                $category_id = null;
                 $new_uuid = Str::uuid()->toString();
 
-                // Check if the product's category_uuid exists in the old_data mapping
+                // Check if the product's old category UUID exists in the mapping
                 if (array_key_exists($product['category_uuid'], $old_data)) {
                     // Assign the new category UUID based on the old category UUID mapping
-                    $category_uuid = $old_data[$product['category_uuid']];
-                    echo "Mapped to new category UUID: $category_uuid\n"; // Debugging output for new category UUID
-                } else {
-                    $category_uuid = null;
+                    $category_id = $old_data[$product['category_uuid']];
                 }
 
-                // If no valid category_uuid was assigned, throw an error
-                if (!$category_uuid) {
-                    throw new Exception('Unable to assign product to category. Category UUID ' . $product['category_uuid'] . ' is invalid.');
+                // If no valid category_id was assigned, throw an error
+                if (!$category_id) {
+                    throw new \Exception('Unable to assign product to category. Category UUID ' . $product['category_uuid'] . ' is invalid.');
                 }
 
-                // Create the product with the new category_uuid
+                // Create the product with the new category_id
                 Product::create([
                     'uuid' => $new_uuid, // don't overlap UUIDs
                     'name' => $product['name'],
                     'icon' => $product['icon'] ?? null,
-                    'price' => (float) $product['price'],
+                    'price' => (int) $product['price'],
                     'description' => $product['description'],
                     'visible' => (bool) $product['visible'],
                     'cpu_limit' => (int) $product['cpu_limit'],
@@ -85,7 +75,7 @@ class BillingConfigImportService
                     'backup_limit' => (int) $product['backup_limit'],
                     'database_limit' => (int) $product['database_limit'],
                     'allocation_limit' => (int) $product['allocation_limit'],
-                    'category_uuid' => $category_uuid,
+                    'category_id' => $category_id,
                     'stripe_id' => null, // deprecated
                 ]);
             }

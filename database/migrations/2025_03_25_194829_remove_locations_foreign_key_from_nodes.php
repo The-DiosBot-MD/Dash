@@ -22,6 +22,5 @@ class RemoveLocationsForeignKeyFromNodes extends Migration
      */
     public function down(): void
     {
-        //
     }
 }

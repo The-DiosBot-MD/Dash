@@ -8,9 +8,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Validation\Rules\In;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
-use function Illuminate\Events\queueable;
-
 use Illuminate\Database\Eloquent\Builder;
 use Everest\Models\Traits\HasAccessTokens;
 use Everest\Traits\Helpers\AvailableLanguages;

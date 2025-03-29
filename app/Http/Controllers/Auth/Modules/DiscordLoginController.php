@@ -30,7 +30,6 @@ class DiscordLoginController extends AbstractLoginController
      */
     public function requestToken(Request $request): string
     {
-
         if ($this->hasTooManyLoginAttempts($request)) {
             $this->fireLockoutEvent($request);
             $this->sendLockoutResponse($request);

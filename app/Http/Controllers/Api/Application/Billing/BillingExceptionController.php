@@ -55,7 +55,7 @@ class BillingExceptionController extends ApplicationApiController
 
         foreach ($exceptions as $exception) {
             $exception->delete();
-        };
+        }
 
         Activity::event('admin:billing:exception-resolve-all')
             ->description('All billing exceptions was resolved')

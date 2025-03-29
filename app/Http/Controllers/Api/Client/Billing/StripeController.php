@@ -97,7 +97,7 @@ class StripeController extends ClientApiController
     {
         $product = Product::findOrFail($id);
         $intent = $this->stripe->paymentIntents->retrieve($request->input('intent'));
-        
+
         if (!$intent) {
             BillingException::create([
                 'exception_type' => BillingException::TYPE_STOREFRONT,
@@ -146,7 +146,6 @@ class StripeController extends ClientApiController
 
         if (!$intent) {
             throw new DisplayException('Unable to fetch payment intent from Stripe.');
-
             BillingException::create([
                 'order_id' => $order->id,
                 'exception_type' => BillingException::TYPE_DEPLOYMENT,

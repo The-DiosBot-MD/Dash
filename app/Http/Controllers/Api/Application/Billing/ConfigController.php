@@ -19,8 +19,7 @@ class ConfigController extends ApplicationApiController
      */
     public function __construct(
         private BillingConfigImportService $importService,
-    )
-    {
+    ) {
         parent::__construct();
     }
 

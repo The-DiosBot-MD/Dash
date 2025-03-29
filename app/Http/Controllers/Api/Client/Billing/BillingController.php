@@ -27,7 +27,7 @@ class BillingController extends ClientApiController
                 'exception_type' => BillingException::TYPE_DEPLOYMENT,
                 'description' => 'Set the \'deployable\' variable on any node to true',
             ]);
-        };
+        }
 
         return $this->fractal->collection($nodes)
             ->transformWith(NodeTransformer::class)
