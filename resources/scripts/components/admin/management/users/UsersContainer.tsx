@@ -18,6 +18,9 @@ import type { RealFilters } from '@/api/admin/users';
 import AdminContentBlock from '@elements/AdminContentBlock';
 import { Button } from '@elements/button';
 import { useStoreState } from '@/state/hooks';
+import Pill from '@/components/elements/Pill';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLock, faLockOpen, faUser, faUserCheck, faUserGear, faUserSlash } from '@fortawesome/free-solid-svg-icons';
 
 function UsersContainer() {
     const { data: users } = useGetUsers();
@@ -74,7 +77,9 @@ function UsersContainer() {
                                         direction={sort === 'email' ? (sortDirection ? 1 : 2) : null}
                                         onClick={() => setSort('email')}
                                     />
-                                    <TableHeader name={'Permission Level'} />
+                                    <TableHeader name={'Account State'} />
+                                    <TableHeader name={'2 Factor'} />
+                                    <TableHeader name={'Created At'} />
                                 </TableHead>
                                 <TableBody>
                                     {users !== undefined &&
@@ -101,7 +106,70 @@ function UsersContainer() {
                                                     {user.email}
                                                 </td>
                                                 <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
-                                                    {user.isRootAdmin ? 'Administrator' : 'Standard'}
+                                                    {user.isRootAdmin ? (
+                                                        <Pill type={'success'}>
+                                                            <FontAwesomeIcon
+                                                                icon={faUserGear}
+                                                                className={'my-auto mr-1'}
+                                                                size={'sm'}
+                                                            />{' '}
+                                                            Admin
+                                                        </Pill>
+                                                    ) : (
+                                                        <Pill type={'unknown'}>
+                                                            <FontAwesomeIcon
+                                                                icon={faUser}
+                                                                className={'my-auto mr-1'}
+                                                                size={'sm'}
+                                                            />{' '}
+                                                            Standard
+                                                        </Pill>
+                                                    )}
+                                                    {user.state === 'suspended' ? (
+                                                        <Pill type={'warn'}>
+                                                            <FontAwesomeIcon
+                                                                icon={faUserSlash}
+                                                                className={'my-auto mr-1'}
+                                                                size={'sm'}
+                                                            />{' '}
+                                                            Suspended
+                                                        </Pill>
+                                                    ) : (
+                                                        <Pill type={'success'}>
+                                                            <FontAwesomeIcon
+                                                                icon={faUserCheck}
+                                                                className={'my-auto mr-1'}
+                                                                size={'sm'}
+                                                            />{' '}
+                                                            Active
+                                                        </Pill>
+                                                    )}
+                                                </td>
+                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                                    {user.isUsingTwoFactor ? (
+                                                        <Pill type={'success'}>
+                                                            <FontAwesomeIcon
+                                                                icon={faLock}
+                                                                className={'my-auto mr-1'}
+                                                                size={'sm'}
+                                                            />{' '}
+                                                            Enabled
+                                                        </Pill>
+                                                    ) : (
+                                                        <Pill type={'danger'}>
+                                                            <FontAwesomeIcon
+                                                                icon={faLockOpen}
+                                                                className={'my-auto mr-1'}
+                                                                size={'sm'}
+                                                            />{' '}
+                                                            Disabled
+                                                        </Pill>
+                                                    )}
+                                                </td>
+                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                                    <code css={tw`font-mono bg-neutral-900 rounded py-1 px-2`}>
+                                                        {user.createdAt.toLocaleString()}
+                                                    </code>
                                                 </td>
                                             </TableRow>
                                         ))}
