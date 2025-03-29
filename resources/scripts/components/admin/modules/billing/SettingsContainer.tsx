@@ -3,7 +3,7 @@ import AdminBox from '@elements/AdminBox';
 import { Button } from '@/components/elements/button';
 import ToggleFeatureButton from './ToggleFeatureButton';
 import { updateSettings } from '@/api/admin/billing/settings';
-import { faDollar, faKey, faPowerOff } from '@fortawesome/free-solid-svg-icons';
+import { faDollar, faExchange, faKey, faPowerOff } from '@fortawesome/free-solid-svg-icons';
 import { useStoreActions, useStoreState } from '@/state/hooks';
 import { faPaypal, faStripe } from '@fortawesome/free-brands-svg-icons';
 import SetupPayPal from './guides/SetupPayPal';
@@ -13,6 +13,9 @@ import Select from '@/components/elements/Select';
 import currencyDictionary from '@/assets/currency';
 import { deleteStripeKeys } from '@/api/admin/billing/keys';
 import SetupStripe from './guides/SetupStripe';
+import ExportConfigButton from './config/ExportConfigButton';
+import FlashMessageRender from '@/components/FlashMessageRender';
+import ImportConfigButton from './config/ImportConfigButton';
 
 export type BillingSetupDialog = 'paypal' | 'link' | 'setup' | 'none';
 
@@ -113,6 +116,15 @@ export default () => {
                             </option>
                         ))}
                     </Select>
+                </div>
+            </AdminBox>
+            <AdminBox title={'Import/Export Configuration'} icon={faExchange}>
+                <FlashMessageRender byKey={'billing:config'} className={'mb-2'} />
+                Use the below options to either export your current billing configurations, or use the Import button to
+                import a pre-created set of categories and products to Jexactyl.
+                <div className={'text-right mt-3'}>
+                    <ExportConfigButton />
+                    <ImportConfigButton />
                 </div>
             </AdminBox>
             {!settings.keys.publishable || !settings.keys.secret ? (

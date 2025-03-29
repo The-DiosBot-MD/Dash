@@ -88,6 +88,11 @@ Route::middleware([AdminSubject::class])->group(function () {
             Route::delete('/', [Application\Billing\BillingExceptionController::class, 'resolveAll']);
             Route::delete('/{uuid}', [Application\Billing\BillingExceptionController::class, 'resolve']);
         });
+
+        Route::prefix('/config')->group(function () {
+            Route::post('/import', [Application\Billing\ConfigController::class, 'import']);
+            Route::post('/export', [Application\Billing\ConfigController::class, 'export']);
+        });
     });
 
     /*
