@@ -29,13 +29,15 @@ class ProductController extends ApplicationApiController
      */
     public function index(Request $request, int $id): array
     {
+        $category = Category::findOrFail($id);
+
         $perPage = (int) $request->query('per_page', '10');
         if ($perPage < 1 || $perPage > 100) {
             throw new QueryValueOutOfRangeHttpException('per_page', 1, 100);
         }
 
         $products = QueryBuilder::for(Product::query())
-            ->where('category_id', $id)
+            ->where('category_uuid', $category->uuid)
             ->allowedFilters(['id', 'name'])
             ->allowedSorts(['id', 'name'])
             ->paginate($perPage);
@@ -54,7 +56,7 @@ class ProductController extends ApplicationApiController
         try {
             $product = Product::create([
                 'uuid' => Uuid::uuid4()->toString(),
-                'category_id' => $category->id,
+                'category_uuid' => $category->uuid,
                 'name' => $request->input('name'),
                 'icon' => $request->input('icon'),
                 'price' => (float) $request->input('price'),
@@ -83,8 +85,10 @@ class ProductController extends ApplicationApiController
     /**
      * Update an existing product.
      */
-    public function update(Request $request, Category $category, Product $product): Response
+    public function update(Request $request, Category $category, int $productId): Response
     {
+        $product = Product::findOrFail($productId);
+
         try {
             $product->update([
                 'name' => $request->input('name'),
@@ -114,8 +118,10 @@ class ProductController extends ApplicationApiController
     /**
      * View an existing product.
      */
-    public function view(Request $request, Category $category, Product $product): array
+    public function view(Request $request, Category $category, int $productId): array
     {
+        $product = Product::findOrFail($productId);
+
         return $this->fractal->item($product)
             ->transformWith(ProductTransformer::class)
             ->toArray();
@@ -124,8 +130,10 @@ class ProductController extends ApplicationApiController
     /**
      * Delete a product.
      */
-    public function delete(Request $request, Category $category, Product $product): Response
+    public function delete(Request $request, Category $category, int $productId): Response
     {
+        $product = Product::findOrFail($productId);
+
         $product->delete();
 
         Activity::event('admin:billing:products:delete')

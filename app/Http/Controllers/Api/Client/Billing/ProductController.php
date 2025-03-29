@@ -19,11 +19,12 @@ class ProductController extends ClientApiController
      */
     public function index(int $id): array
     {
-        $products = Product::where('category_id', $id)->get();
+        $category = Category::findOrFail($id);
+        $products = Product::where('category_uuid', $category->uuid)->get();
 
         if ($products->count() == 0) {
             BillingException::create([
-                'title' => 'No products in category ' . $id . ' are visible',
+                'title' => 'No products in category ' . $category->name . ' are visible',
                 'exception_type' => BillingException::TYPE_STOREFRONT,
                 'description' => 'Go to this category and create a visible product',
             ]);

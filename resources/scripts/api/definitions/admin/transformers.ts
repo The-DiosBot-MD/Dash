@@ -276,7 +276,7 @@ export default class Transformers {
     static toProduct = ({ attributes }: FractalResponseData): Product => ({
         id: attributes.id,
         uuid: attributes.uuid,
-        categoryId: attributes.category_id,
+        categoryUuid: attributes.category_uuid,
         name: attributes.name,
         icon: attributes.icon,
         price: attributes.price,

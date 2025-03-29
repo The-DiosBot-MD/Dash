@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property int $id
  * @property string $uuid
- * @property int $category_id
+ * @property string $category_uuid
  * @property string $name
  * @property string $icon
  * @property float $price
@@ -39,7 +39,7 @@ class Product extends Model
      * Fields that are mass assignable.
      */
     protected $fillable = [
-        'uuid', 'category_id',
+        'uuid', 'category_uuid',
         'name', 'icon', 'price', 'description',
         'cpu_limit', 'memory_limit', 'disk_limit',
         'backup_limit', 'database_limit', 'allocation_limit',
@@ -49,7 +49,6 @@ class Product extends Model
      * Cast values to correct type.
      */
     protected $casts = [
-        'category_id' => 'integer',
         'cpu_limit' => 'integer',
         'memory_limit' => 'integer',
         'disk_limit' => 'integer',
@@ -60,7 +59,7 @@ class Product extends Model
 
     public static array $validationRules = [
         'uuid' => 'required|string|size:36',
-        'category_id' => 'sometimes|int|exists:categories,id',
+        'category_uuid' => 'string|exists:categories,uuid',
 
         'name' => 'required|string|min:3|max:191',
         'icon' => 'nullable|string|min:3|max:300',
@@ -81,6 +80,6 @@ class Product extends Model
      */
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_uuid');
     }
 }

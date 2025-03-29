@@ -4,16 +4,14 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class RemoveLocationsForeignKeyFromNodes extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::table('nodes', function (Blueprint $table) {
-            // Drop the foreign key constraint
-            $table->dropForeign(['location_id']);
+        Schema::table('products', function (Blueprint $table) {
+            $table->unsignedInteger('category_id')->required();
         });
     }
 
@@ -22,6 +20,8 @@ class RemoveLocationsForeignKeyFromNodes extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropColumn('category_id');
+        });
     }
-}
+};

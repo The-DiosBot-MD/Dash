@@ -17,6 +17,8 @@ import type { Product, Values } from '@/api/admin/billing/products';
 import ProductDeleteButton from './ProductDeleteButton';
 import { CubeIcon } from '@heroicons/react/outline';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useEffect, useState } from 'react';
+import { getCategory } from '@/api/admin/billing/categories';
 
 interface Props {
     product?: Product;
@@ -25,6 +27,7 @@ interface Props {
 export default ({ product }: Props) => {
     const navigate = useNavigate();
     const params = useParams<'id'>();
+    const [uuid, setUuid] = useState<string>();
 
     const { clearFlashes, clearAndAddHttpError } = useStoreActions(
         (actions: Actions<ApplicationStore>) => actions.flashes,
@@ -57,6 +60,10 @@ export default ({ product }: Props) => {
         }
     };
 
+    useEffect(() => {
+        getCategory(Number(params.id)).then(category => setUuid(category.uuid));
+    });
+
     return (
         <AdminContentBlock title={'New Product'}>
             <div css={tw`w-full flex flex-row items-center m-8`}>
@@ -75,7 +82,7 @@ export default ({ product }: Props) => {
                 </div>
                 {product && (
                     <div className={'hidden md:flex ml-auto mr-12'}>
-                        <Link to={`/admin/billing/categories/${product?.categoryId}`}>
+                        <Link to={`/admin/billing/categories/${Number(params.id)}`}>
                             <Button>
                                 <FontAwesomeIcon icon={faArrowLeft} className={'mr-2'} />
                                 Return to Category
@@ -87,7 +94,7 @@ export default ({ product }: Props) => {
             <Formik
                 onSubmit={submit}
                 initialValues={{
-                    categoryId: Number(params.id),
+                    categoryUuid: uuid!,
 
                     name: product?.name ?? 'Plan Name',
                     icon: product?.icon ?? undefined,
