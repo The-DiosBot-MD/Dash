@@ -14,10 +14,11 @@ export default () => {
     const { colors } = useStoreState(s => s.theme.data!);
     const { addFlash, clearFlashes } = useFlash();
 
+    const intent = params.get('payment_intent');
+
     useEffect(() => {
         clearFlashes();
 
-        const intent = params.get('payment_intent');
         const renewal = Boolean(params.get('renewal'));
 
         if (!intent) {
@@ -54,7 +55,7 @@ export default () => {
                         Our systems are currently working on deploying your server to our systems. Sit tight while your
                         new server is deployed!
                     </p>
-                    <p className={'text-2xs text-neutral-400 mt-8'}>Session unknown</p>
+                    <p className={'text-2xs text-neutral-400 mt-8'}>Session {intent ?? 'Unknown'}</p>
                 </div>
             </div>
         </PageContentBlock>
