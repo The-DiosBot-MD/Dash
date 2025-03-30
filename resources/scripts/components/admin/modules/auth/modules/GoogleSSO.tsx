@@ -11,6 +11,7 @@ import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import RequiredFieldIcon from '@elements/RequiredFieldIcon';
 import { toggleModule, updateModule } from '@/api/admin/auth/module';
+import { Alert } from '@/components/elements/alert';
 
 export default () => {
     const { status, setStatus } = useStatus();
@@ -69,7 +70,7 @@ export default () => {
 
                 <p className={'text-xs text-gray-400 mt-1'}>Set the Google Client ID.</p>
             </div>
-            <div className={'mt-6'}>
+            <div className={'my-6'}>
                 <Label>Client Secret {!settings.clientSecret && <RequiredFieldIcon />}</Label>
                 <Input
                     id={'client_secret'}
@@ -80,6 +81,14 @@ export default () => {
                 />
                 <p className={'text-xs text-gray-400 mt-1'}>Set the Google Client Secret.</p>
             </div>
+            <Alert type={'info'}>
+                <div>
+                    Use the following Callback URL:
+                    <p className={'bg-black/50 p-1 rounded-lg font-mono w-fit mt-2'}>
+                        /auth/modules/google/authenticate
+                    </p>
+                </div>
+            </Alert>
         </AdminBox>
     );
 };
