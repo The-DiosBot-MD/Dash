@@ -7,11 +7,10 @@ import Input from '@elements/Input';
 import AdminBox from '@elements/AdminBox';
 import { TrashIcon } from '@heroicons/react/outline';
 import { Dialog } from '@elements/dialog';
-import disableModule from '@/api/admin/auth/disableModule';
 import { faDiscord } from '@fortawesome/free-brands-svg-icons';
 import RequiredFieldIcon from '@elements/RequiredFieldIcon';
-import updateDiscordSettings from '@/api/admin/auth/modules/updateDiscordSettings';
 import useStatus from '@/plugins/useStatus';
+import { toggleModule, updateModule } from '@/api/admin/auth/module';
 
 export default () => {
     const { status, setStatus } = useStatus();
@@ -24,7 +23,7 @@ export default () => {
         clearFlashes();
         setStatus('loading');
 
-        updateDiscordSettings(key, value)
+        updateModule('discord', key, value)
             .then(() => {
                 setStatus('success');
                 setTimeout(() => setStatus('none'), 2000);
@@ -37,7 +36,7 @@ export default () => {
     };
 
     const doDeletion = () => {
-        disableModule('discord')
+        toggleModule('disable', 'discord')
             .then(() => {
                 // @ts-expect-error this is fine
                 window.location = '/admin/auth';

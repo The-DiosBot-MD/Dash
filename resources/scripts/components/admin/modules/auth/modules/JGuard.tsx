@@ -5,10 +5,9 @@ import Input from '@elements/Input';
 import AdminBox from '@elements/AdminBox';
 import Spinner from '@elements/Spinner';
 import { CheckCircleIcon, TrashIcon } from '@heroicons/react/outline';
-import updateDiscordSettings from '@/api/admin/auth/modules/updateDiscordSettings';
+import { toggleModule, updateModule } from '@/api/admin/auth/module';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import { Dialog } from '@elements/dialog';
-import disableModule from '@/api/admin/auth/disableModule';
 import { faDoorOpen } from '@fortawesome/free-solid-svg-icons';
 import { useStoreState } from '@/state/hooks';
 
@@ -24,7 +23,7 @@ export default () => {
         setLoading(true);
         setSuccess(false);
 
-        updateDiscordSettings(key, value)
+        updateModule('jguard', key, value)
             .then(() => {
                 setSuccess(true);
                 setLoading(false);
@@ -38,7 +37,7 @@ export default () => {
     };
 
     const doDeletion = () => {
-        disableModule('jguard')
+        toggleModule('disable', 'jguard')
             .then(() => {
                 // @ts-expect-error this is fine
                 window.location = '/admin/auth';
@@ -69,7 +68,7 @@ export default () => {
                     id={'delay'}
                     type={'text'}
                     name={'delay'}
-                    value={delay || 0}
+                    defaultValue={delay || 0}
                     onChange={e => update('delay', parseInt(e.target.value))}
                 />
                 <p className={'text-xs text-gray-400 mt-1'}>

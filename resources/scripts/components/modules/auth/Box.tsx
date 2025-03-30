@@ -2,9 +2,9 @@ import AdminBox from '@elements/AdminBox';
 import { Button } from '@elements/button';
 import { faPuzzlePiece, faStar } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import enableModule from '@/api/admin/auth/enableModule';
 import useFlash from '@/plugins/useFlash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { toggleModule } from '@/api/admin/auth/module';
 
 interface Props {
     name: string;
@@ -21,7 +21,7 @@ export default ({ name, title, disabled, recommended, description, icon }: Props
     const submit = () => {
         clearFlashes('auth:modules');
 
-        enableModule(name)
+        toggleModule('enable', name)
             .then(() => {
                 // @ts-expect-error this is fine
                 window.location = '/admin/auth';

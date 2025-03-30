@@ -41,4 +41,20 @@ class ModuleController extends ApplicationApiController
 
         return $this->returnNoContent();
     }
+
+    /**
+     * Update the module settings in the Panel.
+     * Currently, it is only possible to update one value at once.
+     *
+     * @throws \Throwable
+     */
+    public function update(Request $request): Response
+    {
+        $this->settings->set(
+            'settings::modules:auth:' . $request->input('module') . ':' . $request->input('key'),
+            $request->input('value')
+        );
+
+        return $this->returnNoContent();
+    }
 }

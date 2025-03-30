@@ -7,11 +7,10 @@ import Input from '@elements/Input';
 import AdminBox from '@elements/AdminBox';
 import { TrashIcon } from '@heroicons/react/outline';
 import { Dialog } from '@elements/dialog';
-import disableModule from '@/api/admin/auth/disableModule';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import FlashMessageRender from '@/components/FlashMessageRender';
-import updateGoogleSettings from '@/api/admin/auth/modules/updateGoogleSettings';
 import RequiredFieldIcon from '@elements/RequiredFieldIcon';
+import { toggleModule, updateModule } from '@/api/admin/auth/module';
 
 export default () => {
     const { status, setStatus } = useStatus();
@@ -23,7 +22,7 @@ export default () => {
         clearFlashes();
         setStatus('loading');
 
-        updateGoogleSettings(key, value)
+        updateModule('google', key, value)
             .then(() => {
                 setStatus('success');
             })
@@ -35,7 +34,7 @@ export default () => {
     };
 
     const doDeletion = () => {
-        disableModule('google')
+        toggleModule('disable', 'google')
             .then(() => {
                 // @ts-expect-error this is fine
                 window.location = '/admin/auth';

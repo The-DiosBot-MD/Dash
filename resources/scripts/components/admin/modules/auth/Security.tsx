@@ -4,9 +4,9 @@ import AdminBox from '@elements/AdminBox';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import Input from '@elements/Input';
 import useFlash from '@/plugins/useFlash';
-import updateSecuritySettings from '@/api/admin/auth/updateSecuritySettings';
 import { useStoreState } from '@/state/hooks';
 import useStatus from '@/plugins/useStatus';
+import { updateModule } from '@/api/admin/auth/module';
 
 export default () => {
     const { status, setStatus } = useStatus();
@@ -17,7 +17,7 @@ export default () => {
         clearFlashes();
         setStatus('loading');
 
-        updateSecuritySettings(key, value)
+        updateModule('security', key, value)
             .then(() => setStatus('success'))
             .catch(error => {
                 setStatus('error');

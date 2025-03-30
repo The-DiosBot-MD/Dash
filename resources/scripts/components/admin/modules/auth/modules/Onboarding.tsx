@@ -5,13 +5,12 @@ import Input from '@elements/Input';
 import AdminBox from '@elements/AdminBox';
 import Spinner from '@elements/Spinner';
 import { CheckCircleIcon, TrashIcon } from '@heroicons/react/outline';
-import updateDiscordSettings from '@/api/admin/auth/modules/updateDiscordSettings';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import { Dialog } from '@elements/dialog';
-import disableModule from '@/api/admin/auth/disableModule';
 import { faDoorOpen } from '@fortawesome/free-solid-svg-icons';
 import { useStoreState } from '@/state/hooks';
 import { Alert } from '@elements/alert';
+import { toggleModule, updateModule } from '@/api/admin/auth/module';
 
 export default () => {
     const [confirm, setConfirm] = useState<boolean>(false);
@@ -26,7 +25,7 @@ export default () => {
         setLoading(true);
         setSuccess(false);
 
-        updateDiscordSettings(key, value)
+        updateModule('onboarding', key, value)
             .then(() => {
                 setSuccess(true);
                 setLoading(false);
@@ -40,7 +39,7 @@ export default () => {
     };
 
     const doDeletion = () => {
-        disableModule('onboarding')
+        toggleModule('disable', 'onboarding')
             .then(() => {
                 // @ts-expect-error this is fine
                 window.location = '/admin/auth';

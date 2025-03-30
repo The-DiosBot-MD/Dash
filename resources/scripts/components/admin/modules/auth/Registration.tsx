@@ -3,10 +3,10 @@ import Label from '@elements/Label';
 import Select from '@elements/Select';
 import AdminBox from '@elements/AdminBox';
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
-import updateRegistrationSettings from '@/api/admin/auth/updateRegistrationSettings';
 import { useStoreState } from '@/state/hooks';
 import { Alert } from '@elements/alert';
 import useStatus from '@/plugins/useStatus';
+import { updateModule } from '@/api/admin/auth/module';
 
 export default () => {
     const { status, setStatus } = useStatus();
@@ -17,7 +17,7 @@ export default () => {
         clearFlashes();
         setStatus('loading');
 
-        updateRegistrationSettings(key, value)
+        updateModule('registration', key, value)
             .then(() => {
                 setStatus('success');
             })
