@@ -43,6 +43,7 @@ Route::middleware([AdminSubject::class])->group(function () {
 
             Route::put('/discord', [Application\Auth\Modules\DiscordController::class, 'update']);
             Route::put('/google', [Application\Auth\Modules\GoogleController::class, 'update']);
+            Route::put('/onboarding', [Application\Auth\Modules\OnboardingController::class, 'update']);
         });
     });
 

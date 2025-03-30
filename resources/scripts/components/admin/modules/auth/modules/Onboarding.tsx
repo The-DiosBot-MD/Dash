@@ -71,7 +71,7 @@ export default () => {
                     id={'content'}
                     type={'text'}
                     name={'content'}
-                    value={content || "You can change these at any time in the 'Account' tab."}
+                    defaultValue={content || "You can change these at any time in the 'Account' tab."}
                     onChange={e => update('content', e.target.value)}
                 />
                 <p className={'text-xs text-gray-400 mt-1'}>
