@@ -114,12 +114,13 @@ export default () => {
                         )}
                     </p>
                 </TitledGreyBox>
-                <TitledGreyBox title={'Billing Orders'} icon={faDollar}>
-                    <p className={'text-2xl font-bold text-center py-4'}>
-                        {orders.filter(x => x.status === 'processed').length} completed,{' '}
-                        {orders.filter(x => x.status !== 'processed').length} total
-                    </p>
-                </TitledGreyBox>
+                {billing && (
+                    <TitledGreyBox title={'Billing Orders'} icon={faDollar}>
+                        <p className={'text-2xl font-bold text-center py-4'}>
+                            {orders.filter(x => x.status === 'processed').length} completed, {orders.length} total
+                        </p>
+                    </TitledGreyBox>
+                )}
             </div>
             <FlashMessageRender className={'my-4'} byKey={'dashboard'} />
             <div className={'grid lg:grid-cols-3 gap-4'}>
