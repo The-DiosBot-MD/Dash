@@ -49,11 +49,11 @@ class UserController extends ApplicationApiController
 
         $users = QueryBuilder::for(User::query())
             ->allowedFilters([
+                'username',
+                'email',
                 AllowedFilter::exact('id'),
                 AllowedFilter::exact('uuid'),
                 AllowedFilter::exact('external_id'),
-                AllowedFilter::exact('username'),
-                AllowedFilter::exact('email'),
                 AllowedFilter::callback('*', function (Builder $builder, $value) {
                     foreach (Arr::wrap($value) as $datum) {
                         $datum = '%' . $datum . '%';

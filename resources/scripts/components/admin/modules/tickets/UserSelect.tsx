@@ -53,7 +53,7 @@ export default ({ selected, isAdmin }: { selected?: User; isAdmin?: boolean }) =
                         item={d}
                         active={d.id === user?.id}
                     >
-                        {d.email}
+                        {d.username} ({d.email})
                     </Option>
                 ))}
         </SearchableSelect>
