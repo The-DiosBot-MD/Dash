@@ -29,6 +29,7 @@ export default () => {
                     {alert.position === 'center' && open && (
                         <Dialog.Confirm
                             open
+                            buttonType={alert.type}
                             onClose={() => setOpen(false)}
                             title={capitalize(alert.type)}
                             onConfirmed={() => setOpen(false)}

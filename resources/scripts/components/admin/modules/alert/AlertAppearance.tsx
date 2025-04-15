@@ -63,6 +63,7 @@ export default () => {
         <>
             <Dialog.Confirm
                 open={open}
+                buttonType={alert.type}
                 onClose={() => setOpen(false)}
                 title={capitalize(alert.type)}
                 onConfirmed={() => setOpen(false)}
