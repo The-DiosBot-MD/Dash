@@ -14,12 +14,12 @@ import { useEggFromRoute } from '@/api/admin/egg';
 import NewVariableButton from '@admin/service/nests/eggs/NewVariableButton';
 import AdminBox from '@elements/AdminBox';
 import { Button } from '@elements/button';
-import Checkbox from '@elements/Checkbox';
 import Field, { FieldRow, TextareaField } from '@elements/Field';
 import SpinnerOverlay from '@elements/SpinnerOverlay';
 import useFlash from '@/plugins/useFlash';
 import Label from '@elements/Label';
 import { useStoreState } from '@/state/hooks';
+import Checkbox from '@/components/elements/inputs/Checkbox';
 
 export const validationSchema = object().shape({
     name: string().required().min(1).max(191),
@@ -31,7 +31,9 @@ export const validationSchema = object().shape({
     rules: string().required(),
 });
 
-export function EggVariableForm({ prefix }: { prefix: string }) {
+export function EggVariableForm({ prefix, variable }: { prefix: string; variable: EggVariable }) {
+    console.log(variable.id === 5 && variable);
+
     return (
         <>
             <Field id={`${prefix}name`} name={`${prefix}name`} label={'Name'} type={'text'} css={tw`mb-6`} />
@@ -61,20 +63,30 @@ export function EggVariableForm({ prefix }: { prefix: string }) {
             </FieldRow>
 
             <div css={tw`flex flex-row mb-6`}>
-                <div className="ml-auto flex flex-row">
-                    {/* TODO: fix Checkbox component, current one is designed for subuser permissions and not for individual values */}
-                    <Checkbox id={`${prefix}isUserViewable`} name={`${prefix}isUserViewable`} />
-
-                    <div css={tw`flex-1`}>
+                <div className="ml-auto flex flex-row items-center">
+                    <Field
+                        type="checkbox"
+                        // @ts-expect-error ignore type error
+                        as={Checkbox}
+                        defaultChecked={variable.isUserViewable}
+                        id={`${prefix}isUserViewable`}
+                        name={`${prefix}isUserViewable`}
+                    />
+                    <div css={tw`flex-1 ml-4`}>
                         <Label>User Viewable</Label>
                     </div>
                 </div>
 
-                <div className="ml-auto flex flex-row">
-                    {/* TODO: fix Checkbox component, current one is designed for subuser permissions and not for individual values */}
-                    <Checkbox id={`${prefix}isUserEditable`} name={`${prefix}isUserEditable`} />
-
-                    <div css={tw`flex-1`}>
+                <div className="ml-auto flex flex-row items-center">
+                    <Field
+                        type="checkbox"
+                        // @ts-expect-error ignore type error
+                        as={Checkbox}
+                        defaultChecked={variable.isUserEditable}
+                        id={`${prefix}isUserEditable`}
+                        name={`${prefix}isUserEditable`}
+                    />
+                    <div css={tw`flex-1 ml-4`}>
                         <Label>User Editable</Label>
                     </div>
                 </div>
@@ -147,7 +159,7 @@ function EggVariableBox({
         >
             <SpinnerOverlay visible={isSubmitting} />
 
-            <EggVariableForm prefix={prefix} />
+            <EggVariableForm prefix={prefix} variable={variable} />
         </AdminBox>
     );
 }
