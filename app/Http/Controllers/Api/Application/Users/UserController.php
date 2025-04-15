@@ -52,12 +52,8 @@ class UserController extends ApplicationApiController
                 AllowedFilter::exact('id'),
                 AllowedFilter::exact('uuid'),
                 AllowedFilter::exact('external_id'),
-                AllowedFilter::callback('username_or_email', function (Builder $builder, $value) {
-                    foreach (Arr::wrap($value) as $datum) {
-                        $builder->orWhere('username', $datum)
-                                ->orWhere('email', $datum);
-                    }
-                }),
+                AllowedFilter::exact('username'),
+                AllowedFilter::exact('email'),
                 AllowedFilter::callback('*', function (Builder $builder, $value) {
                     foreach (Arr::wrap($value) as $datum) {
                         $datum = '%' . $datum . '%';
