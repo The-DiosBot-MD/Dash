@@ -58,7 +58,7 @@ export const getNode = async (id: string | number): Promise<Node> => {
     return withRelationships(Transformers.toNode(data.data));
 };
 
-export const searchNodes = async (params: QueryBuilderParams<'name'>): Promise<Node[]> => {
+export const searchNodes = async (params: QueryBuilderParams<'name' | 'fqdn'>): Promise<Node[]> => {
     const { data } = await http.get('/api/application/nodes', {
         params: withQueryBuilderParams(params),
     });
@@ -68,10 +68,16 @@ export const searchNodes = async (params: QueryBuilderParams<'name'>): Promise<N
 
 export const getAllocations = async (
     id: string | number,
+    perPage?: number,
     params?: QueryBuilderParams<'ip' | 'server_id'>,
 ): Promise<Allocation[]> => {
+    const queryParams = {
+        ...withQueryBuilderParams(params),
+        ...(perPage ? { per_page: perPage } : {}),
+    };
+
     const { data } = await http.get(`/api/application/nodes/${id}/allocations`, {
-        params: withQueryBuilderParams(params),
+        params: queryParams,
     });
 
     return data.data.map(Transformers.toAllocation);

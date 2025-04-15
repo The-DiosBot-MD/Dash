@@ -11,7 +11,13 @@ export default ({ node, setNode }: { node: Node | null; setNode: (_: Node | null
     const [nodes, setNodes] = useState<Node[] | null>(null);
 
     const onSearch = async (query: string) => {
-        setNodes(await searchNodes({ filters: { name: query } }));
+        const [byName, byFqdn] = await Promise.all([
+            searchNodes({ filters: { name: query } }),
+            searchNodes({ filters: { fqdn: query } }),
+        ]);
+
+        const combined = [...new Map([...byName, ...byFqdn].map(n => [n.id, n])).values()];
+        setNodes(combined);
     };
 
     const onSelect = (node: Node | null) => {
@@ -38,7 +44,7 @@ export default ({ node, setNode }: { node: Node | null; setNode: (_: Node | null
         >
             {nodes?.map(d => (
                 <Option key={d.id} selectId={'nodeId'} id={d.id} item={d} active={d.id === node?.id}>
-                    {d.name}
+                    {d.name} ({d.fqdn})
                 </Option>
             ))}
         </SearchableSelect>

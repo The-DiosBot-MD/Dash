@@ -60,7 +60,7 @@ function InternalForm() {
         }
 
         // server_id: 0 filters out assigned allocations
-        getAllocations(node.id, { filters: { server_id: '0' } }).then(setAllocations);
+        getAllocations(node.id, 100, { filters: { server_id: '0' } }).then(setAllocations);
     }, [node]);
 
     return (

@@ -47,15 +47,23 @@ const PaginatedFooter = ({ pagination }: { pagination: UsePaginationResult<any> 
                     <span className={'text-white'}>{pagination.endIndex}</span> of{' '}
                     <span className={'text-white'}>{pagination.totalItems}</span> results
                 </p>
-                <div className={'inline-flex space-x-2'}>
-                    <p className={'text-xs font-bold text-gray-400 my-auto'}>
+                <div className={'inline-flex'}>
+                    <p className={'text-xs font-bold text-gray-400 my-auto mr-2'}>
                         Page <span className={'text-white'}>{pagination.currentPage}</span> of{' '}
                         <span className={'text-white'}>{pagination.totalPages}</span>
                     </p>
-                    <Button.Text size={Button.Sizes.Small} onClick={pagination.goToPreviousPage}>
+                    <Button.Text
+                        disabled={pagination.currentPage === 1}
+                        size={Button.Sizes.Small}
+                        onClick={pagination.goToPreviousPage}
+                    >
                         <FontAwesomeIcon icon={faChevronLeft} />
                     </Button.Text>
-                    <Button.Text size={Button.Sizes.Small} onClick={pagination.goToNextPage}>
+                    <Button.Text
+                        disabled={pagination.currentPage === pagination.totalPages}
+                        size={Button.Sizes.Small}
+                        onClick={pagination.goToNextPage}
+                    >
                         <FontAwesomeIcon icon={faChevronRight} />
                     </Button.Text>
                 </div>
