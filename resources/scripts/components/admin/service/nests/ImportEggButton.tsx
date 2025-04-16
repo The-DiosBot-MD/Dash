@@ -15,6 +15,7 @@ import FlashMessageRender from '@/components/FlashMessageRender';
 
 export default ({ className }: { className?: string }) => {
     const [visible, setVisible] = useState(false);
+    const [file, setFile] = useState<File | null>(null);
 
     const { clearFlashes } = useFlash();
 
@@ -23,26 +24,56 @@ export default ({ className }: { className?: string }) => {
 
     let fetchFileContent: (() => Promise<string>) | null = null;
 
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const selectedFile = event.target.files ? event.target.files[0] : null;
+        if (selectedFile) {
+            setFile(selectedFile);
+        }
+    };
+
     const submit = async () => {
         clearFlashes('egg:import');
 
-        if (fetchFileContent === null) {
+        if (!fetchFileContent && !file) {
             return;
         }
 
-        const egg = await importEgg(Number(params.nestId), await fetchFileContent());
-        await mutate(data => ({ ...data!, items: [...data!.items!, egg] }));
-        setVisible(false);
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = async e => {
+                console.log('reader loaded');
+                try {
+                    const jsonData = JSON.parse(e.target?.result as string);
+                    const egg = await importEgg(Number(params.nestId), jsonData);
+                    await mutate(data => ({ ...data!, items: [...data!.items!, egg] }));
+                    setVisible(false);
+                } catch (error) {
+                    console.error('Failed to parse or import egg:', error);
+                }
+            };
+
+            reader.onerror = () => {
+                console.error('File could not be read:', reader.error);
+            };
+
+            reader.readAsText(file);
+        } else if (fetchFileContent) {
+            try {
+                const jsonContent = await fetchFileContent();
+                const jsonData = JSON.parse(jsonContent);
+                const egg = await importEgg(Number(params.nestId), jsonData);
+                await mutate(data => ({ ...data!, items: [...data!.items!, egg] }));
+                setVisible(false);
+            } catch (error) {
+                console.error('Failed to import from editor content:', error);
+            }
+        }
     };
 
     return (
         <>
-            <Modal
-                visible={visible}
-                onDismissed={() => {
-                    setVisible(false);
-                }}
-            >
+            <Modal visible={visible} onDismissed={() => setVisible(false)}>
                 <FlashMessageRender byKey={'egg:import'} css={tw`mb-6`} />
 
                 <h2 css={tw`mb-6 text-2xl text-neutral-100`}>Import Egg</h2>
@@ -65,6 +96,9 @@ export default ({ className }: { className?: string }) => {
                     >
                         Cancel
                     </Button.Text>
+
+                    <input type="file" accept=".json" onChange={handleFileChange} className={'mt-4'} />
+
                     <Button css={tw`w-full sm:w-auto mt-4 sm:mt-0`} onClick={submit}>
                         Import Egg
                     </Button>
