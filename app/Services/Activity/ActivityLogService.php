@@ -2,16 +2,20 @@
 
 namespace Everest\Services\Activity;
 
+use Everest\Models\User;
 use Illuminate\Support\Arr;
 use Webmozart\Assert\Assert;
 use Everest\Models\ActivityLog;
+use Everest\Models\WebhookEvent;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Everest\Models\ActivityLogSubject;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Database\ConnectionInterface;
+use Everest\Services\Webhooks\WebhookEventService;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
+use Everest\Contracts\Repository\SettingsRepositoryInterface;
 
 class ActivityLogService
 {
@@ -23,7 +27,9 @@ class ActivityLogService
         protected AuthFactory $manager,
         protected ActivityLogBatchService $batch,
         protected ActivityLogTargetableService $targetable,
-        protected ConnectionInterface $connection
+        protected ConnectionInterface $connection,
+        private SettingsRepositoryInterface $settings,
+        private WebhookEventService $webhook,
     ) {
     }
 
@@ -145,6 +151,17 @@ class ActivityLogService
     public function log(string $description = null): ActivityLog
     {
         $activity = $this->getActivity();
+
+        if ($this->settings->get('settings::modules:webhooks:enabled')) {
+            try {
+                $user = User::findOrFail($activity->actor_id);
+                $event = WebhookEvent::where('key', $activity->event)->first();
+    
+                $this->webhook->send($user, $event);
+            } catch (\Exception $ex) {
+                // handle exception quietly
+            }
+        }
 
         if (!is_null($description)) {
             $activity->description = $description;

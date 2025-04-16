@@ -104,6 +104,22 @@ Route::middleware([AdminSubject::class])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
+    | Webhook Controller Routes
+    |--------------------------------------------------------------------------
+    |
+    | Endpoint: /api/application/webhooks
+    |
+    */
+    Route::group(['prefix' => '/webhooks'], function () {
+        Route::get('/', [Application\Webhooks\EventsController::class, 'index']);
+        Route::put('/', [Application\Webhooks\SettingsController::class, 'update']);
+
+        Route::post('/test', [Application\Webhooks\EventsController::class, 'test']);
+        Route::put('/status', [Application\Webhooks\EventsController::class, 'toggle']);
+    });
+
+    /*
+    |--------------------------------------------------------------------------
     | API Controller Routes
     |--------------------------------------------------------------------------
     |

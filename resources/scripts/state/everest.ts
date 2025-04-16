@@ -62,6 +62,10 @@ export interface EverestSettings {
         key: boolean | string;
         user_access: boolean;
     };
+    webhooks: {
+        enabled: boolean;
+        url: boolean;
+    };
 }
 
 export interface EverestStore {

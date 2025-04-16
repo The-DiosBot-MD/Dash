@@ -2,6 +2,7 @@ import {
     CashIcon,
     CodeIcon,
     CogIcon,
+    CursorClickIcon,
     DatabaseIcon,
     EyeIcon,
     FolderIcon,
@@ -71,6 +72,7 @@ import {
     faKey,
     faLayerGroup,
     faLink,
+    faMessage,
     faPaintBrush,
     faServer,
     faTicket,
@@ -79,6 +81,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import LinksTable from '@admin/modules/links/LinksTable';
 import ActivityContainer from '@admin/general/ActivityContainer';
+import WebhookRouter from '@/components/admin/modules/webhooks/WebhookRouter';
 
 function AdminRouter() {
     const theme = useStoreState(state => state.theme.data!);
@@ -103,6 +106,7 @@ function AdminRouter() {
                         <MobileSidebar.Link icon={faDollar} text={'Billing'} linkTo={'/admin/billing'} />
                         <MobileSidebar.Link icon={faTicket} text={'Tickets'} linkTo={'/admin/tickets'} />
                         <MobileSidebar.Link icon={faWandSparkles} text={'AI'} linkTo={'/admin/ai'} />
+                        <MobileSidebar.Link icon={faMessage} text={'Webhooks'} linkTo={'/admin/webhooks'} />
                     </>
                 )}
                 <MobileSidebar.Link icon={faExclamationTriangle} text={'Alerts'} linkTo={'/admin/alerts'} />
@@ -168,6 +172,10 @@ function AdminRouter() {
                             <NavLink to="/admin/ai">
                                 <SparklesIcon />
                                 <span>AI</span>
+                            </NavLink>
+                            <NavLink to="/admin/webhooks">
+                                <CursorClickIcon />
+                                <span>Webhooks</span>
                             </NavLink>
                         </>
                     )}
@@ -244,6 +252,7 @@ function AdminRouter() {
                         <Route path="billing/*" element={<BillingRouter />} />
                         <Route path="tickets/*" element={<TicketRouter />} />
                         <Route path="ai/*" element={<AIRouter />} />
+                        <Route path="webhooks/*" element={<WebhookRouter />} />
                         <Route path="theme" element={<ThemeContainer />} />
                         <Route path="links/*" element={<LinksTable />} />
                         <Route path="alerts/*" element={<AlertRouter />} />

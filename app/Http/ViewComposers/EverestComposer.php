@@ -69,6 +69,10 @@ class EverestComposer
                 'key' => !empty(config('modules.ai.key')),
                 'user_access' => boolval(config('modules.ai.user_access', false)),
             ],
+            'webhooks' => [
+                'enabled' => boolval(config('modules.webhooks.enabled', false)),
+                'url' => !empty(config('modules.webhooks.url')),
+            ],
         ]);
     }
 }

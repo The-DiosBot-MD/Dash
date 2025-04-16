@@ -9,6 +9,7 @@ import { Category } from '@/api/admin/billing/categories';
 import { Ticket, TicketMessage } from '@/api/admin/tickets/getTickets';
 import { Product } from '@/api/admin/billing/products';
 import { type Database } from '@definitions/server';
+import { WebhookEvent } from '@/api/admin/webhooks';
 const isList = (data: FractalResponseList | FractalResponseData): data is FractalResponseList => data.object === 'list';
 
 function transform<T, M = undefined>(
@@ -307,5 +308,14 @@ export default class Transformers {
         exception_type: attributes.exception_type,
         created_at: new Date(attributes.created_at),
         updated_at: new Date(attributes.last_used_at),
+    });
+
+    static toWebhookEvent = ({ attributes }: FractalResponseData): WebhookEvent => ({
+        id: attributes.id,
+        key: attributes.key,
+        description: attributes.description,
+        enabled: attributes.enabled,
+        createdAt: new Date(attributes.created_at),
+        updatedAt: attributes.updated_at ? new Date(attributes.updated_at) : null,
     });
 }

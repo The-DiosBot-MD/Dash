@@ -36,11 +36,20 @@ const BodyItem = ({ item, to, children }: { item: string; to?: string; children:
     );
 };
 
-const PaginatedFooter = ({ pagination }: { pagination: UsePaginationResult<any> }) => {
+const PaginatedFooter = ({
+    pagination,
+    noBackground,
+}: {
+    pagination: UsePaginationResult<any>;
+    noBackground?: boolean;
+}) => {
     const { colors } = useStoreState(s => s.theme.data!);
 
     return (
-        <div style={{ backgroundColor: colors.secondary }} className={'rounded-b-lg py-2 px-4'}>
+        <div
+            style={{ backgroundColor: noBackground ? colors.secondary : 'transparent' }}
+            className={'rounded-b-lg py-2 px-4'}
+        >
             <div className={'flex justify-between space-x-2'}>
                 <p className={'text-xs font-bold text-gray-400 my-auto'}>
                     Showing <span className={'text-white'}>{pagination.startIndex + 1}</span> to{' '}
