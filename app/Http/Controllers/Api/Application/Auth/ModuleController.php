@@ -4,6 +4,7 @@ namespace Everest\Http\Controllers\Api\Application\Auth;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Everest\Facades\Activity;
 use Everest\Contracts\Repository\SettingsRepositoryInterface;
 use Everest\Http\Controllers\Api\Application\ApplicationApiController;
 
@@ -27,6 +28,11 @@ class ModuleController extends ApplicationApiController
     {
         $this->settings->set('settings::modules:auth:' . $request->all()[0] . ':enabled', true);
 
+        Activity::event('admin:auth:module:enable')
+            ->property('module', $request->all()[0])
+            ->description('An authentication module was enabled')
+            ->log();
+
         return $this->returnNoContent();
     }
 
@@ -38,6 +44,11 @@ class ModuleController extends ApplicationApiController
     public function disable(Request $request): Response
     {
         $this->settings->set('settings::modules:auth:' . $request->all()[0] . ':enabled', false);
+
+        Activity::event('admin:auth:module:disable')
+            ->property('module', $request->all()[0])
+            ->description('An authentication module was disabled')
+            ->log();
 
         return $this->returnNoContent();
     }

@@ -20,6 +20,9 @@ class WebhookSeeder extends Seeder
             'admin:api-keys:create',
             'admin:api-keys:delete',
 
+            'admin:auth:module:enable',
+            'admin:auth:module:disable',
+
             'admin:billing:update',
             'admin:billing:reset-keys',
             'admin:billing:exception-resolve',
