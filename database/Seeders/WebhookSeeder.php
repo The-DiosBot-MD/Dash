@@ -88,6 +88,8 @@ class WebhookSeeder extends Seeder
      */
     public function run()
     {
+        $created = 0;
+        $updated = 0;
         $this->command->alert('Seeding Webhook Events');
 
         foreach ($this->events as $event) {
@@ -98,10 +100,17 @@ class WebhookSeeder extends Seeder
                     'enabled' => true,
                 ]);
 
+                $created++;
                 $this->command->info('Event ' . $event . ' was added');
-            };
+            } else {
+                $updated++;
+                $this->command->warn('Event ' . $event . ' already exists, skipping');
+            }
         }
 
-        $this->command->info('Updated all webhook events');
+        $this->command->info('Created ' . $created . ' webhook events');
+        $this->command->info('Skipped ' . $updated . ' webhook events');
+        $this->command->info('---');
+        $this->command->info('Verified ' . $created + $updated . ' webhook events');
     }
 }

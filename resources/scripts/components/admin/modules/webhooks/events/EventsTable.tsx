@@ -7,7 +7,8 @@ import { PaginatedFooter } from '@/components/elements/Table';
 export default ({ events }: { events?: WebhookEvent[] }) => {
     if (!events) return <Spinner size={'large'} centered />;
 
-    const pagination = usePagination<WebhookEvent>(events, 10);
+    const pagination = usePagination<WebhookEvent>(events, 12);
+
     return (
         <>
             <div className={'grid lg:grid-cols-3 gap-4'}>

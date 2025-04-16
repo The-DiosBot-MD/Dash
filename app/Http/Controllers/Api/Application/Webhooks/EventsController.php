@@ -30,7 +30,7 @@ class EventsController extends ApplicationApiController
     {
         $events = QueryBuilder::for(WebhookEvent::query())
             ->allowedFilters(['key'])
-            ->paginate();
+            ->get();
 
         return $this->fractal->collection($events)
             ->transformWith(WebhookEventTransformer::class)
