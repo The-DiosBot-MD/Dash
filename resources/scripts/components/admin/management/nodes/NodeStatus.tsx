@@ -31,7 +31,9 @@ export default ({ node, className }: { node: number; className?: string }) => {
     return (
         <Tooltip
             placement={'top'}
-            content={info ? `${info.system.supercharged && 'Supercharged'} ver: ${info.version}` : 'Node Unavailable'}
+            content={
+                info ? `${info.system.supercharged ? 'Supercharged' : ''} version ${info.version}` : 'Node Unavailable'
+            }
         >
             <FontAwesomeIcon
                 icon={error ? faExclamationTriangle : info?.system.supercharged ? faBoltLightning : faHeart}
