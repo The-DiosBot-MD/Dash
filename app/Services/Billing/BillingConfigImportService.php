@@ -43,7 +43,7 @@ class BillingConfigImportService
         foreach ($import_data['products'] as $product) {
             // Skip existing products if ignore_duplicates is true and a product with the same name exists in the same category
             if ($ignore_duplicates && Product::where('name', $product['name'])
-                                            ->where('category_uuid', $product['category_uuid'])
+                                            ->where('category_id', $old_data[$product['category_uuid']] ?? null)
                                             ->exists()) {
                 continue;  // Skip this product if it already exists in the same category
             } else {
@@ -57,27 +57,25 @@ class BillingConfigImportService
                 }
 
                 // If no valid category_id was assigned, throw an error
-                if (!$category_id) {
-                    throw new \Exception('Unable to assign product to category. Category UUID ' . $product['category_uuid'] . ' is invalid.');
+                if ($category_id) {
+                    // Create the product with the new category_id
+                    Product::create([
+                        'uuid' => $new_uuid, // don't overlap UUIDs
+                        'name' => $product['name'],
+                        'icon' => $product['icon'] ?? null,
+                        'price' => (int) $product['price'],
+                        'description' => $product['description'],
+                        'visible' => (bool) $product['visible'],
+                        'cpu_limit' => (int) $product['cpu_limit'],
+                        'memory_limit' => (int) $product['memory_limit'],
+                        'disk_limit' => (int) $product['disk_limit'],
+                        'backup_limit' => (int) $product['backup_limit'],
+                        'database_limit' => (int) $product['database_limit'],
+                        'allocation_limit' => (int) $product['allocation_limit'],
+                        'category_uuid' => $category_id, // Correctly assign the new category ID
+                        'stripe_id' => null, // deprecated
+                    ]);
                 }
-
-                // Create the product with the new category_id
-                Product::create([
-                    'uuid' => $new_uuid, // don't overlap UUIDs
-                    'name' => $product['name'],
-                    'icon' => $product['icon'] ?? null,
-                    'price' => (int) $product['price'],
-                    'description' => $product['description'],
-                    'visible' => (bool) $product['visible'],
-                    'cpu_limit' => (int) $product['cpu_limit'],
-                    'memory_limit' => (int) $product['memory_limit'],
-                    'disk_limit' => (int) $product['disk_limit'],
-                    'backup_limit' => (int) $product['backup_limit'],
-                    'database_limit' => (int) $product['database_limit'],
-                    'allocation_limit' => (int) $product['allocation_limit'],
-                    'category_id' => $category_id,
-                    'stripe_id' => null, // deprecated
-                ]);
             }
         }
     }
