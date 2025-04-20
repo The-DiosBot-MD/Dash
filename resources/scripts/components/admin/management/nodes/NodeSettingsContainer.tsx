@@ -21,7 +21,7 @@ export default function NodeSettingsContainer({ node }: { node?: Node }) {
             </div>
 
             <div css={tw`mb-6`}>
-                <DatabaseSelect selected={node?.relations.databaseHost || null} />
+                <DatabaseSelect selected={node?.databaseHostId || null} />
             </div>
 
             <div css={tw`mb-6`}>

@@ -1,14 +1,15 @@
 import { useFormikContext } from 'formik';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import type { Database } from '@/api/admin/databases/getDatabases';
 import searchDatabases from '@/api/admin/databases/searchDatabases';
 import SearchableSelect, { Option } from '@elements/SearchableSelect';
+import getDatabase from '@/api/admin/databases/getDatabase';
 
-export default ({ selected }: { selected: Database | null }) => {
+export default ({ selected }: { selected: number | null }) => {
     const context = useFormikContext();
 
-    const [database, setDatabase] = useState<Database | null>(selected);
+    const [database, setDatabase] = useState<Database | null>(null);
     const [databases, setDatabases] = useState<Database[] | null>(null);
 
     const onSearch = (query: string): Promise<void> => {
@@ -30,6 +31,12 @@ export default ({ selected }: { selected: Database | null }) => {
     const getSelectedText = (database: Database | null): string | undefined => {
         return database?.name;
     };
+
+    useEffect(() => {
+        if (selected) {
+            getDatabase(selected).then(database => setDatabase(database));
+        }
+    }, [selected]);
 
     return (
         <SearchableSelect

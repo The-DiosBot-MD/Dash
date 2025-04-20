@@ -20,7 +20,6 @@ import NodeBillingContainer from './NodeBillingContainer';
 
 interface Values {
     name: string;
-    locationId: number;
     databaseHostId: number | null;
     fqdn: string;
     scheme: string;
@@ -67,6 +66,7 @@ export default () => {
             behindProxy: values.behindProxy === 'true',
             public: values.public === 'true',
             deployable: values.deployable === 'true',
+            databaseHostId: values.databaseHostId,
         };
 
         updateNode(node.id, v)
@@ -83,7 +83,6 @@ export default () => {
             onSubmit={submit}
             initialValues={{
                 name: node.name,
-                locationId: node.locationId,
                 databaseHostId: node.databaseHostId,
                 fqdn: node.fqdn,
                 scheme: node.scheme,
@@ -104,12 +103,11 @@ export default () => {
             }}
             validationSchema={object().shape({
                 name: string().required().max(191),
-
+                databaseHostId: number().nullable(),
                 listenPortHTTP: number().required(),
                 publicPortHTTP: number().required(),
                 listenPortSFTP: number().required(),
                 publicPortSFTP: number().required(),
-
                 memory: number().required(),
                 memoryOverallocate: number().required(),
                 disk: number().required(),
