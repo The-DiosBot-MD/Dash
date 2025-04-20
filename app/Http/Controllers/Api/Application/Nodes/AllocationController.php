@@ -3,6 +3,7 @@
 namespace Everest\Http\Controllers\Api\Application\Nodes;
 
 use Everest\Models\Node;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Everest\Models\Allocation;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -85,6 +86,18 @@ class AllocationController extends ApplicationApiController
     public function delete(DeleteAllocationRequest $request, Node $node, Allocation $allocation): Response
     {
         $this->deletionService->handle($allocation);
+
+        return $this->returnNoContent();
+    }
+
+    /**
+     * Delete all unused allocations on a node.
+     */
+    public function deleteAll(Request $request, Node $node): Response
+    {
+        $allocations = Allocation::where('server_id', null)->get();
+
+        $allocations->map->delete();
 
         return $this->returnNoContent();
     }

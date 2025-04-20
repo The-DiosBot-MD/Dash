@@ -7,3 +7,11 @@ export default (nodeId: number, allocationId: number): Promise<void> => {
             .catch(reject);
     });
 };
+
+export const deleteAllAllocations = (nodeId: number): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        http.delete(`/api/application/nodes/${nodeId}/allocations`)
+            .then(() => resolve())
+            .catch(reject);
+    });
+};

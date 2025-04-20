@@ -306,6 +306,7 @@ Route::middleware([AdminSubject::class])->group(function () {
         Route::group(['prefix' => '/{node:id}/allocations'], function () {
             Route::get('/', [Application\Nodes\AllocationController::class, 'index']);
             Route::post('/', [Application\Nodes\AllocationController::class, 'store']);
+            Route::delete('/', [Application\Nodes\AllocationController::class, 'deleteAll']);
             Route::delete('/{allocation:id}', [Application\Nodes\AllocationController::class, 'delete']);
         });
     });

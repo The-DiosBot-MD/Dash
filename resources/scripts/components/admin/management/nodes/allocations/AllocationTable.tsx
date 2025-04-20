@@ -125,23 +125,25 @@ function AllocationsTable({ nodeId, filters }: Props) {
                                             )}
 
                                             <td>
-                                                <DeleteAllocationButton
-                                                    nodeId={nodeId}
-                                                    allocationId={allocation.id}
-                                                    onDeleted={async () => {
-                                                        await mutate(allocations => ({
-                                                            pagination: allocations!.pagination,
-                                                            items: allocations!.items.filter(
-                                                                a => a.id === allocation.id,
-                                                            ),
-                                                        }));
+                                                {!allocation.relations.server && (
+                                                    <DeleteAllocationButton
+                                                        nodeId={nodeId}
+                                                        allocationId={allocation.id}
+                                                        onDeleted={async () => {
+                                                            await mutate(allocations => ({
+                                                                pagination: allocations!.pagination,
+                                                                items: allocations!.items.filter(
+                                                                    a => a.id === allocation.id,
+                                                                ),
+                                                            }));
 
-                                                        // Go back a page if no more items will exist on the current page.
-                                                        if (allocations?.items.length - (1 % 10) === 0) {
-                                                            setPage(p => p - 1);
-                                                        }
-                                                    }}
-                                                />
+                                                            // Go back a page if no more items will exist on the current page.
+                                                            if (allocations?.items.length - (1 % 10) === 0) {
+                                                                setPage(p => p - 1);
+                                                            }
+                                                        }}
+                                                    />
+                                                )}
                                             </td>
                                         </tr>
                                     ))}
