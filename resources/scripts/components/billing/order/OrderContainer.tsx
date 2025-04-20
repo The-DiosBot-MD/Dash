@@ -132,7 +132,7 @@ export default () => {
                         <div className={'h-0.5 my-4 bg-gray-600 mr-8 rounded-full'} />
                         <LimitBox icon={faMicrochip} content={`${product.limits.cpu}% CPU`} />
                         <LimitBox icon={faMemory} content={`${(product.limits.memory / 1024).toFixed(1)} GiB Memory`} />
-                        <LimitBox icon={faHdd} content={`${(product.limits.memory / 1024).toFixed(1)} GiB Disk`} />
+                        <LimitBox icon={faHdd} content={`${(product.limits.disk / 1024).toFixed(1)} GiB Disk`} />
                         <div className={'h-0.5 my-4 bg-gray-600 mr-8 rounded-full'} />
                         <LimitBox icon={faArchive} content={`${product.limits.backup} Backup Slots`} />
                         <LimitBox icon={faDatabase} content={`${product.limits.database} Database Slots`} />

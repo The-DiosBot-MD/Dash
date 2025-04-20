@@ -1,10 +1,11 @@
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
 import useFlash from '@/plugins/useFlash';
 import { Product } from '@/api/billing/products';
 import { Button } from '@elements/button';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import { PaymentIntent, updateIntent } from '@/api/billing/intent';
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 
 interface Props {
     selectedNode?: number;
@@ -17,9 +18,11 @@ export default (data: Props) => {
     const stripe = useStripe();
     const elements = useElements();
     const { clearFlashes } = useFlash();
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (event: FormEvent) => {
         clearFlashes();
+        setLoading(true);
         event.preventDefault();
 
         if (!stripe || !elements || !data.product || !data.selectedNode) return;
@@ -44,6 +47,7 @@ export default (data: Props) => {
     return (
         <form onSubmit={handleSubmit}>
             <PaymentElement />
+            <SpinnerOverlay visible={loading} />
             <FlashMessageRender byKey={'store:order'} className={'mb-4'} />
             <div className={'text-right'}>
                 <Button disabled={!data.selectedNode} className={'mt-4'} size={Button.Sizes.Large}>
