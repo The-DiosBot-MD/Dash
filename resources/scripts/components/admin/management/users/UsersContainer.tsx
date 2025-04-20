@@ -18,7 +18,7 @@ import type { RealFilters } from '@/api/admin/users';
 import AdminContentBlock from '@elements/AdminContentBlock';
 import { Button } from '@elements/button';
 import { useStoreState } from '@/state/hooks';
-import Pill from '@/components/elements/Pill';
+import Pill from '@elements/Pill';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock, faLockOpen, faUser, faUserCheck, faUserGear, faUserSlash } from '@fortawesome/free-solid-svg-icons';
 

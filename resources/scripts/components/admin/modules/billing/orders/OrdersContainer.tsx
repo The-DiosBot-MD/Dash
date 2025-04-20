@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Order } from '@/api/billing/orders';
 import { getOrders } from '@/api/admin/billing/orders';
 import OrdersTable from './OrdersTable';
-import TitledGreyBox from '@/components/elements/TitledGreyBox';
+import TitledGreyBox from '@elements/TitledGreyBox';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
 export default () => {

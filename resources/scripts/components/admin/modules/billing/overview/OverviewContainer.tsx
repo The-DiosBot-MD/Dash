@@ -4,12 +4,12 @@ import { useEffect, useState } from 'react';
 import { BillingAnalytics, getBillingAnalytics } from '@/api/admin/billing/analytics';
 import Spinner from '@elements/Spinner';
 import { useStoreState } from '@/state/hooks';
-import ContentBox from '@/components/elements/ContentBox';
+import ContentBox from '@elements/ContentBox';
 import { Order } from '@/api/billing/orders';
 import { differenceInDays, parseISO } from 'date-fns';
 import SuccessChart from './SuccessChart';
 import RevenueChart from './RevenueChart';
-import Select from '@/components/elements/Select';
+import Select from '@elements/Select';
 import SetupStripe from '../guides/SetupStripe';
 
 export default () => {

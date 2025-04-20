@@ -11,7 +11,7 @@ import { faDiscord } from '@fortawesome/free-brands-svg-icons';
 import RequiredFieldIcon from '@elements/RequiredFieldIcon';
 import useStatus from '@/plugins/useStatus';
 import { toggleModule, updateModule } from '@/api/admin/auth/module';
-import { Alert } from '@/components/elements/alert';
+import { Alert } from '@elements/alert';
 
 export default () => {
     const { status, setStatus } = useStatus();

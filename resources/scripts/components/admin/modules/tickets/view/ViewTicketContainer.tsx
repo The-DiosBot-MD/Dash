@@ -23,7 +23,7 @@ import MessageTable from './MessageTable';
 import DeleteTicketDialog from './DeleteTicketDialog';
 import { Alert } from '@elements/alert';
 import { Ticket } from '@/api/admin/tickets/getTickets';
-import Spinner from '@/components/elements/Spinner';
+import Spinner from '@elements/Spinner';
 import { useParams } from 'react-router-dom';
 import useStatus from '@/plugins/useStatus';
 

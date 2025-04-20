@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react';
 import { BillingException } from '@/api/definitions/admin';
 import { getBillingExceptions, resolveAllBillingExceptions } from '@/api/admin/billing/exceptions';
 import BillingExceptionsTable from './BillingExceptionsTable';
-import TitledGreyBox from '@/components/elements/TitledGreyBox';
+import TitledGreyBox from '@elements/TitledGreyBox';
 import { faBank, faDesktop, faLayerGroup, faXmarkCircle } from '@fortawesome/free-solid-svg-icons';
-import { Button } from '@/components/elements/button';
+import { Button } from '@elements/button';
 import { CheckCircleIcon } from '@heroicons/react/outline';
 
 export default () => {

@@ -8,7 +8,7 @@ import PersonalModeSvg from '@/assets/images/themed/PersonalModeSvg';
 import StandardModeSvg from '@/assets/images/themed/StandardMoveSvg';
 import { faDesktop, faMoon, faTerminal } from '@fortawesome/free-solid-svg-icons';
 import ServerSvg from '@/assets/images/themed/ServerSvg';
-import { Dialog } from '@/components/elements/dialog';
+import { Dialog } from '@elements/dialog';
 import { useState } from 'react';
 
 export default () => {

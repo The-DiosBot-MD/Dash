@@ -19,7 +19,7 @@ import SpinnerOverlay from '@elements/SpinnerOverlay';
 import useFlash from '@/plugins/useFlash';
 import Label from '@elements/Label';
 import { useStoreState } from '@/state/hooks';
-import Checkbox from '@/components/elements/inputs/Checkbox';
+import Checkbox from '@elements/inputs/Checkbox';
 
 export const validationSchema = object().shape({
     name: string().required().min(1).max(191),

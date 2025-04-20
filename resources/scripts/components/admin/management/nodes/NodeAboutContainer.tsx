@@ -21,7 +21,7 @@ import useFlash from '@/plugins/useFlash';
 import Label from '@elements/Label';
 import Input from '@elements/Input';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from '@/components/elements/tooltip/Tooltip';
+import Tooltip from '@elements/tooltip/Tooltip';
 import getNodeUtilization, { NodeUtilization } from '@/api/admin/nodes/getNodeUtilization';
 
 const Code = ({ className, children }: { className?: string; children: ReactNode }) => {

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { importBillingConfiguration } from '@/api/admin/billing/import';
-import { Button } from '@/components/elements/button';
+import { Button } from '@elements/button';
 import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Dialog } from '@/components/elements/dialog';
-import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
+import { Dialog } from '@elements/dialog';
+import SpinnerOverlay from '@elements/SpinnerOverlay';
 import useFlash from '@/plugins/useFlash';
-import Switch from '@/components/elements/Switch';
-import { Alert } from '@/components/elements/alert';
+import Switch from '@elements/Switch';
+import { Alert } from '@elements/alert';
 
 export default () => {
     const [open, setOpen] = useState<boolean>(false);

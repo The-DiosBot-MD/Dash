@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import AdminBox from '@elements/AdminBox';
-import { Button } from '@/components/elements/button';
+import { Button } from '@elements/button';
 import ToggleFeatureButton from './ToggleFeatureButton';
 import { updateSettings } from '@/api/admin/billing/settings';
 import { faDollar, faExchange, faKey, faPowerOff } from '@fortawesome/free-solid-svg-icons';
@@ -8,8 +8,8 @@ import { useStoreActions, useStoreState } from '@/state/hooks';
 import { faPaypal, faStripe } from '@fortawesome/free-brands-svg-icons';
 import SetupPayPal from './guides/SetupPayPal';
 import SetupLink from './guides/SetupLink';
-import Label from '@/components/elements/Label';
-import Select from '@/components/elements/Select';
+import Label from '@elements/Label';
+import Select from '@elements/Select';
 import currencyDictionary from '@/assets/currency';
 import { deleteStripeKeys } from '@/api/admin/billing/keys';
 import SetupStripe from './guides/SetupStripe';

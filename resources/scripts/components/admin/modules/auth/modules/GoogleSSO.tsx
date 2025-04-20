@@ -11,7 +11,7 @@ import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import RequiredFieldIcon from '@elements/RequiredFieldIcon';
 import { toggleModule, updateModule } from '@/api/admin/auth/module';
-import { Alert } from '@/components/elements/alert';
+import { Alert } from '@elements/alert';
 
 export default () => {
     const { status, setStatus } = useStatus();

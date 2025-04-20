@@ -4,7 +4,7 @@ import { formatDistanceToNowStrict } from 'date-fns';
 import { NoItems } from '@elements/AdminTable';
 import { Body, BodyItem, Header, HeaderItem, PaginatedFooter, Table } from '@elements/Table';
 import { BillingException } from '@/api/definitions/admin';
-import { Button } from '@/components/elements/button';
+import { Button } from '@elements/button';
 import { CheckCircleIcon } from '@heroicons/react/outline';
 import { resolveBillingException } from '@/api/admin/billing/exceptions';
 import { useState } from 'react';
