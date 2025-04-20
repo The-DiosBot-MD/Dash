@@ -47,7 +47,7 @@ const PaginatedFooter = ({
 
     return (
         <div
-            style={{ backgroundColor: noBackground ? colors.secondary : 'transparent' }}
+            style={{ backgroundColor: !noBackground ? colors.secondary : 'transparent' }}
             className={'rounded-b-lg py-2 px-4'}
         >
             <div className={'flex justify-between space-x-2'}>

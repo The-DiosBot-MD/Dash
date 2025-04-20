@@ -1,7 +1,7 @@
 import type { Action, Actions } from 'easy-peasy';
 import { action, createContextStore, useStoreActions } from 'easy-peasy';
 import { useEffect, useState } from 'react';
-import { Route, Routes, useParams } from 'react-router-dom';
+import { Link, Route, Routes, useParams } from 'react-router-dom';
 import tw from 'twin.macro';
 
 import { getUser } from '@/api/admin/users';
@@ -16,6 +16,9 @@ import type { User } from '@definitions/admin';
 import { CogIcon, ServerIcon, UserIcon } from '@heroicons/react/outline';
 import ManageContainer from './view/ManageContainer';
 import { useStoreState } from '@/state/hooks';
+import { Button } from '@/components/elements/button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 interface ctx {
     user: User | undefined;
@@ -77,6 +80,13 @@ const UserRouter = () => {
                     >
                         {user.uuid}
                     </p>
+                </div>
+                <div css={tw`flex ml-auto pl-4`}>
+                    <Link to={'/admin/users'}>
+                        <Button>
+                            <FontAwesomeIcon icon={faArrowLeft} className={'mr-2 my-auto'} /> Back to Users
+                        </Button>
+                    </Link>
                 </div>
             </div>
 
