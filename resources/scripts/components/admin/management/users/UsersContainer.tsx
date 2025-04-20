@@ -22,9 +22,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 function UsersContainer() {
     const { data: users } = useGetUsers();
 
-    if (!users) return <Spinner size={'large'} centered />;
+    // Ensure the hook is always called
+    const pagination = usePagination<User>(users?.items || [], 10);
 
-    const pagination = usePagination<User>(users.items, 10);
+    if (!users) return <Spinner size={'large'} centered />;
 
     return (
         <AdminContentBlock title={'User Accounts'}>
