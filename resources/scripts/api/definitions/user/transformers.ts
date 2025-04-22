@@ -3,12 +3,12 @@ import { transform } from '@definitions/helpers';
 import * as Models from '@definitions/user/models';
 
 export default class Transformers {
-    static toSSHKey = (data: Record<any, any>): Models.SSHKey => {
+    static toSSHKey = ({ attributes }: FractalResponseData): Models.SSHKey => {
         return {
-            name: data.name,
-            publicKey: data.public_key,
-            fingerprint: data.fingerprint,
-            createdAt: new Date(data.created_at),
+            name: attributes.name,
+            public_key: attributes.public_key,
+            fingerprint: attributes.fingerprint,
+            created_at: new Date(attributes.created_at),
         };
     };
 

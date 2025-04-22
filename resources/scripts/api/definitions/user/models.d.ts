@@ -14,9 +14,9 @@ interface User extends Model {
 
 interface SSHKey extends Model {
     name: string;
-    publicKey: string;
+    public_key: string;
     fingerprint: string;
-    createdAt: Date;
+    created_at: Date;
 }
 
 interface ApiKey extends Model {
