@@ -30,7 +30,7 @@ class ApiController extends ApplicationApiController
      */
     public function index(Request $request): array
     {
-        $perPage = (int) $request->query('per_page', '10');
+        $perPage = (int) $request->query('per_page', '20');
         if ($perPage < 1 || $perPage > 100) {
             throw new QueryValueOutOfRangeHttpException('per_page', 1, 100);
         }
