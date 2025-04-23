@@ -36,7 +36,7 @@ class SettingsRepository extends EloquentRepository implements SettingsRepositor
     /**
      * Retrieve a persistent setting from the database.
      */
-    public function get(string $key, mixed $default): mixed
+    public function get(string $key, mixed $default = null): mixed
     {
         // If item has already been requested return it from the cache. If
         // we already know it is missing, immediately return the default value.
