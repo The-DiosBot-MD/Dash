@@ -25,7 +25,7 @@ interface ctx {
     setUser: Action<ctx, User | undefined>;
 }
 
-export const Context = createContextStore<ctx>({
+export const Context: ReturnType<typeof createContextStore<ctx>> = createContextStore<ctx>({
     user: undefined,
 
     setUser: action((state, payload) => {

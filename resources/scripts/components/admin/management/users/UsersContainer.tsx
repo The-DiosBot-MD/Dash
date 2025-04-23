@@ -1,31 +1,54 @@
 import tw from 'twin.macro';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import AdminContentBlock from '@elements/AdminContentBlock';
 import { Button } from '@elements/button';
-import * as Table from '@/components/elements/Table';
-import { useGetUsers } from '@/api/admin/users';
-import Spinner from '@/components/elements/Spinner';
-import usePagination from '@/plugins/usePagination';
-import { User } from '@/api/definitions/admin';
-import Pill from '@/components/elements/Pill';
+import { RealFilters, useGetUsers, Context as UsersContext } from '@/api/admin/users';
 import {
-    faUserGear,
-    faUser,
-    faUserSlash,
-    faUserCheck,
-    faLockOpen,
     faLock,
+    faLockOpen,
     faPlus,
+    faUser,
+    faUserCheck,
+    faUserGear,
+    faUserSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useContext } from 'react';
+import AdminTable, {
+    ContentWrapper,
+    Loading,
+    NoItems,
+    Pagination,
+    TableBody,
+    TableHead,
+    TableHeader,
+    TableRow,
+    useTableHooks,
+} from '@/components/elements/AdminTable';
+import { useStoreState } from '@/state/hooks';
+import Pill from '@/components/elements/Pill';
+import CopyOnClick from '@/components/elements/CopyOnClick';
 
 function UsersContainer() {
-    const { data: users } = useGetUsers();
+    const { data: users, error, isValidating } = useGetUsers();
+    const { colors } = useStoreState(state => state.theme.data!);
+    const { setPage, sort, sortDirection, setSort, setFilters } = useContext(UsersContext);
 
-    // Ensure the hook is always called
-    const pagination = usePagination<User>(users?.items || [], 10);
+    const length = users?.items?.length || 0;
 
-    if (!users) return <Spinner size={'large'} centered />;
+    const onSearch = (query: string): Promise<void> => {
+        return new Promise(resolve => {
+            if (query.length < 2) {
+                setFilters(null);
+            } else {
+                setPage(1);
+                setFilters({
+                    username: query,
+                });
+            }
+            return resolve();
+        });
+    };
 
     return (
         <AdminContentBlock title={'User Accounts'}>
@@ -47,68 +70,157 @@ function UsersContainer() {
                     </Link>
                 </div>
             </div>
-            <Table.Table>
-                <Table.Header>
-                    <Table.HeaderItem>Username</Table.HeaderItem>
-                    <Table.HeaderItem>Email Address</Table.HeaderItem>
-                    <Table.HeaderItem>Account State</Table.HeaderItem>
-                    <Table.HeaderItem>2 Factor</Table.HeaderItem>
-                    <Table.HeaderItem>Created At</Table.HeaderItem>
-                </Table.Header>
-                <Table.Body>
-                    {pagination.paginatedItems.map(user => (
-                        <Table.BodyItem item={user.username} key={user.id} to={`/admin/users/${user.id}`}>
-                            <td className={'px-6 py-4 whitespace-nowrap text-sm text-neutral-50'}>{user.email}</td>
-                            <td className={'px-6 py-4 whitespace-nowrap text-sm text-neutral-50'}>
-                                {user.isRootAdmin ? (
-                                    <Pill type={'success'}>
-                                        <FontAwesomeIcon icon={faUserGear} className={'my-auto mr-1'} size={'sm'} />{' '}
-                                        Admin
-                                    </Pill>
-                                ) : (
-                                    <Pill type={'unknown'}>
-                                        <FontAwesomeIcon icon={faUser} className={'my-auto mr-1'} size={'sm'} />{' '}
-                                        Standard
-                                    </Pill>
-                                )}
-                                {user.state === 'suspended' ? (
-                                    <Pill type={'warn'}>
-                                        <FontAwesomeIcon icon={faUserSlash} className={'my-auto mr-1'} size={'sm'} />{' '}
-                                        Suspended
-                                    </Pill>
-                                ) : (
-                                    <Pill type={'success'}>
-                                        <FontAwesomeIcon icon={faUserCheck} className={'my-auto mr-1'} size={'sm'} />{' '}
-                                        Active
-                                    </Pill>
-                                )}
-                            </td>
-                            <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
-                                {user.isUsingTwoFactor ? (
-                                    <Pill type={'success'}>
-                                        <FontAwesomeIcon icon={faLock} className={'my-auto mr-1'} size={'sm'} /> Enabled
-                                    </Pill>
-                                ) : (
-                                    <Pill type={'danger'}>
-                                        <FontAwesomeIcon icon={faLockOpen} className={'my-auto mr-1'} size={'sm'} />{' '}
-                                        Disabled
-                                    </Pill>
-                                )}
-                            </td>
-                            <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
-                                <code css={tw`font-mono bg-neutral-900 rounded py-1 px-2`}>
-                                    {user.createdAt.toLocaleString()}
-                                </code>
-                            </td>
-                        </Table.BodyItem>
-                    ))}
-                </Table.Body>
-            </Table.Table>
-            <Table.PaginatedFooter pagination={pagination} />
+            <AdminTable>
+                <ContentWrapper onSearch={onSearch}>
+                    <Pagination data={users} onPageSelect={setPage}>
+                        <div css={tw`overflow-x-auto`}>
+                            <table css={tw`w-full table-auto`}>
+                                <TableHead>
+                                    <TableHeader
+                                        name={'ID'}
+                                        direction={sort === 'id' ? (sortDirection ? 1 : 2) : null}
+                                        onClick={() => setSort('id')}
+                                    />
+                                    <TableHeader
+                                        name={'UUID'}
+                                        direction={sort === 'uuid' ? (sortDirection ? 1 : 2) : null}
+                                        onClick={() => setSort('uuid')}
+                                    />
+                                    <TableHeader
+                                        name={'Username'}
+                                        direction={sort === 'username' ? (sortDirection ? 1 : 2) : null}
+                                        onClick={() => setSort('username')}
+                                    />
+                                    <TableHeader
+                                        name={'Email Address'}
+                                        direction={sort === 'email' ? (sortDirection ? 1 : 2) : null}
+                                        onClick={() => setSort('email')}
+                                    />
+                                    <TableHeader
+                                        name={'Account State'}
+                                        direction={sort === 'root_admin' ? (sortDirection ? 1 : 2) : null}
+                                        onClick={() => setSort('root_admin')}
+                                    />
+                                    <TableHeader
+                                        name={'2FA Enabled'}
+                                        direction={sort === 'use_totp' ? (sortDirection ? 1 : 2) : null}
+                                        onClick={() => setSort('use_totp')}
+                                    />
+                                </TableHead>
+
+                                <TableBody>
+                                    {users !== undefined &&
+                                        !error &&
+                                        !isValidating &&
+                                        length > 0 &&
+                                        users.items.map(user => (
+                                            <TableRow key={user.id}>
+                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                                    <code css={tw`font-mono bg-neutral-900 rounded py-1 px-2`}>
+                                                        {user.id}
+                                                    </code>
+                                                </td>
+                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                                    <CopyOnClick text={user.uuid}>
+                                                        <code css={tw`font-mono bg-neutral-900 rounded py-1 px-2`}>
+                                                            {user.uuid.slice(0, 8)}
+                                                        </code>
+                                                    </CopyOnClick>
+                                                </td>
+                                                <td
+                                                    css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap font-bold hover:brightness-125`}
+                                                    style={{ color: colors.primary }}
+                                                >
+                                                    <NavLink to={`/admin/users/${user.id}`}>{user.username}</NavLink>
+                                                </td>
+                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                                    {user.email}
+                                                </td>
+                                                <td className={'px-6 py-4 whitespace-nowrap text-sm text-neutral-50'}>
+                                                    {user.isRootAdmin ? (
+                                                        <Pill type={'success'}>
+                                                            <FontAwesomeIcon
+                                                                icon={faUserGear}
+                                                                className={'my-auto mr-1'}
+                                                                size={'sm'}
+                                                            />{' '}
+                                                            Admin
+                                                        </Pill>
+                                                    ) : (
+                                                        <Pill type={'unknown'}>
+                                                            <FontAwesomeIcon
+                                                                icon={faUser}
+                                                                className={'my-auto mr-1'}
+                                                                size={'sm'}
+                                                            />{' '}
+                                                            Standard
+                                                        </Pill>
+                                                    )}
+                                                    {user.state === 'suspended' ? (
+                                                        <Pill type={'warn'}>
+                                                            <FontAwesomeIcon
+                                                                icon={faUserSlash}
+                                                                className={'my-auto mr-1'}
+                                                                size={'sm'}
+                                                            />{' '}
+                                                            Suspended
+                                                        </Pill>
+                                                    ) : (
+                                                        <Pill type={'success'}>
+                                                            <FontAwesomeIcon
+                                                                icon={faUserCheck}
+                                                                className={'my-auto mr-1'}
+                                                                size={'sm'}
+                                                            />{' '}
+                                                            Active
+                                                        </Pill>
+                                                    )}
+                                                </td>
+                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                                    {user.isUsingTwoFactor ? (
+                                                        <Pill type={'success'}>
+                                                            <FontAwesomeIcon
+                                                                icon={faLock}
+                                                                className={'my-auto mr-1'}
+                                                                size={'sm'}
+                                                            />{' '}
+                                                            Enabled
+                                                        </Pill>
+                                                    ) : (
+                                                        <Pill type={'danger'}>
+                                                            <FontAwesomeIcon
+                                                                icon={faLockOpen}
+                                                                className={'my-auto mr-1'}
+                                                                size={'sm'}
+                                                            />{' '}
+                                                            Disabled
+                                                        </Pill>
+                                                    )}
+                                                </td>
+                                            </TableRow>
+                                        ))}
+                                </TableBody>
+                            </table>
+
+                            {users === undefined || (error && isValidating) ? (
+                                <Loading />
+                            ) : length < 1 ? (
+                                <NoItems />
+                            ) : null}
+                        </div>
+                    </Pagination>
+                </ContentWrapper>
+            </AdminTable>
         </AdminContentBlock>
     );
 }
 
 export default () => {
-    return <UsersContainer />;
+    const hooks = useTableHooks<RealFilters>();
+
+    return (
+        <UsersContext.Provider value={hooks}>
+            <UsersContainer />
+        </UsersContext.Provider>
+    );
 };

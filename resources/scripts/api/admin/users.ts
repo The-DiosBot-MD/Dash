@@ -1,12 +1,10 @@
-import type { AxiosError } from 'axios';
-import type { SWRConfiguration, SWRResponse } from 'swr';
 import useSWR from 'swr';
-
-import type { FractalPaginatedResponse, PaginatedResult, QueryBuilderParams } from '@/api/http';
+import type { PaginatedResult, QueryBuilderParams } from '@/api/http';
 import http, { getPaginationSet, withQueryBuilderParams } from '@/api/http';
 import type { User } from '@definitions/admin';
 import { Transformers } from '@definitions/admin';
 import { createContext } from '@/api/admin';
+import { useContext } from 'react';
 
 export interface UpdateUserValues {
     externalId: string;
@@ -25,28 +23,39 @@ export interface RealFilters {
     id?: number;
     username?: string;
     email?: string;
+    root_admin?: boolean;
+    use_totp?: boolean;
+    created_at?: Date;
 }
 
 export const Context = createContext<RealFilters>();
 
-const useGetUsers = (
-    params?: QueryBuilderParams<Filters>,
-    config?: SWRConfiguration,
-): SWRResponse<PaginatedResult<User>, AxiosError> => {
-    return useSWR<PaginatedResult<User>>(
-        ['/api/application/users', JSON.stringify(params)],
-        async () => {
-            const { data } = await http.get<FractalPaginatedResponse>('/api/application/users', {
-                params: withQueryBuilderParams(params),
-            });
+const useGetUsers = (include: string[] = []) => {
+    const { page, filters, sort, sortDirection } = useContext(Context);
 
-            return {
-                items: (data.data || []).map(Transformers.toUser),
-                pagination: getPaginationSet(data.meta.pagination),
-            };
-        },
-        config || { revalidateOnMount: true, revalidateOnFocus: false },
-    );
+    const params = {};
+    if (filters !== null) {
+        Object.keys(filters).forEach(key => {
+            // @ts-expect-error todo
+            params['filter[' + key + ']'] = filters[key];
+        });
+    }
+
+    if (sort !== null) {
+        // @ts-expect-error todo
+        params.sort = (sortDirection ? '-' : '') + sort;
+    }
+
+    return useSWR<PaginatedResult<User>>(['users', page, filters, sort, sortDirection], async () => {
+        const { data } = await http.get('/api/application/users', {
+            params: { include: include.join(','), page, ...params },
+        });
+
+        return {
+            items: (data.data || []).map(Transformers.toUser),
+            pagination: getPaginationSet(data.meta.pagination),
+        };
+    });
 };
 
 const getUser = (id: number, include: string[] = []): Promise<User> => {

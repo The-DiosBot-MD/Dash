@@ -21,7 +21,6 @@ import { Button } from '@elements/button';
 import CopyOnClick from '@elements/CopyOnClick';
 import { bytesToString, mbToBytes } from '@/lib/formatters';
 import { useStoreState } from '@/state/hooks';
-import NodeStatus from './NodeStatus';
 
 const NodesContainer = () => {
     const { colors } = useStoreState(state => state.theme.data!);
@@ -106,7 +105,6 @@ const NodesContainer = () => {
                                         onClick={() => setSort('disk')}
                                     />
                                     <TableHeader />
-                                    <TableHeader />
                                 </TableHead>
 
                                 <TableBody>
@@ -162,10 +160,6 @@ const NodesContainer = () => {
                                                             Non-Secure
                                                         </span>
                                                     )}
-                                                </td>
-
-                                                <td css={tw`px-6 whitespace-nowrap`}>
-                                                    <NodeStatus node={node.id} />
                                                 </td>
                                             </TableRow>
                                         ))}
