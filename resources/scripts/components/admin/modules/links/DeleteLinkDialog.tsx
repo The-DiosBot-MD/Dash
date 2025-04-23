@@ -1,14 +1,18 @@
 import { Dialog } from '@elements/dialog';
-import { VisibleDialog } from './LinksTable';
+import { VisibleDialog } from './LinksContainer';
 import { deleteLink } from '@/api/admin/links';
 import { Dispatch, SetStateAction } from 'react';
 import Spinner from '@elements/Spinner';
+import { mutate } from 'swr';
 
 export default ({ id, setOpen }: { id?: number; setOpen: Dispatch<SetStateAction<VisibleDialog>> }) => {
     if (!id) return <Spinner centered />;
 
     const onSubmit = () => {
-        deleteLink(id).then(() => setOpen('none'));
+        deleteLink(id).then(() => {
+            setOpen('none');
+            mutate(['links']);
+        });
     };
 
     return (

@@ -1,10 +1,11 @@
 import { Dialog } from '@elements/dialog';
 import { createLink, CustomLink, updateLink, Values } from '@/api/admin/links';
-import { VisibleDialog } from './LinksTable';
+import { VisibleDialog } from './LinksContainer';
 import Label from '@elements/Label';
 import InputField from '@elements/inputs/InputField';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import Switch from '@elements/Switch';
+import { mutate } from 'swr';
 
 export default ({ link, setOpen }: { link?: CustomLink; setOpen: Dispatch<SetStateAction<VisibleDialog>> }) => {
     const [values, setValues] = useState<Values>({
@@ -15,9 +16,15 @@ export default ({ link, setOpen }: { link?: CustomLink; setOpen: Dispatch<SetSta
 
     const onSubmit = () => {
         if (link) {
-            updateLink(link.id, values).then(() => setOpen('none'));
+            updateLink(link.id, values).then(() => {
+                setOpen('none');
+                mutate(['links']);
+            });
         } else {
-            createLink(values).then(() => setOpen('none'));
+            createLink(values).then(() => {
+                setOpen('none');
+                mutate(['links'], true);
+            });
         }
     };
 

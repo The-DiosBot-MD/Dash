@@ -1,4 +1,7 @@
-import http, { FractalResponseData } from '@/api/http';
+import { createContext } from '@/api/admin';
+import http, { FractalResponseData, getPaginationSet, PaginatedResult } from '@/api/http';
+import { useContext } from 'react';
+import useSWR from 'swr';
 
 export interface CustomLink {
     id: number;
@@ -10,10 +13,12 @@ export interface CustomLink {
 }
 
 export interface Values {
-    url: string;
-    name: string;
-    visible: boolean;
+    url?: string;
+    name?: string;
+    visible?: boolean;
 }
+
+export const Context = createContext<Values>();
 
 export const rawDataToLink = ({ attributes: data }: FractalResponseData): CustomLink => ({
     id: data.id,
@@ -24,11 +29,31 @@ export const rawDataToLink = ({ attributes: data }: FractalResponseData): Custom
     updatedAt: data.updated_at ? new Date(data.updated_at) : null,
 });
 
-export const getLinks = (): Promise<CustomLink[]> => {
-    return new Promise((resolve, reject) => {
-        http.get(`/api/application/links`)
-            .then(({ data }) => resolve((data.data || []).map((datum: any) => rawDataToLink(datum))))
-            .catch(reject);
+export const getLinks = (include: string[] = []) => {
+    const { page, filters, sort, sortDirection } = useContext(Context);
+
+    const params = {};
+    if (filters !== null) {
+        Object.keys(filters).forEach(key => {
+            // @ts-expect-error todo
+            params['filter[' + key + ']'] = filters[key];
+        });
+    }
+
+    if (sort !== null) {
+        // @ts-expect-error todo
+        params.sort = (sortDirection ? '-' : '') + sort;
+    }
+
+    return useSWR<PaginatedResult<CustomLink>>(['links', page, filters, sort, sortDirection], async () => {
+        const { data } = await http.get('/api/application/links', {
+            params: { include: include.join(','), page, ...params },
+        });
+
+        return {
+            items: (data.data || []).map(rawDataToLink),
+            pagination: getPaginationSet(data.meta.pagination),
+        };
     });
 };
 

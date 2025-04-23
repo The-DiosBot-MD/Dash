@@ -1,107 +1,149 @@
-import { useEffect, useState } from 'react';
-import Spinner from '@elements/Spinner';
-import usePagination from '@/plugins/usePagination';
-import { CustomLink, getLinks } from '@/api/admin/links';
-import { NoItems } from '@elements/AdminTable';
-import { Table, Header, HeaderItem, Body, BodyItem, PaginatedFooter } from '@elements/Table';
-import { formatDistanceToNowStrict } from 'date-fns';
-import AdminContentBlock from '@elements/AdminContentBlock';
-import FlashMessageRender from '@/components/FlashMessageRender';
-import { Button } from '@elements/button';
-import CreateLinkDialog from './CreateLinkDialog';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { getLinks, type Values, Context as LinksContext, CustomLink } from '@/api/admin/links';
+import { useStoreState } from '@/state/hooks';
+import AdminTable, {
+    ContentWrapper,
+    Loading,
+    NoItems,
+    Pagination,
+    TableBody,
+    TableHead,
+    TableHeader,
+    TableRow,
+    useTableHooks,
+} from '@elements/AdminTable';
+import { Dispatch, SetStateAction, useContext } from 'react';
+import tw from 'twin.macro';
+import { VisibleDialog } from './LinksContainer';
+import Pill from '@/components/elements/Pill';
+import { Button } from '@/components/elements/button';
 import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
-import Pill from '@elements/Pill';
-import DeleteLinkDialog from './DeleteLinkDialog';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-export type VisibleDialog = 'none' | 'create' | 'update' | 'delete';
+interface Props {
+    setOpen: Dispatch<SetStateAction<VisibleDialog>>;
+    setLink: Dispatch<SetStateAction<CustomLink | null>>;
+}
 
-export default () => {
-    const [links, setLinks] = useState<CustomLink[]>([]);
-    const [selectedLink, setSelectedLink] = useState<CustomLink | null>();
+const LinksTable = ({ setOpen, setLink }: Props) => {
+    const { data: links, error, isValidating } = getLinks();
+    const { colors } = useStoreState(state => state.theme.data!);
+    const { setPage, sort, sortDirection, setSort, setFilters } = useContext(LinksContext);
 
-    const [open, setOpen] = useState<VisibleDialog>('none');
+    const length = links?.items?.length || 0;
 
-    useEffect(() => {
-        getLinks().then(data => setLinks(data));
-    }, [open]);
-
-    if (!links) return <Spinner centered />;
-
-    const pagination = usePagination<CustomLink>(links, 10);
+    const onSearch = (query: string): Promise<void> => {
+        return new Promise(resolve => {
+            if (query.length < 2) {
+                setFilters(null);
+            } else {
+                setPage(1);
+                setFilters({
+                    name: query,
+                });
+            }
+            return resolve();
+        });
+    };
 
     return (
-        <AdminContentBlock title={'Custom Links'}>
-            {open === 'create' && <CreateLinkDialog setOpen={setOpen} />}
-            {open === 'update' && selectedLink && <CreateLinkDialog link={selectedLink} setOpen={setOpen} />}
-            {open === 'delete' && <DeleteLinkDialog id={selectedLink?.id} setOpen={setOpen} />}
-            <FlashMessageRender byKey={'admin:links'} className={'mb-4'} />
-            <div className={'w-full flex flex-row items-center mb-8'}>
-                <div className={'flex flex-col flex-shrink'} style={{ minWidth: '0' }}>
-                    <h2 className={'text-2xl text-neutral-50 font-header font-medium'}>Custom Links</h2>
-                    <p
-                        className={
-                            'hidden lg:block text-base text-neutral-400 whitespace-nowrap overflow-ellipsis overflow-hidden'
-                        }
-                    >
-                        Create custom links to external sites for clients.
-                    </p>
-                </div>
-                <div className={'flex ml-auto pl-4'}>
-                    <Button onClick={() => setOpen('create')}>New Link</Button>
-                </div>
-            </div>
-            <Table>
-                <Header>
-                    <HeaderItem>Name</HeaderItem>
-                    <HeaderItem>URL</HeaderItem>
-                    <HeaderItem>Visible</HeaderItem>
-                    <HeaderItem>Created At</HeaderItem>
-                    <HeaderItem>Updated At</HeaderItem>
-                    <HeaderItem>&nbsp;</HeaderItem>
-                </Header>
-                <Body>
-                    {pagination.paginatedItems.map(link => (
-                        <BodyItem item={link.name} key={link.id}>
-                            <td className={'px-6 py-4 text-white font-bold'}>{link.url}</td>
-                            <td className={'px-6 py-4'}>
-                                {link.visible ? (
-                                    <Pill type={'success'}>Visible</Pill>
-                                ) : (
-                                    <Pill type={'warn'}>Hidden</Pill>
-                                )}
-                            </td>
-                            <td className={'px-6 py-4'}>
-                                {formatDistanceToNowStrict(link.createdAt, { addSuffix: true })}
-                            </td>
-                            <td className={'px-6 py-4'}>
-                                {link.updatedAt
-                                    ? formatDistanceToNowStrict(link.updatedAt, { addSuffix: true })
-                                    : 'N/A'}
-                            </td>
-                            <td className={'px-6 py-4 text-right space-x-3'}>
-                                <Button
-                                    onClick={() => {
-                                        setSelectedLink(link);
-                                        setOpen('update');
-                                    }}
-                                >
-                                    <FontAwesomeIcon icon={faPencil} className={'text-white'} />
-                                </Button>
-                                <Button.Danger
-                                    onClick={() => {
-                                        setSelectedLink(link);
-                                        setOpen('delete');
-                                    }}
-                                >
-                                    <FontAwesomeIcon icon={faTrash} />
-                                </Button.Danger>
-                            </td>
-                        </BodyItem>
-                    ))}
-                </Body>
-            </Table>
-            {links.length < 1 ? <NoItems /> : <PaginatedFooter pagination={pagination} />}
-        </AdminContentBlock>
+        <AdminTable>
+            <ContentWrapper onSearch={onSearch}>
+                <Pagination data={links} onPageSelect={setPage}>
+                    <div css={tw`overflow-x-auto`}>
+                        <table css={tw`w-full table-auto`}>
+                            <TableHead>
+                                <TableHeader
+                                    name={'ID'}
+                                    direction={sort === 'id' ? (sortDirection ? 1 : 2) : null}
+                                    onClick={() => setSort('id')}
+                                />
+                                <TableHeader
+                                    name={'Name'}
+                                    direction={sort === 'name' ? (sortDirection ? 1 : 2) : null}
+                                    onClick={() => setSort('name')}
+                                />
+                                <TableHeader
+                                    name={'URL'}
+                                    direction={sort === 'url' ? (sortDirection ? 1 : 2) : null}
+                                    onClick={() => setSort('url')}
+                                />
+                                <TableHeader
+                                    name={'Is Visible'}
+                                    direction={sort === 'visibe' ? (sortDirection ? 1 : 2) : null}
+                                    onClick={() => setSort('visible')}
+                                />
+                                <TableHeader name={'Actions'} />
+                            </TableHead>
+
+                            <TableBody>
+                                {links !== undefined &&
+                                    !error &&
+                                    !isValidating &&
+                                    length > 0 &&
+                                    links.items.map(link => (
+                                        <TableRow key={link.id}>
+                                            <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                                <code css={tw`font-mono bg-neutral-900 rounded py-1 px-2`}>
+                                                    {link.id}
+                                                </code>
+                                            </td>
+                                            <td
+                                                css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap font-bold hover:brightness-125`}
+                                                style={{ color: colors.primary }}
+                                            >
+                                                {link.name}
+                                            </td>
+                                            <td
+                                                css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap font-bold hover:brightness-125`}
+                                            >
+                                                {link.url}
+                                            </td>
+                                            <td
+                                                css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap font-bold hover:brightness-125`}
+                                            >
+                                                {link.visible ? (
+                                                    <Pill type={'success'}>Visible</Pill>
+                                                ) : (
+                                                    <Pill type={'danger'}>Hidden</Pill>
+                                                )}
+                                            </td>
+                                            <td className={'px-6 py-4 space-x-3'}>
+                                                <Button
+                                                    onClick={() => {
+                                                        setLink(link);
+                                                        setOpen('update');
+                                                    }}
+                                                >
+                                                    <FontAwesomeIcon icon={faPencil} className={'text-white'} />
+                                                </Button>
+                                                <Button.Danger
+                                                    onClick={() => {
+                                                        setLink(link);
+                                                        setOpen('delete');
+                                                    }}
+                                                >
+                                                    <FontAwesomeIcon icon={faTrash} />
+                                                </Button.Danger>
+                                            </td>
+                                        </TableRow>
+                                    ))}
+                            </TableBody>
+                        </table>
+
+                        {links === undefined || (error && isValidating) ? <Loading /> : length < 1 ? <NoItems /> : null}
+                    </div>
+                </Pagination>
+            </ContentWrapper>
+        </AdminTable>
+    );
+};
+
+export default ({ setOpen, setLink }: Props) => {
+    const hooks = useTableHooks<Values>();
+
+    return (
+        <LinksContext.Provider value={hooks}>
+            <LinksTable setLink={setLink} setOpen={setOpen} />
+        </LinksContext.Provider>
     );
 };
