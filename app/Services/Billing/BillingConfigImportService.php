@@ -43,7 +43,7 @@ class BillingConfigImportService
         foreach ($import_data['products'] as $product) {
             // Skip existing products if ignore_duplicates is true and a product with the same name exists in the same category
             if ($ignore_duplicates && Product::where('name', $product['name'])
-                                            ->where('category_id', $old_data[$product['category_uuid']] ?? null)
+                                            ->where('category_uuid', $old_data[$product['category_uuid']] ?? null)
                                             ->exists()) {
                 continue;  // Skip this product if it already exists in the same category
             } else {
