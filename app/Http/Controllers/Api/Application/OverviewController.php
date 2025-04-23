@@ -32,9 +32,9 @@ class OverviewController extends ApplicationApiController
      */
     public function metrics(): JsonResponse
     {
-        $nodes = Node::all()->count();
-        $servers = Server::all()->count();
-        $tickets = Ticket::where('status', 'pending')->get()->count();
+        $nodes = Node::query()->count();
+        $servers = Server::query()->count();
+        $tickets = Ticket::query()->where('status', 'pending')->count();
 
         $data = [
             'nodes' => $nodes,

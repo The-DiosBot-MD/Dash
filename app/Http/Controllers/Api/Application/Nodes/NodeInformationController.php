@@ -6,7 +6,6 @@ use Everest\Models\Node;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Cache\Repository as CacheRepository;
 use Everest\Repositories\Wings\DaemonConfigurationRepository;
 use Everest\Http\Controllers\Api\Application\ApplicationApiController;
 
@@ -15,7 +14,7 @@ class NodeInformationController extends ApplicationApiController
     /**
      * NodeInformationController constructor.
      */
-    public function __construct(private CacheRepository $cache, private DaemonConfigurationRepository $repository)
+    public function __construct(private DaemonConfigurationRepository $repository)
     {
         parent::__construct();
     }

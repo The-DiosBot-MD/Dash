@@ -3,8 +3,8 @@
 namespace Everest\Http\Controllers\Api\Application\Auth;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Everest\Facades\Activity;
+use Illuminate\Http\Response;
 use Everest\Contracts\Repository\SettingsRepositoryInterface;
 use Everest\Http\Controllers\Api\Application\ApplicationApiController;
 

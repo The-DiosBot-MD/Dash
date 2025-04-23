@@ -156,7 +156,7 @@ class ActivityLogService
             try {
                 $user = User::findOrFail($activity->actor_id);
                 $event = WebhookEvent::where('key', $activity->event)->first();
-    
+
                 if ($event) {
                     $this->webhook->send($user, $event);
                 }

@@ -15,7 +15,6 @@ use Everest\Services\Billing\CreateOrderService;
 use Everest\Services\Billing\CreateServerService;
 use Everest\Http\Controllers\Api\Client\ClientApiController;
 use Everest\Contracts\Repository\SettingsRepositoryInterface;
-use Everest\Repositories\Wings\DaemonConfigurationRepository;
 
 class StripeController extends ClientApiController
 {
@@ -23,7 +22,6 @@ class StripeController extends ClientApiController
         private CreateOrderService $orderService,
         private CreateServerService $serverCreation,
         private SettingsRepositoryInterface $settings,
-        private DaemonConfigurationRepository $repository,
     ) {
         parent::__construct();
 

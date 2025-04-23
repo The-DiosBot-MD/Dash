@@ -7,8 +7,6 @@ use Everest\Facades\Activity;
 use Illuminate\Http\Response;
 use Everest\Models\WebhookEvent;
 use Spatie\QueryBuilder\QueryBuilder;
-use Everest\Services\Webhooks\WebhookEventService;
-use Everest\Exceptions\Http\QueryValueOutOfRangeHttpException;
 use Everest\Transformers\Api\Application\WebhookEventTransformer;
 use Everest\Http\Controllers\Api\Application\ApplicationApiController;
 
@@ -17,9 +15,8 @@ class EventsController extends ApplicationApiController
     /**
      * EventsController constructor.
      */
-    public function __construct(
-        private WebhookEventService $webhook
-    ) {
+    public function __construct()
+    {
         parent::__construct();
     }
 
@@ -51,9 +48,9 @@ class EventsController extends ApplicationApiController
 
             foreach ($events as $event) {
                 $event->update(['enabled' => $request->input('enabled')]);
-            };
+            }
         }
-        
+
         return $this->returnNoContent();
     }
 
@@ -65,7 +62,7 @@ class EventsController extends ApplicationApiController
         Activity::event('admin:webhooks:test')
             ->description('The webhook integration was tested')
             ->log();
-            
+
         return $this->returnNoContent();
     }
 }

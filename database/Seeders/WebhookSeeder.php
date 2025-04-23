@@ -100,10 +100,10 @@ class WebhookSeeder extends Seeder
                     'enabled' => true,
                 ]);
 
-                $created++;
+                ++$created;
                 $this->command->info('Event ' . $event . ' was added');
             } else {
-                $updated++;
+                ++$updated;
                 $this->command->warn('Event ' . $event . ' already exists, skipping');
             }
         }

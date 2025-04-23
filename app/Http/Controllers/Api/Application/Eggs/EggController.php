@@ -131,7 +131,7 @@ class EggController extends ApplicationApiController
     public function export(ExportEggRequest $request, int $eggId): JsonResponse
     {
         Activity::event('admin:eggs:export')
-            ->property('egg', $egg)
+            ->property('egg', $eggId)
             ->description('An egg was exported')
             ->log();
 

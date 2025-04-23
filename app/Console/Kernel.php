@@ -5,6 +5,7 @@ namespace Everest\Console;
 use Everest\Models\ActivityLog;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Console\PruneCommand;
+use Everest\Console\Commands\AutoUpdateCommand;
 use Everest\Console\Commands\Billing\CleanupOrdersCommand;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Everest\Console\Commands\Schedule\ProcessRunnableCommand;

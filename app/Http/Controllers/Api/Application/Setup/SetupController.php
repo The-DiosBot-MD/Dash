@@ -12,7 +12,8 @@ class SetupController extends ApplicationApiController
     /**
      * SetupController constructor.
      */
-    public function __construct(private SettingsRepositoryInterface $settings) {
+    public function __construct(private SettingsRepositoryInterface $settings)
+    {
         parent::__construct();
     }
 
@@ -24,10 +25,10 @@ class SetupController extends ApplicationApiController
     public function data(): JsonResponse
     {
         return response()->json([
-            'nodes' => \Everest\Models\Node::all()->count(),
-            'servers' => \Everest\Models\Server::all()->count(),
-            'users' => \Everest\Models\User::all()->count(),
-            'eggs' => \Everest\Models\Egg::all()->count(),
+            'nodes' => \Everest\Models\Node::query()->count(),
+            'servers' => \Everest\Models\Server::query()->count(),
+            'users' => \Everest\Models\User::query()->count(),
+            'eggs' => \Everest\Models\Egg::query()->count(),
         ]);
     }
 

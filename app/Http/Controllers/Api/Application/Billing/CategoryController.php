@@ -119,7 +119,7 @@ class CategoryController extends ApplicationApiController
      */
     public function delete(Request $request, Category $category): Response
     {
-        foreach ($category->products() as $product) {
+        foreach ((array) $category->products() as $product) {
             $product->delete();
         }
 

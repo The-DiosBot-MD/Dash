@@ -2,7 +2,6 @@
 
 namespace Everest\Services\Webhooks;
 
-use Exception;
 use Everest\Models\User;
 use Everest\Models\WebhookEvent;
 use Illuminate\Support\Facades\Http;
@@ -13,19 +12,18 @@ use Everest\Contracts\Repository\SettingsRepositoryInterface;
 class WebhookEventService
 {
     /**
-     * WebhookEventService constructor
+     * WebhookEventService constructor.
      */
     public function __construct(
         private SettingsRepositoryInterface $settings,
         private ThemeRepositoryInterface $theme,
-    )
-    {
+    ) {
     }
 
     /**
      * Send a webhook through the defined URL.
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function send(User $user, WebhookEvent $event): void
     {
@@ -34,7 +32,7 @@ class WebhookEventService
 
         if (!$url) {
             throw new DisplayException('No Webhook URL has been defined.');
-        };
+        }
 
         try {
             Http::post($url, [
@@ -56,6 +54,6 @@ class WebhookEventService
             ]);
         } catch (DisplayException $ex) {
             throw new DisplayException('Unable to send webhook through URL.');
-        };
+        }
     }
 }
