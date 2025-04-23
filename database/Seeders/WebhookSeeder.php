@@ -8,6 +8,13 @@ use Everest\Models\WebhookEvent;
 class WebhookSeeder extends Seeder
 {
     /**
+     * List of webhook events.
+     *
+     * @var array
+     */
+    private $events;
+
+    /**
      * WebhookSeeder constructor.
      */
     public function __construct()
