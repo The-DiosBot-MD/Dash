@@ -3,12 +3,12 @@ name: Docker
 on:
   push:
     branches:
-      - develop
-      - 1.0-develop
+      - "develop"
+      - "3.x-develop"
   pull_request:
     branches:
-      - develop
-      - 1.0-develop
+      - "develop"
+      - "3.x-develop"
   release:
     types:
       - published

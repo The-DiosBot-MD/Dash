@@ -4,42 +4,13 @@ on:
   push:
     branches:
       - "develop"
-      - "1.0-develop"
+      - "3.x-develop"
   pull_request:
     branches:
       - "develop"
-      - "1.0-develop"
+      - "3.x-develop"
 
 jobs:
-  analysis:
-    name: Static Analysis
-    runs-on: ubuntu-22.04
-    env:
-      APP_ENV: testing
-      APP_DEBUG: "true"
-      APP_KEY: SomeRandomString3232RandomString
-      CACHE_DRIVER: array
-      MAIL_MAILER: array
-      SESSION_DRIVER: array
-      QUEUE_CONNECTION: sync
-    steps:
-      - name: Code checkout
-        uses: actions/checkout@v3
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.1
-          extensions: bcmath, cli, curl, gd, mbstring, mysql, openssl, pdo, tokenizer, xml, zip
-          tools: composer:v2
-          coverage: none
-
-      - name: Install dependencies
-        run: composer install --no-interaction --no-progress --no-suggest --prefer-dist
-
-      - name: Analyze
-        run: vendor/bin/phpstan analyse
-
   lint:
     name: Lint
     runs-on: ubuntu-22.04

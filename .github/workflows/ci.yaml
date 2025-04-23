@@ -3,10 +3,12 @@ name: Tests
 on:
   push:
     branches:
-      - 'everest'
+      - "develop"
+      - "3.x-develop"
   pull_request:
     branches:
-      - "everest"
+      - "develop"
+      - "3.x-develop"
 
 jobs:
   tests:

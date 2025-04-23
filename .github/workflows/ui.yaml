@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - "develop"
-      - "everest"
+      - "3.x-develop"
   pull_request:
     branches:
       - "develop"
-      - "everest"
+      - "3.x-develop"
 
 jobs:
   lint:
