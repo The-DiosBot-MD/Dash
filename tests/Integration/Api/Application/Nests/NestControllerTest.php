@@ -45,7 +45,7 @@ class NestControllerTest extends ApplicationApiIntegrationTestCase
                 'pagination' => [
                     'total' => 4,
                     'count' => 4,
-                    'per_page' => 10,
+                    'per_page' => 20,
                     'current_page' => 1,
                     'total_pages' => 1,
                 ],
