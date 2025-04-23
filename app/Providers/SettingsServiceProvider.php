@@ -19,6 +19,7 @@ class SettingsServiceProvider extends ServiceProvider
         // Jexactyl-specific keys
         'app:name',
         'app:mode',
+        'app:setup',
         'app:locale',
         'app:speed_dial',
         'app:indicators',

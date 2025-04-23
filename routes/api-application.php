@@ -10,6 +10,11 @@ Route::middleware([AdminSubject::class])->group(function () {
 
     Route::get('/activity', Application\ActivityLogController::class);
 
+    Route::group(['prefix' => '/setup'], function () {
+        Route::get('/data', [Application\Setup\SetupController::class, 'data']);
+        Route::post('/finish', [Application\Setup\SetupController::class, 'finish']);
+    });
+
     /*
     |--------------------------------------------------------------------------
     | Settings Controller Routes

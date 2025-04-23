@@ -10,6 +10,7 @@ export interface SiteSettings {
     auto_update: boolean;
     indicators: boolean;
     speed_dial: boolean;
+    setup: boolean;
     recaptcha: {
         enabled: boolean;
         siteKey: string;

@@ -33,6 +33,16 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Is Setup
+    |--------------------------------------------------------------------------
+    | This variable toggles whether Jexactyl has been configured and is ready
+    | for use. This should ideally be done via the UI.
+    */
+    'auto_update' => false,
+
+
+    /*
+    |--------------------------------------------------------------------------
     | Admin Speed Dial
     |--------------------------------------------------------------------------
     | This controls whether a small 'speed dial' component is visible to
