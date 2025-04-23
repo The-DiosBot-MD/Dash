@@ -79,7 +79,7 @@ import {
     faUser,
     faWandSparkles,
 } from '@fortawesome/free-solid-svg-icons';
-import LinksTable from '@admin/modules/links/LinksTable';
+import LinksTable from '@/components/admin/modules/links/LinksContainer';
 import ActivityContainer from '@admin/general/ActivityContainer';
 import WebhookRouter from '@/components/admin/modules/webhooks/WebhookRouter';
 

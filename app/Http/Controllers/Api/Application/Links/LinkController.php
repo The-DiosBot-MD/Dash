@@ -6,7 +6,11 @@ use Illuminate\Http\Request;
 use Everest\Facades\Activity;
 use Illuminate\Http\Response;
 use Everest\Models\CustomLink;
+use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Everest\Transformers\Api\Application\LinkTransformer;
+use Everest\Exceptions\Http\QueryValueOutOfRangeHttpException;
 use Everest\Http\Controllers\Api\Application\ApplicationApiController;
 
 class LinkController extends ApplicationApiController
@@ -24,7 +28,23 @@ class LinkController extends ApplicationApiController
      */
     public function index(Request $request): array
     {
-        return $this->fractal->collection(CustomLink::all())
+        $perPage = (int) $request->query('per_page', '20');
+        if ($perPage < 1 || $perPage > 100) {
+            throw new QueryValueOutOfRangeHttpException('per_page', 1, 100);
+        }
+
+        $links = QueryBuilder::for(CustomLink::query())
+            ->allowedFilters([
+                AllowedFilter::exact('id'),
+                'name',
+                'url',
+                'visible',
+                
+            ])
+            ->allowedSorts(['id', 'visible', 'name'])
+            ->paginate($perPage);
+    
+        return $this->fractal->collection($links)
             ->transformWith(LinkTransformer::class)
             ->toArray();
     }
