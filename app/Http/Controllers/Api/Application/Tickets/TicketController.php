@@ -50,9 +50,10 @@ class TicketController extends ApplicationApiController
     public function store(Request $request): JsonResponse
     {
         $ticket = Ticket::create([
-            'title' => $request->input('title'),
-            'user_id' => $request->input('user_id'),
-            'assigned_to' => $request->input('assigned_to'),
+            'title' => $request['title'],
+            'user_id' => $request['user_id'],
+            'assigned_to' => $request['assigned_to'] ?? null,
+            'status' => $request['status'] ?? Ticket::STATUS_PENDING,
         ]);
 
         Activity::event('admin:tickets:create')

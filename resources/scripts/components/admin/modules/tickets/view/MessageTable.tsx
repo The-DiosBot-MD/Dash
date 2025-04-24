@@ -35,6 +35,7 @@ const MessagesTable = ({ ticketId }: { ticketId: number }) => {
 
     return (
         <>
+            {/* this is a really dumb comparison but TS is dumber. */}
             {visible !== null && (
                 <Dialog open={Boolean(visible)} onClose={() => setVisible(null)} title={'Message Content'}>
                     <p className={'text-gray-300 italic'}>{visible.toString()}</p>
