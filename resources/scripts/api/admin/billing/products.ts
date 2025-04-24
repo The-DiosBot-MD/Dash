@@ -10,7 +10,7 @@ export const Context = createContext<ProductFilters>();
 
 export const getProducts = (id: number) =>
     createPaginatedHook<Product, ProductFilters>({
-        url: `/api/application/categories/${id}/products`,
+        url: `/api/application/billing/categories/${id}/products`,
         swrKey: `category:${id}:products`,
         context: Context,
         transformer: Transformers.toProduct,

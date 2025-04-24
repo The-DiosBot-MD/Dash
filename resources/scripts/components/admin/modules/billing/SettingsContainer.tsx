@@ -2,7 +2,6 @@ import { useState } from 'react';
 import AdminBox from '@elements/AdminBox';
 import { Button } from '@elements/button';
 import ToggleFeatureButton from './ToggleFeatureButton';
-import { updateSettings } from '@/api/admin/billing/settings';
 import { faDollar, faExchange, faKey, faPowerOff } from '@fortawesome/free-solid-svg-icons';
 import { useStoreActions, useStoreState } from '@/state/hooks';
 import { faPaypal, faStripe } from '@fortawesome/free-brands-svg-icons';
@@ -11,11 +10,11 @@ import SetupLink from './guides/SetupLink';
 import Label from '@elements/Label';
 import Select from '@elements/Select';
 import currencyDictionary from '@/assets/currency';
-import { deleteStripeKeys } from '@/api/admin/billing/keys';
 import SetupStripe from './guides/SetupStripe';
 import ExportConfigButton from './config/ExportConfigButton';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import ImportConfigButton from './config/ImportConfigButton';
+import { deleteStripeKeys, updateSettings } from '@/api/admin/billing';
 
 export type BillingSetupDialog = 'paypal' | 'link' | 'setup' | 'none';
 
