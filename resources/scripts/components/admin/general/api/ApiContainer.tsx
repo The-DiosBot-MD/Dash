@@ -32,7 +32,7 @@ function ApiContainer() {
             if (query.length < 2) {
                 setFilters(null);
             } else {
-                // setFilters({ identifier: query });
+                setFilters({ identifier: query });
             }
             return resolve();
         });
@@ -74,7 +74,11 @@ function ApiContainer() {
                                         direction={sort === 'identifier' ? (sortDirection ? 1 : 2) : null}
                                         onClick={() => setSort('identifier')}
                                     />
-                                    <TableHeader name={'Last Used'} />
+                                    <TableHeader
+                                        name={'Last Used'}
+                                        direction={sort === 'last_used_at' ? (sortDirection ? 1 : 2) : null}
+                                        onClick={() => setSort('last_used_at')}
+                                    />
                                     <TableHeader name={'Created At'} />
                                     <TableHeader />
                                 </TableHead>
@@ -99,14 +103,14 @@ function ApiContainer() {
                                                     </div>
                                                 </td>
                                                 <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
-                                                    {key.lastUsedAt && new Date(key.lastUsedAt).getTime() > 0
-                                                        ? format(key.lastUsedAt, 'MMM do, yyyy h:mma')
+                                                    {key.last_used_at && new Date(key.last_used_at).getTime() > 0
+                                                        ? format(key.last_used_at, 'MMM do, yyyy h:mma')
                                                         : 'Not Used'}
                                                 </td>
                                                 <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
-                                                    {Math.abs(differenceInHours(key.createdAt!, new Date())) > 48
-                                                        ? format(key.createdAt!, 'MMM do, yyyy h:mma')
-                                                        : formatDistanceToNow(key.createdAt!, { addSuffix: true })}
+                                                    {Math.abs(differenceInHours(key.created_at!, new Date())) > 48
+                                                        ? format(key.created_at!, 'MMM do, yyyy h:mma')
+                                                        : formatDistanceToNow(key.created_at!, { addSuffix: true })}
                                                 </td>
                                                 <DeleteApiKeyButton id={key.id!} />
                                             </TableRow>

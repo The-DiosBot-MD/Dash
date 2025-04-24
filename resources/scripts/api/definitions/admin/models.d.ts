@@ -47,9 +47,9 @@ interface ApiKey extends Model {
     id?: number;
     identifier: string;
     description: string;
-    allowedIps: string[];
-    createdAt: Date | null;
-    lastUsedAt: Date | null;
+    allowed_ips: string[];
+    created_at: Date | null;
+    last_used_at: Date | null;
 }
 
 interface BillingException extends Model {

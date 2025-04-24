@@ -121,9 +121,9 @@ export default class Transformers {
         id: attributes.id,
         identifier: attributes.identifier,
         description: attributes.description,
-        allowedIps: attributes.allowed_ips,
-        createdAt: new Date(attributes.created_at),
-        lastUsedAt: new Date(attributes.last_used_at),
+        allowed_ips: attributes.allowed_ips,
+        created_at: new Date(attributes.created_at),
+        last_used_at: new Date(attributes.last_used_at),
     });
 
     static toTicket = ({ attributes }: FractalResponseData): Ticket => ({

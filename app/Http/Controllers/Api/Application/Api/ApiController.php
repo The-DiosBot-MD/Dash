@@ -37,8 +37,8 @@ class ApiController extends ApplicationApiController
 
         $apiKeys = QueryBuilder::for(ApiKey::query())
             ->where('key_type', 2)
-            ->allowedFilters(['id', 'identifier'])
-            ->allowedSorts(['id', 'identifier'])
+            ->allowedFilters(['id', 'identifier', 'last_used_at'])
+            ->allowedSorts(['id', 'identifier', 'last_used_at'])
             ->paginate($perPage);
 
         return $this->fractal->collection($apiKeys)
