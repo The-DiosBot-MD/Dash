@@ -2,7 +2,6 @@ import type { Actions } from 'easy-peasy';
 import { useStoreActions } from 'easy-peasy';
 import type { FormikHelpers } from 'formik';
 import { Form, Formik } from 'formik';
-import { useNavigate } from 'react-router-dom';
 import Field from '@elements/Field';
 import tw from 'twin.macro';
 import AdminContentBlock from '@elements/AdminContentBlock';
@@ -16,6 +15,9 @@ import { faCog, faElevator } from '@fortawesome/free-solid-svg-icons';
 import AdminBox from '@elements/AdminBox';
 import PermissionRow from '@admin/general/api/PermissionRow';
 import { useStoreState } from '@/state/hooks';
+import { useState } from 'react';
+import { Dialog } from '@/components/elements/dialog';
+import CopyOnClick from '@/components/elements/CopyOnClick';
 
 const initialValues: Values = {
     memo: 'Your API Key',
@@ -33,7 +35,7 @@ const initialValues: Values = {
 };
 
 export default () => {
-    const navigate = useNavigate();
+    const [visible, setVisible] = useState<string | null>();
 
     const { clearFlashes, clearAndAddHttpError } = useStoreActions(
         (actions: Actions<ApplicationStore>) => actions.flashes,
@@ -44,7 +46,7 @@ export default () => {
         clearFlashes('api:create');
 
         createApiKey(values)
-            .then(() => navigate(`/admin/api`))
+            .then(token => setVisible(token))
             .catch(error => {
                 console.error(error);
                 clearAndAddHttpError({ key: 'api:create', error });
@@ -66,6 +68,16 @@ export default () => {
             </div>
 
             <FlashMessageRender byKey={'api:create'} />
+            {visible && (
+                <Dialog open={Boolean(visible)} onClose={() => setVisible(null)} title={'Your API Key'}>
+                    Do not lose this key, it is impossible to recover. Click the key below to copy it.
+                    <CopyOnClick text={visible}>
+                        <div className={'px-4 py-2 bg-black/50 rounded-lg mt-1 font-mono'}>
+                            {visible.slice(0, 48) ?? ''}...
+                        </div>
+                    </CopyOnClick>
+                </Dialog>
+            )}
 
             <Formik
                 onSubmit={submit}

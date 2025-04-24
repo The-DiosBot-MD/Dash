@@ -61,9 +61,7 @@ class ApiController extends ApplicationApiController
             ->description('A new Application API key was created')
             ->log();
 
-        return $this->fractal->item($apiKey)
-            ->transformWith(ApiKeyTransformer::class)
-            ->respond(201);
+        return response()->json(['token' => $apiKey->token]);
     }
 
     /**

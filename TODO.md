@@ -1,4 +1,3 @@
-Show admins the API token after creation
 Finish jGuard
 cleanup frontend api stack
 finish database hosts
