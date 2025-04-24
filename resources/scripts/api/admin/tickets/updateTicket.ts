@@ -4,7 +4,7 @@ import { Ticket, TicketStatus } from '@/api/admin/tickets/getTickets';
 
 export interface Values {
     user_id: number;
-    assigned_to: number;
+    assigned_to?: number | null;
     status: TicketStatus;
 }
 

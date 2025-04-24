@@ -1,29 +1,22 @@
-import http, {
-    FractalPaginatedResponse,
-    PaginatedResult,
-    QueryBuilderParams,
-    getPaginationSet,
-    withQueryBuilderParams,
-} from '@/api/http';
+import http, { PaginatedResult, getPaginationSet } from '@/api/http';
 import { Transformers, User } from '@/api/definitions/admin';
-import { AxiosError } from 'axios';
-import { SWRConfiguration, SWRResponse } from 'swr';
 import useSWR from 'swr';
 import { createContext } from '@/api/admin';
+import { useContext } from 'react';
 
 export type TicketStatus = 'resolved' | 'unresolved' | 'in-progress' | 'pending';
 
-const filters = ['id'] as const;
+const filters = ['id', 'title', 'user', 'assigned_to', 'status', 'created_at'] as const;
 export type Filters = (typeof filters)[number];
 
 export interface Ticket {
     id: number;
     title: string;
     user: User;
-    assignedTo?: User;
+    assigned_to?: User;
     status: TicketStatus;
-    createdAt: Date;
-    updatedAt?: Date | null;
+    created_at: Date;
+    updated_at?: Date | null;
     relationships: {
         messages?: TicketMessage[];
     };
@@ -33,18 +26,18 @@ export interface TicketMessage {
     id: number;
     message: string;
     author: User;
-    createdAt: Date;
-    updatedAt?: Date | null;
+    created_at: Date;
+    updated_at?: Date | null;
 }
 
 export interface ContextFilters {
-    id: number;
-    title: string;
-    user: User;
-    assignedTo?: User;
-    status: TicketStatus;
-    createdAt: Date;
-    updatedAt?: Date | null;
+    id?: number;
+    title?: string;
+    user?: User;
+    assigned_to?: User;
+    status?: TicketStatus;
+    created_at?: Date;
+    updated_at?: Date | null;
 }
 
 export const Context = createContext<ContextFilters>();
@@ -57,24 +50,32 @@ const getTickets = (): Promise<Ticket> => {
     });
 };
 
-const useGetTickets = (
-    params?: QueryBuilderParams<Filters>,
-    config?: SWRConfiguration,
-): SWRResponse<PaginatedResult<Ticket>, AxiosError> => {
-    return useSWR<PaginatedResult<Ticket>>(
-        ['/api/application/tickets', JSON.stringify(params)],
-        async () => {
-            const { data } = await http.get<FractalPaginatedResponse>('/api/application/tickets', {
-                params: withQueryBuilderParams(params),
-            });
+const useGetTickets = (include: string[] = []) => {
+    const { page, filters, sort, sortDirection } = useContext(Context);
 
-            return {
-                items: (data.data || []).map(Transformers.toTicket),
-                pagination: getPaginationSet(data.meta.pagination),
-            };
-        },
-        config || { revalidateOnMount: true, revalidateOnFocus: false },
-    );
+    const params = {};
+    if (filters !== null) {
+        Object.keys(filters).forEach(key => {
+            // @ts-expect-error todo
+            params['filter[' + key + ']'] = filters[key];
+        });
+    }
+
+    if (sort !== null) {
+        // @ts-expect-error todo
+        params.sort = (sortDirection ? '-' : '') + sort;
+    }
+
+    return useSWR<PaginatedResult<Ticket>>(['tickets', page, filters, sort, sortDirection], async () => {
+        const { data } = await http.get('/api/application/tickets', {
+            params: { include: include.join(','), page, ...params },
+        });
+
+        return {
+            items: (data.data || []).map(Transformers.toTicket),
+            pagination: getPaginationSet(data.meta.pagination),
+        };
+    });
 };
 
 export { getTickets, useGetTickets };

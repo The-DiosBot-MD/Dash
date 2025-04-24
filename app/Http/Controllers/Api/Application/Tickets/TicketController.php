@@ -35,8 +35,8 @@ class TicketController extends ApplicationApiController
         }
 
         $tickets = QueryBuilder::for(Ticket::query())
-            ->allowedFilters(['id', 'title'])
-            ->allowedSorts(['id', 'title'])
+            ->allowedFilters(['id', 'title', 'status', 'created_at'])
+            ->allowedSorts(['id', 'title', 'status', 'created_at'])
             ->paginate($perPage);
 
         return $this->fractal->collection($tickets)
@@ -50,9 +50,10 @@ class TicketController extends ApplicationApiController
     public function store(Request $request): JsonResponse
     {
         $ticket = Ticket::create([
-            'title' => $request->input('title'),
-            'assigned_to' => $request->user()->id,
-            'user_id' => $request->input('user_id'),
+            'title' => $request['title'],
+            'user_id' => $request['user_id'],
+            'assigned_to' => $request['assigned_to'] ?? null,
+            'status' => $request['status'] ?? Ticket::STATUS_PENDING,
         ]);
 
         Activity::event('admin:tickets:create')

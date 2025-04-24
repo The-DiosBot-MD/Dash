@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { searchUserAccounts } from '@/api/admin/users';
 import SearchableSelect, { Option } from '@elements/SearchableSelect';
 import type { User } from '@definitions/admin';
+import Avatar from '@/components/Avatar';
 
 export default ({ selected, isAdmin }: { selected?: User; isAdmin?: boolean }) => {
     const { setFieldValue } = useFormikContext();
@@ -32,7 +33,7 @@ export default ({ selected, isAdmin }: { selected?: User; isAdmin?: boolean }) =
         <SearchableSelect
             id={isAdmin ? 'assigned_to' : 'user_id'}
             name={isAdmin ? 'assigned_to' : 'user_id'}
-            label={isAdmin ? 'Assign to Administrator' : 'Ticket Owner'}
+            label={isAdmin ? 'Assign to Administrator (optional)' : 'Ticket Owner'}
             placeholder={'Select a user...'}
             items={users}
             selected={user}
@@ -53,7 +54,12 @@ export default ({ selected, isAdmin }: { selected?: User; isAdmin?: boolean }) =
                         item={d}
                         active={d.id === user?.id}
                     >
-                        {d.username} ({d.email})
+                        <div className={'inline-flex items-center mr-2'}>
+                            <Avatar name={d.uuid} size={20} />
+                        </div>
+                        <div className={'inline-flex items-center'}>
+                            {d.username} ({d.email})
+                        </div>
                     </Option>
                 ))}
         </SearchableSelect>

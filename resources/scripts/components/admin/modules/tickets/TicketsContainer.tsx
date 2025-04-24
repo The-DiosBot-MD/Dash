@@ -11,13 +11,15 @@ import AdminTable, {
     TableHead,
     TableHeader,
     TableRow,
+    useTableHooks,
 } from '@elements/AdminTable';
-import { useGetTickets, Context as TicketContext, TicketStatus } from '@/api/admin/tickets/getTickets';
+import { useGetTickets, Context as TicketContext, TicketStatus, ContextFilters } from '@/api/admin/tickets/getTickets';
 import { Button } from '@elements/button';
 import CopyOnClick from '@elements/CopyOnClick';
 import { differenceInHours, format, formatDistanceToNow } from 'date-fns';
 import classNames from 'classnames';
 import { useStoreState } from '@/state/hooks';
+import Avatar from '@/components/Avatar';
 
 export const statusToColor = (status: TicketStatus): string => {
     switch (status) {
@@ -32,7 +34,7 @@ export const statusToColor = (status: TicketStatus): string => {
     }
 };
 
-export default () => {
+function TicketContainer() {
     const { data: tickets } = useGetTickets();
     const { colors } = useStoreState(state => state.theme.data!);
     const { setPage, setFilters, sort, setSort, sortDirection } = useContext(TicketContext);
@@ -42,7 +44,7 @@ export default () => {
             if (query.length < 2) {
                 setFilters(null);
             } else {
-                // setFilters({ title: query });
+                setFilters({ title: query });
             }
             return resolve();
         });
@@ -84,14 +86,15 @@ export default () => {
                                         onClick={() => setSort('title')}
                                     />
                                     <TableHeader
-                                        name={'Created At'}
-                                        direction={sort === 'created_at' ? (sortDirection ? 1 : 2) : null}
-                                        onClick={() => setSort('created_at')}
-                                    />
-                                    <TableHeader
                                         name={'Status'}
                                         direction={sort === 'status' ? (sortDirection ? 1 : 2) : null}
                                         onClick={() => setSort('status')}
+                                    />
+                                    <TableHeader name={'Assigned To'} />
+                                    <TableHeader
+                                        name={'Created At'}
+                                        direction={sort === 'created_at' ? (sortDirection ? 1 : 2) : null}
+                                        onClick={() => setSort('created_at')}
                                     />
                                 </TableHead>
                                 <TableBody>
@@ -116,11 +119,6 @@ export default () => {
                                                     </NavLink>
                                                 </td>
                                                 <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
-                                                    {Math.abs(differenceInHours(ticket.createdAt, new Date())) > 48
-                                                        ? format(ticket.createdAt, 'MMM do, yyyy h:mma')
-                                                        : formatDistanceToNow(ticket.createdAt, { addSuffix: true })}
-                                                </td>
-                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
                                                     <span
                                                         className={classNames(
                                                             statusToColor(ticket.status),
@@ -129,6 +127,19 @@ export default () => {
                                                     >
                                                         {ticket.status}
                                                     </span>
+                                                </td>
+                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                                    <div className={'my-2 inline-flex'}>
+                                                        <Avatar size={24} name={ticket.assigned_to?.email ?? 'null'} />
+                                                        <div className={'ml-2'}>
+                                                            {ticket.assigned_to?.email ?? 'Unassigned'}
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                                    {Math.abs(differenceInHours(ticket.created_at, new Date())) > 48
+                                                        ? format(ticket.created_at, 'MMM do, yyyy h:mma')
+                                                        : formatDistanceToNow(ticket.created_at, { addSuffix: true })}
                                                 </td>
                                             </TableRow>
                                         ))}
@@ -141,5 +152,15 @@ export default () => {
                 </ContentWrapper>
             </AdminTable>
         </AdminContentBlock>
+    );
+}
+
+export default () => {
+    const hooks = useTableHooks<ContextFilters>();
+
+    return (
+        <TicketContext.Provider value={hooks}>
+            <TicketContainer />
+        </TicketContext.Provider>
     );
 };

@@ -131,9 +131,9 @@ export default class Transformers {
         title: attributes.title,
         status: attributes.status,
         user: attributes.user,
-        assignedTo: attributes.assigned_to,
-        createdAt: new Date(attributes.created_at),
-        updatedAt: attributes.updated_at ? new Date(attributes.updated_at) : null,
+        assigned_to: attributes.assigned_to,
+        created_at: new Date(attributes.created_at),
+        updated_at: attributes.updated_at ? new Date(attributes.updated_at) : null,
         relationships: {
             messages: transform(attributes.relationships?.messages as FractalResponseList, this.toTicketMessage),
         },
@@ -143,8 +143,8 @@ export default class Transformers {
         id: attributes.id,
         message: attributes.message,
         author: attributes.author,
-        createdAt: new Date(attributes.created_at),
-        updatedAt: attributes.updated_at ? new Date(attributes.updated_at) : null,
+        created_at: new Date(attributes.created_at),
+        updated_at: attributes.updated_at ? new Date(attributes.updated_at) : null,
     });
 
     static toUser = ({ attributes }: FractalResponseData): Models.User => {

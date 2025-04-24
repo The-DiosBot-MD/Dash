@@ -16,10 +16,14 @@ import { object, string, number } from 'yup';
 import { faTicket } from '@fortawesome/free-solid-svg-icons';
 import UserSelect from './UserSelect';
 import { useStoreState } from '@/state/hooks';
+import Select from '@/components/elements/Select';
+import Label from '@/components/elements/Label';
 
 const initialValues: Values = {
     title: '',
     user_id: 0,
+    assigned_to: null,
+    status: null,
 };
 
 export default () => {
@@ -34,7 +38,7 @@ export default () => {
         clearFlashes('ticket:create');
 
         createTicket(values)
-            .then(() => navigate(`/admin/tickets`))
+            .then(ticket => navigate(`/admin/tickets/${ticket.id}`))
             .catch(error => {
                 console.error(error);
                 clearAndAddHttpError({ key: 'ticket:create', error });
@@ -63,6 +67,8 @@ export default () => {
                 validationSchema={object().shape({
                     title: string().required().max(191).min(3),
                     user_id: number().required(),
+                    assigned_to: number().nullable(),
+                    status: string().nullable(),
                 })}
             >
                 {({ isSubmitting, isValid }) => (
@@ -78,7 +84,30 @@ export default () => {
                                             label={'Title'}
                                             description={'A simple title or description for this ticket.'}
                                         />
-                                        <UserSelect />
+                                        <div>
+                                            <UserSelect />
+                                            <p className={'text-xs pt-2'}>
+                                                This will be the user that the ticket is made for.
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <UserSelect isAdmin />
+                                            <p className={'text-xs pt-2'}>
+                                                Set an assigned administrator to deal with this ticket.
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <Label>Select ticket status</Label>
+                                            <Select id={'status'} name={'status'}>
+                                                <option value={'pending'}>Pending</option>
+                                                <option value={'in-progress'}>In Progress</option>
+                                                <option value={'resolved'}>Resolved</option>
+                                                <option value={'unresolved'}>Unresolved</option>
+                                            </Select>
+                                            <p className={'text-xs pt-2'}>
+                                                Before the ticket is created, you can change the status.
+                                            </p>
+                                        </div>
                                     </FieldRow>
                                 </AdminBox>
                                 <div css={tw`rounded shadow-md mt-4 py-2 pr-6`} style={{ backgroundColor: secondary }}>

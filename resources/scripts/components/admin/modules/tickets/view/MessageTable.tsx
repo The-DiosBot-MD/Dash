@@ -8,79 +8,140 @@ import AdminTable, {
     Loading,
     NoItems,
     useTableHooks,
+    ContentWrapper,
+    Pagination,
 } from '@elements/AdminTable';
-import { ContextFilters, Context as MessagesContext } from '@/api/admin/tickets/messages/getMessages';
+import {
+    ContextFilters,
+    Context as MessagesContext,
+    useGetTicketMessages,
+} from '@/api/admin/tickets/messages/getMessages';
 import { differenceInHours, format, formatDistanceToNow } from 'date-fns';
-import { TicketMessage } from '@/api/admin/tickets/getTickets';
+import { Context as TicketMessageContext } from '@/api/admin/tickets/getTickets';
 import { useStoreState } from '@/state/hooks';
+import { useContext, useState } from 'react';
+import CopyOnClick from '@/components/elements/CopyOnClick';
+import { Button } from '@/components/elements/button';
+import { Dialog } from '@/components/elements/dialog';
+import { Alert } from '@/components/elements/alert';
 
-const MessagesTable = ({ messages }: { messages?: TicketMessage[] }) => {
-    const length = messages?.length || 0;
+const MessagesTable = ({ ticketId }: { ticketId: number }) => {
+    const { data: messages, error } = useGetTicketMessages(ticketId);
+    const [visible, setVisible] = useState<string | null>(null);
     const { colors } = useStoreState(state => state.theme.data!);
+    const { setPage, sort, setSort, sortDirection } = useContext(TicketMessageContext);
+
+    if (error) return <Alert type={'danger'}>Unable to render messages: {error}</Alert>;
 
     return (
-        <AdminTable className={'mt-6'}>
-            <div css={tw`overflow-x-auto`}>
-                <table css={tw`w-full table-auto`}>
-                    <TableHead>
-                        <TableHeader name={'Author'} />
-                        <TableHeader name={'Message'} />
-                        <TableHeader name={'Sent At'} />
-                    </TableHead>
+        <>
+            {/* this is a really dumb comparison but TS is dumber. */}
+            {visible !== null && (
+                <Dialog open={Boolean(visible)} onClose={() => setVisible(null)} title={'Message Content'}>
+                    <p className={'text-gray-300 italic'}>{visible.toString()}</p>
+                </Dialog>
+            )}
+            <AdminTable className={'mt-6'}>
+                <ContentWrapper>
+                    <Pagination data={messages} onPageSelect={setPage}>
+                        <div css={tw`overflow-x-auto`}>
+                            <table css={tw`w-full table-auto`}>
+                                <TableHead>
+                                    <TableHeader
+                                        name={'ID'}
+                                        direction={sort === 'id' ? (sortDirection ? 1 : 2) : null}
+                                        onClick={() => setSort('id')}
+                                    />
+                                    <TableHeader name={'Author'} />
+                                    <TableHeader name={'Message'} />
+                                    <TableHeader name={'Sent At'} />
+                                    <TableHeader />
+                                </TableHead>
 
-                    <TableBody>
-                        {messages !== undefined &&
-                            length > 0 &&
-                            messages
-                                .map(message => (
-                                    <TableRow key={message.id}>
-                                        {message.author ? (
-                                            <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
-                                                <Link
-                                                    to={`/admin/users/${message.author.id}`}
-                                                    style={{ color: colors.primary }}
-                                                    className={'hover:brightness-125 duration-300'}
-                                                >
-                                                    {message.author.email}
-                                                </Link>
-                                            </td>
-                                        ) : (
-                                            <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
-                                                <Link
-                                                    to={`/admin/users`}
-                                                    style={{ color: colors.primary }}
-                                                    className={'hover:brightness-125 duration-300'}
-                                                >
-                                                    Ticket Owner
-                                                </Link>
-                                            </td>
-                                        )}
-                                        <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
-                                            {message.message}
-                                        </td>
-                                        <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
-                                            {Math.abs(differenceInHours(message.createdAt, new Date())) > 48
-                                                ? format(message.createdAt!, 'MMM do, yyyy h:mma')
-                                                : formatDistanceToNow(message.createdAt!, { addSuffix: true })}
-                                        </td>
-                                    </TableRow>
-                                ))
-                                .toReversed()}
-                    </TableBody>
-                </table>
+                                <TableBody>
+                                    {messages !== undefined &&
+                                        messages.items.length > 0 &&
+                                        messages.items
+                                            .map(message => (
+                                                <TableRow key={message.id}>
+                                                    <td
+                                                        css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}
+                                                    >
+                                                        <CopyOnClick text={message.id}>
+                                                            <code css={tw`font-mono bg-neutral-900 rounded py-1 px-2`}>
+                                                                {message.id}
+                                                            </code>
+                                                        </CopyOnClick>
+                                                    </td>
+                                                    {message.author ? (
+                                                        <td
+                                                            css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}
+                                                        >
+                                                            <Link
+                                                                to={`/admin/users/${message.author.id}`}
+                                                                style={{ color: colors.primary }}
+                                                                className={'hover:brightness-125 duration-300'}
+                                                            >
+                                                                {message.author.email}
+                                                            </Link>
+                                                        </td>
+                                                    ) : (
+                                                        <td
+                                                            css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}
+                                                        >
+                                                            <Link
+                                                                to={`/admin/users`}
+                                                                style={{ color: colors.primary }}
+                                                                className={'hover:brightness-125 duration-300'}
+                                                            >
+                                                                Ticket Owner
+                                                            </Link>
+                                                        </td>
+                                                    )}
+                                                    <td
+                                                        css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}
+                                                    >
+                                                        {message.message.slice(0, 64)}
+                                                        {message.message.length > 64 && '...'}
+                                                    </td>
+                                                    <td
+                                                        css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}
+                                                    >
+                                                        {Math.abs(differenceInHours(message.created_at, new Date())) >
+                                                        48
+                                                            ? format(message.created_at!, 'MMM do, yyyy h:mma')
+                                                            : formatDistanceToNow(message.created_at!, {
+                                                                  addSuffix: true,
+                                                              })}
+                                                    </td>
+                                                    <td
+                                                        css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}
+                                                    >
+                                                        <Button onClick={() => setVisible(message.message)}>
+                                                            Read Message
+                                                        </Button>
+                                                    </td>
+                                                </TableRow>
+                                            ))
+                                            .toReversed()}
+                                </TableBody>
+                            </table>
 
-                {!messages ? <Loading /> : messages.length < 1 ? <NoItems /> : null}
-            </div>
-        </AdminTable>
+                            {messages === undefined ? <Loading /> : messages.items.length < 1 ? <NoItems /> : null}
+                        </div>
+                    </Pagination>
+                </ContentWrapper>
+            </AdminTable>
+        </>
     );
 };
 
-export default ({ messages }: { messages?: TicketMessage[] }) => {
+export default ({ ticketId }: { ticketId: number }) => {
     const hooks = useTableHooks<ContextFilters>();
 
     return (
         <MessagesContext.Provider value={hooks}>
-            <MessagesTable messages={messages} />
+            <MessagesTable ticketId={ticketId} />
         </MessagesContext.Provider>
     );
 };
