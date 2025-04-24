@@ -3,7 +3,6 @@
 namespace Everest\Models;
 
 use Illuminate\Support\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -69,9 +68,9 @@ class Ticket extends Model
      * Rules verifying that the data being stored matches the expectations of the database.
      */
     public static array $validationRules = [
-        'user_id' => 'required|int|unique:users,id',
+        'user_id' => 'required|int|exists:users,id',
         'title' => 'required|string|min:3|max:191',
-        'assigned_to' => 'sometimes|int|unique:users,id',
+        'assigned_to' => 'nullable|int|exists:users,id',
         'status' => 'required|string|in:pending,resolved,unresolved,in-progress',
     ];
 

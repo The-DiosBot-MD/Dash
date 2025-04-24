@@ -35,8 +35,8 @@ class TicketController extends ApplicationApiController
         }
 
         $tickets = QueryBuilder::for(Ticket::query())
-            ->allowedFilters(['id', 'title'])
-            ->allowedSorts(['id', 'title'])
+            ->allowedFilters(['id', 'title', 'status', 'created_at'])
+            ->allowedSorts(['id', 'title', 'status', 'created_at'])
             ->paginate($perPage);
 
         return $this->fractal->collection($tickets)
@@ -51,8 +51,8 @@ class TicketController extends ApplicationApiController
     {
         $ticket = Ticket::create([
             'title' => $request->input('title'),
-            'assigned_to' => $request->user()->id,
             'user_id' => $request->input('user_id'),
+            'assigned_to' => $request->input('assigned_to'),
         ]);
 
         Activity::event('admin:tickets:create')

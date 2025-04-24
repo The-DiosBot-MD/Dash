@@ -5,7 +5,7 @@ import { differenceInHours, format, formatDistanceToNow } from 'date-fns';
 import { statusToColor } from '@admin/modules/tickets/TicketsContainer';
 import classNames from 'classnames';
 import AdminBox from '@elements/AdminBox';
-import { faGears } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faGears, faXmarkCircle } from '@fortawesome/free-solid-svg-icons';
 import UserSelect from '../UserSelect';
 import { Form, Formik } from 'formik';
 import type { FormikHelpers } from 'formik';
@@ -26,11 +26,13 @@ import { Ticket } from '@/api/admin/tickets/getTickets';
 import Spinner from '@elements/Spinner';
 import { useParams } from 'react-router-dom';
 import useStatus from '@/plugins/useStatus';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default () => {
     const { id } = useParams();
     const boxStatus = useStatus();
 
+    const [unassign, setUnassign] = useState<boolean>(false);
     const [ticket, setTicket] = useState<Ticket | undefined>();
     const { clearFlashes, clearAndAddHttpError } = useFlash();
     const [status, setStatus] = useState<TicketStatus>('pending');
@@ -40,6 +42,9 @@ export default () => {
         boxStatus.setStatus('loading');
 
         values.status = status;
+        if (unassign) {
+            values.assigned_to = null;
+        }
 
         updateTicket(ticket!.id, values)
             .then(() => {
@@ -88,9 +93,9 @@ export default () => {
                         }
                     >
                         First created&nbsp;
-                        {Math.abs(differenceInHours(ticket.createdAt, new Date())) > 48
-                            ? format(ticket.createdAt, 'MMM do, yyyy h:mma')
-                            : formatDistanceToNow(ticket.createdAt, { addSuffix: true })}
+                        {Math.abs(differenceInHours(ticket.created_at, new Date())) > 48
+                            ? format(ticket.created_at, 'MMM do, yyyy h:mma')
+                            : formatDistanceToNow(ticket.created_at, { addSuffix: true })}
                     </p>
                 </div>
             </div>
@@ -99,7 +104,6 @@ export default () => {
                 onSubmit={submit}
                 initialValues={{
                     status: ticket.status,
-                    assigned_to: ticket.assignedTo?.id || 0,
                     user_id: ticket.user.id,
                 }}
             >
@@ -123,7 +127,20 @@ export default () => {
                                     </p>
                                 </div>
                                 <div>
-                                    <UserSelect isAdmin selected={ticket.assignedTo} />
+                                    <div className={classNames(ticket.assigned_to && 'grid grid-cols-8 gap-2')}>
+                                        <div className={classNames(ticket.assigned_to && 'col-span-7')}>
+                                            <UserSelect isAdmin selected={ticket.assigned_to} />
+                                        </div>
+                                        {ticket.assigned_to && (
+                                            <div>
+                                                <FontAwesomeIcon
+                                                    icon={unassign ? faCheckCircle : faXmarkCircle}
+                                                    onClick={() => setUnassign(!unassign)}
+                                                    className={'mt-10 w-5 text-gray-400'}
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
                                     <p className={'text-xs mt-1 text-gray-400'}>
                                         You may assign a Panel administrator to be responsible for this ticket.
                                     </p>
@@ -156,7 +173,7 @@ export default () => {
                     <NewMessageDialog />
                 </div>
             </div>
-            <MessageTable messages={ticket.relationships.messages} />
+            <MessageTable ticketId={ticket.id} />
         </AdminContentBlock>
     );
 };
