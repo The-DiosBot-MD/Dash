@@ -1,4 +1,4 @@
-import { useGetCategories, Context as CategoryContext } from '@/api/admin/billing/categories';
+import { useGetCategories, Context as CategoryContext, ContextFilters } from '@/api/admin/billing/categories';
 import AdminTable, {
     ContentWrapper,
     Loading,
@@ -8,23 +8,24 @@ import AdminTable, {
     TableHead,
     TableHeader,
     TableRow,
+    useTableHooks,
 } from '@elements/AdminTable';
 import CopyOnClick from '@elements/CopyOnClick';
 import { differenceInHours, format, formatDistanceToNow } from 'date-fns';
 import { Link, NavLink } from 'react-router-dom';
 import tw from 'twin.macro';
 import { useStoreState } from '@/state/hooks';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Button } from '@elements/button';
 import classNames from 'classnames';
 import { ShoppingCartIcon } from '@heroicons/react/outline';
+import useFlash from '@/plugins/useFlash';
 
-export default () => {
-    const { data: categories } = useGetCategories();
+function CategoryTable() {
+    const { data: categories, error } = useGetCategories();
+    const { clearFlashes, clearAndAddHttpError } = useFlash();
     const { colors } = useStoreState(state => state.theme.data!);
     const { setPage, setFilters, sort, setSort, sortDirection } = useContext(CategoryContext);
-
-    if (!categories) return null;
 
     const onSearch = (query: string): Promise<void> => {
         return new Promise(resolve => {
@@ -36,6 +37,15 @@ export default () => {
             return resolve();
         });
     };
+
+    useEffect(() => {
+        if (!error) {
+            clearFlashes('admin:billing:products');
+            return;
+        }
+
+        clearAndAddHttpError({ key: 'admin:billing:products', error });
+    }, [error]);
 
     return (
         <>
@@ -73,16 +83,8 @@ export default () => {
                                         direction={sort === 'name' ? (sortDirection ? 1 : 2) : null}
                                         onClick={() => setSort('name')}
                                     />
-                                    <TableHeader
-                                        name={'Description'}
-                                        direction={sort === 'description' ? (sortDirection ? 1 : 2) : null}
-                                        onClick={() => setSort('description')}
-                                    />
-                                    <TableHeader
-                                        name={'Created At'}
-                                        direction={sort === 'created_at' ? (sortDirection ? 1 : 2) : null}
-                                        onClick={() => setSort('created_at')}
-                                    />
+                                    <TableHeader name={'Description'} />
+                                    <TableHeader name={'Created At'} />
                                     <TableHeader />
                                 </TableHead>
                                 <TableBody>
@@ -137,12 +139,21 @@ export default () => {
                                         ))}
                                 </TableBody>
                             </table>
-
                             {categories === undefined ? <Loading /> : categories.items.length < 1 ? <NoItems /> : null}
                         </div>
                     </Pagination>
                 </ContentWrapper>
             </AdminTable>
         </>
+    );
+}
+
+export default () => {
+    const hooks = useTableHooks<ContextFilters>();
+
+    return (
+        <CategoryContext.Provider value={hooks}>
+            <CategoryTable />
+        </CategoryContext.Provider>
     );
 };

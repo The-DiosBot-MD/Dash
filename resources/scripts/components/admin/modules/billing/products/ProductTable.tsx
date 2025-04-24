@@ -1,4 +1,4 @@
-import { Context as productContext } from '@/api/admin/billing/categories';
+import { Context as ProductContext, ProductFilters } from '@/api/admin/billing/getProducts';
 import AdminTable, {
     ContentWrapper,
     Loading,
@@ -8,6 +8,7 @@ import AdminTable, {
     TableHead,
     TableHeader,
     TableRow,
+    useTableHooks,
 } from '@elements/AdminTable';
 import CopyOnClick from '@elements/CopyOnClick';
 import { differenceInHours, format, formatDistanceToNow } from 'date-fns';
@@ -19,12 +20,12 @@ import useFlash from '@/plugins/useFlash';
 import getProducts from '@/api/admin/billing/getProducts';
 import { ShoppingBagIcon } from '@heroicons/react/outline';
 
-export default () => {
+function ProductTable() {
     const params = useParams<'id'>();
     const { data: products, error } = getProducts(Number(params.id));
     const { clearFlashes, clearAndAddHttpError } = useFlash();
     const { colors } = useStoreState(state => state.theme.data!);
-    const { setPage, setFilters, sort, setSort, sortDirection } = useContext(productContext);
+    const { setPage, setFilters, sort, setSort, sortDirection } = useContext(ProductContext);
 
     useEffect(() => {
         if (!error) {
@@ -64,17 +65,13 @@ export default () => {
                                     direction={sort === 'name' ? (sortDirection ? 1 : 2) : null}
                                     onClick={() => setSort('name')}
                                 />
-                                <TableHeader name={'Cost'} />
                                 <TableHeader
-                                    name={'Description'}
-                                    direction={sort === 'description' ? (sortDirection ? 1 : 2) : null}
-                                    onClick={() => setSort('description')}
+                                    name={'Price'}
+                                    direction={sort === 'price' ? (sortDirection ? 1 : 2) : null}
+                                    onClick={() => setSort('price')}
                                 />
-                                <TableHeader
-                                    name={'Created At'}
-                                    direction={sort === 'created_at' ? (sortDirection ? 1 : 2) : null}
-                                    onClick={() => setSort('created_at')}
-                                />
+                                <TableHeader name={'Description'} />
+                                <TableHeader name={'Created At'} />
                             </TableHead>
                             <TableBody>
                                 {products !== undefined &&
@@ -129,5 +126,15 @@ export default () => {
                 </Pagination>
             </ContentWrapper>
         </AdminTable>
+    );
+}
+
+export default () => {
+    const hooks = useTableHooks<ProductFilters>();
+
+    return (
+        <ProductContext.Provider value={hooks}>
+            <ProductTable />
+        </ProductContext.Provider>
     );
 };

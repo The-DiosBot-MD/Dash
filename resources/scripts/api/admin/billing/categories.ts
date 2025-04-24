@@ -1,10 +1,9 @@
-import { useContext } from 'react';
 import { AxiosError } from 'axios';
 import useSWR, { SWRResponse } from 'swr';
-import { createContext, withRelationships } from '@/api/admin';
+import { createContext, createPaginatedHook, withRelationships } from '@/api/admin';
 import { useParams } from 'react-router-dom';
 import { Product, rawDataToProduct } from '@/api/admin/billing/products';
-import http, { FractalResponseData, FractalResponseList, PaginatedResult, getPaginationSet } from '@/api/http';
+import http, { FractalResponseData, FractalResponseList } from '@/api/http';
 import { Transformers } from '@/api/definitions/admin';
 
 const filters = ['id', 'uuid', 'name', 'description'] as const;
@@ -64,33 +63,12 @@ const rawDataToCategory = ({ attributes }: FractalResponseData): Category =>
         },
     } as Category);
 
-const useGetCategories = (include: string[] = []) => {
-    const { page, filters, sort, sortDirection } = useContext(Context);
-
-    const params = {};
-    if (filters !== null) {
-        Object.keys(filters).forEach(key => {
-            // @ts-expect-error todo
-            params['filter[' + key + ']'] = filters[key];
-        });
-    }
-
-    if (sort !== null) {
-        // @ts-expect-error todo
-        params.sort = (sortDirection ? '-' : '') + sort;
-    }
-
-    return useSWR<PaginatedResult<Category>>(['categories', page, filters, sort, sortDirection], async () => {
-        const { data } = await http.get('/api/application/billing/categories', {
-            params: { include: include.join(','), page, ...params },
-        });
-
-        return {
-            items: (data.data || []).map(rawDataToCategory),
-            pagination: getPaginationSet(data.meta.pagination),
-        };
-    });
-};
+const useGetCategories = createPaginatedHook<Category, ContextFilters>({
+    url: '/api/application/billing/categories',
+    swrKey: 'categories',
+    context: Context,
+    transformer: Transformers.toCategory,
+});
 
 const getCategories = (): Promise<Category[]> => {
     return new Promise((resolve, reject) => {

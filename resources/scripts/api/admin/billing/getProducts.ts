@@ -4,12 +4,13 @@ import useSWR from 'swr';
 import { createContext } from '@/api/admin';
 import { Product, rawDataToProduct } from './products';
 
-export interface Filters {
+export interface ProductFilters {
     id?: string;
     name?: string;
+    price?: number;
 }
 
-export const Context = createContext<Filters>();
+export const Context = createContext<ProductFilters>();
 
 export default (nestId: number, include: string[] = []) => {
     const { page, filters, sort, sortDirection } = useContext(Context);
