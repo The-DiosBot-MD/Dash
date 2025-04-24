@@ -8,7 +8,6 @@ use Illuminate\Http\Response;
 use Everest\Models\CustomLink;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
-use Illuminate\Database\Eloquent\Builder;
 use Everest\Transformers\Api\Application\LinkTransformer;
 use Everest\Exceptions\Http\QueryValueOutOfRangeHttpException;
 use Everest\Http\Controllers\Api\Application\ApplicationApiController;
@@ -39,11 +38,10 @@ class LinkController extends ApplicationApiController
                 'name',
                 'url',
                 'visible',
-                
             ])
             ->allowedSorts(['id', 'visible', 'name'])
             ->paginate($perPage);
-    
+
         return $this->fractal->collection($links)
             ->transformWith(LinkTransformer::class)
             ->toArray();

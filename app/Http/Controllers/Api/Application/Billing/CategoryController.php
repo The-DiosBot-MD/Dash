@@ -36,7 +36,7 @@ class CategoryController extends ApplicationApiController
 
         $categories = QueryBuilder::for(Category::query())
             ->allowedFilters(['id', 'name'])
-            ->allowedSorts(['id', 'name'])
+            ->allowedSorts(['id', 'name', 'created_at', 'visible'])
             ->paginate($perPage);
 
         return $this->fractal->collection($categories)

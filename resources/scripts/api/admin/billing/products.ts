@@ -1,85 +1,22 @@
-import http, { FractalResponseData } from '@/api/http';
-import { Category, rawDataToCategory } from '@/api/admin/billing/categories';
-import useSWR, { SWRResponse } from 'swr';
+import http from '@/api/http';
 import { AxiosError } from 'axios';
+import useSWR, { SWRResponse } from 'swr';
 import { useParams } from 'react-router-dom';
-import { Transformers } from '@/api/definitions/admin';
+import { Product, Transformers } from '@/api/definitions/admin';
+import { ProductFilters, ProductValues } from './types';
+import { createContext, createPaginatedHook } from '@/api/admin';
 
-export interface Product {
-    id: number;
-    uuid: string;
-    categoryUuid: number;
+export const Context = createContext<ProductFilters>();
 
-    name: string;
-    icon?: string;
-    price: number;
-    description: string;
+export const getProducts = (id: number) =>
+    createPaginatedHook<Product, ProductFilters>({
+        url: `/api/application/billing/categories/${id}/products`,
+        swrKey: `category:${id}:products`,
+        context: Context,
+        transformer: Transformers.toProduct,
+    })();
 
-    limits: {
-        cpu: number;
-        memory: number;
-        disk: number;
-        backup: number;
-        database: number;
-        allocation: number;
-    };
-
-    createdAt: Date;
-    updatedAt?: Date | null;
-
-    relationships: {
-        category?: Category;
-    };
-}
-
-export interface Values {
-    categoryUuid: string;
-
-    name: string;
-    icon: string | undefined;
-    price: number;
-    description: string;
-
-    limits: {
-        cpu: number;
-        memory: number;
-        disk: number;
-        backup: number;
-        database: number;
-        allocation: number;
-    };
-}
-
-export const rawDataToProduct = ({ attributes }: FractalResponseData): Product => ({
-    id: attributes.id,
-    uuid: attributes.uuid,
-    categoryUuid: attributes.category_uuid,
-    name: attributes.name,
-    icon: attributes.icon,
-    price: attributes.price,
-    description: attributes.description,
-
-    limits: {
-        cpu: attributes.limits.cpu,
-        memory: attributes.limits.memory,
-        disk: attributes.limits.disk,
-        backup: attributes.limits.backup,
-        database: attributes.limits.database,
-        allocation: attributes.limits.allocation,
-    },
-
-    createdAt: new Date(attributes.created_at),
-    updatedAt: new Date(attributes.updated_at),
-
-    relationships: {
-        category:
-            attributes.relationships?.category?.object === 'category'
-                ? rawDataToCategory(attributes.relationships.category as FractalResponseData)
-                : undefined,
-    },
-});
-
-export const createProduct = (id: number, values: Values): Promise<Product> => {
+export const createProduct = (id: number, values: ProductValues): Promise<Product> => {
     return new Promise((resolve, reject) => {
         http.post(`/api/application/billing/categories/${id}/products`, values)
             .then(({ data }) => resolve(Transformers.toProduct(data)))
@@ -90,10 +27,10 @@ export const createProduct = (id: number, values: Values): Promise<Product> => {
 export const getProduct = async (id: number, productId: number): Promise<Product> => {
     const { data } = await http.get(`/api/application/billing/categories/${id}/products/${productId}`);
 
-    return rawDataToProduct(data);
+    return Transformers.toProduct(data);
 };
 
-export const updateProduct = (id: number, productId: number, values: Values): Promise<void> => {
+export const updateProduct = (id: number, productId: number, values: ProductValues): Promise<void> => {
     return new Promise((resolve, reject) => {
         http.patch(`/api/application/billing/categories/${id}/products/${productId}`, values)
             .then(() => resolve())

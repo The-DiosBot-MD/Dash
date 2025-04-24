@@ -13,18 +13,15 @@ import { object, string, number } from 'yup';
 import { faArrowLeft, faBell, faMicrochip, faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
 import { useStoreState } from '@/state/hooks';
 import { createProduct, updateProduct } from '@/api/admin/billing/products';
-import type { Product, Values } from '@/api/admin/billing/products';
 import ProductDeleteButton from './ProductDeleteButton';
 import { CubeIcon } from '@heroicons/react/outline';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
 import { getCategory } from '@/api/admin/billing/categories';
+import { Product } from '@/api/definitions/admin';
+import { ProductValues } from '@/api/admin/billing/types';
 
-interface Props {
-    product?: Product;
-}
-
-export default ({ product }: Props) => {
+export default ({ product }: { product?: Product }) => {
     const navigate = useNavigate();
     const params = useParams<'id'>();
     const [uuid, setUuid] = useState<string>();
@@ -34,7 +31,7 @@ export default ({ product }: Props) => {
     );
     const { secondary } = useStoreState(state => state.theme.data!.colors);
 
-    const submit = (values: Values, { setSubmitting }: FormikHelpers<Values>) => {
+    const submit = (values: ProductValues, { setSubmitting }: FormikHelpers<ProductValues>) => {
         clearFlashes('admin:billing:product:create');
 
         if (!product) {

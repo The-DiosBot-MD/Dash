@@ -10,8 +10,8 @@ import {
     Legend,
 } from 'chart.js';
 import { format, startOfDay, endOfDay, isWithinInterval, eachDayOfInterval } from 'date-fns';
-import { BillingAnalytics } from '@/api/admin/billing/analytics';
 import { useStoreState } from '@/state/hooks';
+import { BillingAnalytics } from '@/api/definitions/admin';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 

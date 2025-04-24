@@ -63,7 +63,7 @@ interface BillingException extends Model {
     updated_at?: Date | null;
 }
 
-export interface Ticket {
+interface Ticket extends Model {
     id: number;
     title: string;
     user: User;
@@ -76,10 +76,75 @@ export interface Ticket {
     };
 }
 
-export interface TicketMessage {
+interface TicketMessage extends Model {
     id: number;
     message: string;
     author: User;
     created_at: Date;
     updated_at?: Date | null;
+}
+
+interface BillingAnalytics extends Model {
+    orders: Order[];
+    products: Product[];
+    categories: Category[];
+}
+
+interface Order extends Model {
+    id: number;
+    name: string;
+    user_id: number;
+    description: string;
+    total: number;
+    status: OrderStatus;
+    product_id: number;
+    is_renewal: boolean;
+    threat_index: number;
+    created_at: Date;
+    updated_at?: Date | null;
+}
+
+interface Product extends Model {
+    id: number;
+    uuid: string;
+    categoryUuid: number;
+
+    name: string;
+    icon?: string;
+    price: number;
+    description: string;
+
+    limits: {
+        cpu: number;
+        memory: number;
+        disk: number;
+        backup: number;
+        database: number;
+        allocation: number;
+    };
+
+    createdAt: Date;
+    updatedAt?: Date | null;
+
+    relationships: {
+        category?: Category;
+    };
+}
+
+interface Category extends Model {
+    id: number;
+    uuid: string;
+    name: string;
+    icon: string;
+    description: string;
+    visible: boolean;
+    nestId: number;
+    eggId: number;
+
+    createdAt: Date;
+    updatedAt?: Date | null;
+
+    relationships: {
+        products?: Product[];
+    };
 }

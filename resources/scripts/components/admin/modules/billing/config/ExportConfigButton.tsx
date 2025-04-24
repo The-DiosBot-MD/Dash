@@ -1,8 +1,8 @@
-import { exportBillingConfiguration } from '@/api/admin/billing/export';
 import { Button } from '@elements/button';
 import useFlash from '@/plugins/useFlash';
 import { faDownload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { exportBillingConfiguration } from '@/api/admin/billing/config';
 
 export default () => {
     const { clearAndAddHttpError, clearFlashes, addFlash } = useFlash();

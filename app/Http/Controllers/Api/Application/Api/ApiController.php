@@ -61,7 +61,7 @@ class ApiController extends ApplicationApiController
             ->description('A new Application API key was created')
             ->log();
 
-        $token = "" . $apiKey->identifier . "" . decrypt($apiKey->token);
+        $token = '' . $apiKey->identifier . '' . decrypt($apiKey->token);
 
         return response()->json(['token' => $token]);
     }
