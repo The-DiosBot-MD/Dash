@@ -1,11 +1,11 @@
 import Spinner from '@elements/Spinner';
 import AdminContentBlock from '@elements/AdminContentBlock';
 import { useEffect, useState } from 'react';
-import { Order } from '@/api/billing/orders';
 import { getOrders } from '@/api/admin/billing/orders';
 import OrdersTable from './OrdersTable';
 import TitledGreyBox from '@elements/TitledGreyBox';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { Order } from '@/api/definitions/admin';
 
 export default () => {
     const [orders, setOrders] = useState<Order[]>([]);

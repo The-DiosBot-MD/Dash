@@ -1,4 +1,3 @@
-import { Context as ProductContext, ProductFilters } from '@/api/admin/billing/getProducts';
 import AdminTable, {
     ContentWrapper,
     Loading,
@@ -17,8 +16,9 @@ import tw from 'twin.macro';
 import { useStoreState } from '@/state/hooks';
 import { useContext, useEffect } from 'react';
 import useFlash from '@/plugins/useFlash';
-import getProducts from '@/api/admin/billing/getProducts';
 import { ShoppingBagIcon } from '@heroicons/react/outline';
+import { getProducts, Context as ProductContext } from '@/api/admin/billing/products';
+import { ProductFilters } from '@/api/admin/billing/types';
 
 function ProductTable() {
     const params = useParams<'id'>();

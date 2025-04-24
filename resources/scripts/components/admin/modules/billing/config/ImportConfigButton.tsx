@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { importBillingConfiguration } from '@/api/admin/billing/import';
 import { Button } from '@elements/button';
 import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,6 +7,7 @@ import SpinnerOverlay from '@elements/SpinnerOverlay';
 import useFlash from '@/plugins/useFlash';
 import Switch from '@elements/Switch';
 import { Alert } from '@elements/alert';
+import { importBillingConfiguration } from '@/api/admin/billing/config';
 
 export default () => {
     const [open, setOpen] = useState<boolean>(false);

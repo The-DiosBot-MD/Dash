@@ -1,4 +1,4 @@
-import { useGetCategories, Context as CategoryContext, ContextFilters } from '@/api/admin/billing/categories';
+import { useGetCategories, Context as CategoryContext } from '@/api/admin/billing/categories';
 import AdminTable, {
     ContentWrapper,
     Loading,
@@ -20,6 +20,7 @@ import { Button } from '@elements/button';
 import classNames from 'classnames';
 import { ShoppingCartIcon } from '@heroicons/react/outline';
 import useFlash from '@/plugins/useFlash';
+import { CategoryFilters } from '@/api/admin/billing/types';
 
 function CategoryTable() {
     const { data: categories, error } = useGetCategories();
@@ -149,7 +150,7 @@ function CategoryTable() {
 }
 
 export default () => {
-    const hooks = useTableHooks<ContextFilters>();
+    const hooks = useTableHooks<CategoryFilters>();
 
     return (
         <CategoryContext.Provider value={hooks}>

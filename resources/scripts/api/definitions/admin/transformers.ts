@@ -5,11 +5,9 @@ import { FractalResponseData, FractalResponseList } from '@/api/http';
 import * as Models from '@definitions/admin/models';
 import { Egg, EggVariable } from '@/api/admin/egg';
 import { Nest } from '@/api/admin/nest';
-import { Category } from '@/api/admin/billing/categories';
-import { Ticket, TicketMessage } from '@/api/admin/tickets/getTickets';
-import { Product } from '@/api/admin/billing/products';
 import { type Database } from '@definitions/server';
 import { WebhookEvent } from '@/api/admin/webhooks';
+
 const isList = (data: FractalResponseList | FractalResponseData): data is FractalResponseList => data.object === 'list';
 
 function transform<T, M = undefined>(
@@ -126,7 +124,7 @@ export default class Transformers {
         last_used_at: new Date(attributes.last_used_at),
     });
 
-    static toTicket = ({ attributes }: FractalResponseData): Ticket => ({
+    static toTicket = ({ attributes }: FractalResponseData): Models.Ticket => ({
         id: attributes.id,
         title: attributes.title,
         status: attributes.status,
@@ -139,13 +137,77 @@ export default class Transformers {
         },
     });
 
-    static toTicketMessage = ({ attributes }: FractalResponseData): TicketMessage => ({
+    static toTicketMessage = ({ attributes }: FractalResponseData): Models.TicketMessage => ({
         id: attributes.id,
         message: attributes.message,
         author: attributes.author,
         created_at: new Date(attributes.created_at),
         updated_at: attributes.updated_at ? new Date(attributes.updated_at) : null,
     });
+
+    static toOrder = ({ attributes: data }: FractalResponseData): Models.Order => ({
+        id: data.id,
+        name: data.name,
+        user_id: data.user_id,
+        description: data.description,
+        total: data.total,
+        status: data.status,
+        product_id: data.product_id,
+        is_renewal: data.is_renewal,
+        threat_index: data.threat_index,
+        created_at: new Date(data.created_at),
+        updated_at: data.updated_at ? new Date(data.updated_at) : null,
+    });
+
+    static toProduct = ({ attributes }: FractalResponseData): Models.Product => ({
+        id: attributes.id,
+        uuid: attributes.uuid,
+        categoryUuid: attributes.category_uuid,
+        name: attributes.name,
+        icon: attributes.icon,
+        price: attributes.price,
+        description: attributes.description,
+
+        limits: {
+            cpu: attributes.limits.cpu,
+            memory: attributes.limits.memory,
+            disk: attributes.limits.disk,
+            backup: attributes.limits.backup,
+            database: attributes.limits.database,
+            allocation: attributes.limits.allocation,
+        },
+
+        createdAt: new Date(attributes.created_at),
+        updatedAt: new Date(attributes.updated_at),
+
+        relationships: {
+            category:
+                attributes.relationships?.category?.object === 'category'
+                    ? this.toCategory(attributes.relationships.category as FractalResponseData)
+                    : undefined,
+        },
+    });
+
+    static toCategory = ({ attributes }: FractalResponseData): Models.Category =>
+        ({
+            id: attributes.id,
+            uuid: attributes.uuid,
+            name: attributes.name,
+            icon: attributes.icon,
+            description: attributes.description,
+            visible: attributes.visible,
+            nestId: attributes.nest_id,
+            eggId: attributes.egg_id,
+
+            createdAt: new Date(attributes.created_at),
+            updatedAt: new Date(attributes.updated_at),
+
+            relationships: {
+                products: ((attributes.relationships?.products as FractalResponseList | undefined)?.data || []).map(
+                    Transformers.toProduct,
+                ),
+            },
+        } as Models.Category);
 
     static toUser = ({ attributes }: FractalResponseData): Models.User => {
         return {
@@ -254,50 +316,6 @@ export default class Transformers {
         username: attributes.username,
         connectionString: attributes.remote,
         allowConnectionsFrom: '',
-    });
-
-    static toCategory = ({ attributes }: FractalResponseData): Category => ({
-        id: attributes.id,
-        uuid: attributes.uuid,
-        name: attributes.name,
-        icon: attributes.icon,
-        description: attributes.description,
-        visible: attributes.visible,
-        nestId: attributes.nest_id,
-        eggId: attributes.egg_id,
-
-        createdAt: new Date(attributes.created_at),
-        updatedAt: new Date(attributes.updated_at),
-
-        relationships: {
-            products: transform(attributes.relationships?.products as FractalResponseList, this.toProduct),
-        },
-    });
-
-    static toProduct = ({ attributes }: FractalResponseData): Product => ({
-        id: attributes.id,
-        uuid: attributes.uuid,
-        categoryUuid: attributes.category_uuid,
-        name: attributes.name,
-        icon: attributes.icon,
-        price: attributes.price,
-        description: attributes.description,
-
-        limits: {
-            cpu: attributes.limits.cpu,
-            memory: attributes.limits.memory,
-            disk: attributes.limits.disk,
-            backup: attributes.limits.backup,
-            database: attributes.limits.database,
-            allocation: attributes.limits.allocation,
-        },
-
-        createdAt: new Date(attributes.created_at),
-        updatedAt: new Date(attributes.updated_at),
-
-        relationships: {
-            category: transform(attributes.relationships?.category as FractalResponseData, this.toCategory),
-        },
     });
 
     static toBillingException = ({ attributes }: FractalResponseData): Models.BillingException => ({

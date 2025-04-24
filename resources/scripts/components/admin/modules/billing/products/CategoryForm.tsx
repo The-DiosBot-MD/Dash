@@ -8,7 +8,6 @@ import tw from 'twin.macro';
 import AdminContentBlock from '@elements/AdminContentBlock';
 import { Button } from '@elements/button';
 import type { ApplicationStore } from '@/state';
-import type { Category, Values } from '@/api/admin/billing/categories';
 import AdminBox from '@elements/AdminBox';
 import { createCategory, updateCategory } from '@/api/admin/billing/categories';
 import { object, string, boolean, number } from 'yup';
@@ -22,6 +21,8 @@ import type { Egg } from '@/api/admin/egg';
 import { ShoppingCartIcon } from '@heroicons/react/outline';
 import CategoryDeleteButton from './CategoryDeleteButton';
 import { getEgg } from '@/api/admin/egg';
+import { Category } from '@/api/definitions/admin';
+import { CategoryValues } from '@/api/admin/billing/types';
 
 interface Props {
     visible: boolean;
@@ -31,7 +32,7 @@ interface Props {
 
 function InternalForm({ category, visible, setVisible }: Props) {
     const [egg, setEgg] = useState<WithRelationships<Egg, 'variables'> | undefined>();
-    const { setFieldValue, isSubmitting } = useFormikContext<Values>();
+    const { setFieldValue, isSubmitting } = useFormikContext<CategoryValues>();
     const { secondary } = useStoreState(state => state.theme.data!.colors);
 
     useEffect(() => {
@@ -134,7 +135,7 @@ export default ({ category }: { category?: Category }) => {
         (actions: Actions<ApplicationStore>) => actions.flashes,
     );
 
-    const submit = (values: Values, { setSubmitting }: FormikHelpers<Values>) => {
+    const submit = (values: CategoryValues, { setSubmitting }: FormikHelpers<CategoryValues>) => {
         clearFlashes('admin:billing:category:create');
 
         values.visible = visible;
@@ -148,7 +149,7 @@ export default ({ category }: { category?: Category }) => {
             .then(() => setSubmitting(false));
     };
 
-    const update = (values: Values, { setSubmitting }: FormikHelpers<Values>) => {
+    const update = (values: CategoryValues, { setSubmitting }: FormikHelpers<CategoryValues>) => {
         clearFlashes();
 
         values.visible = visible;
