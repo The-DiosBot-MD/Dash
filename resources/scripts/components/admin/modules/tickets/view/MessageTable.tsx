@@ -11,22 +11,19 @@ import AdminTable, {
     ContentWrapper,
     Pagination,
 } from '@elements/AdminTable';
-import {
-    ContextFilters,
-    Context as MessagesContext,
-    useGetTicketMessages,
-} from '@/api/admin/tickets/messages/getMessages';
+import { Context as MessagesContext, getTicketMessages } from '@/api/admin/tickets/messages';
 import { differenceInHours, format, formatDistanceToNow } from 'date-fns';
-import { Context as TicketMessageContext } from '@/api/admin/tickets/getTickets';
+import { Context as TicketMessageContext } from '@/api/admin/tickets/messages';
 import { useStoreState } from '@/state/hooks';
 import { useContext, useState } from 'react';
 import CopyOnClick from '@/components/elements/CopyOnClick';
 import { Button } from '@/components/elements/button';
 import { Dialog } from '@/components/elements/dialog';
 import { Alert } from '@/components/elements/alert';
+import { TicketMessageFilters } from '@/api/admin/tickets/types';
 
 const MessagesTable = ({ ticketId }: { ticketId: number }) => {
-    const { data: messages, error } = useGetTicketMessages(ticketId);
+    const { data: messages, error } = getTicketMessages(ticketId);
     const [visible, setVisible] = useState<string | null>(null);
     const { colors } = useStoreState(state => state.theme.data!);
     const { setPage, sort, setSort, sortDirection } = useContext(TicketMessageContext);
@@ -137,7 +134,7 @@ const MessagesTable = ({ ticketId }: { ticketId: number }) => {
 };
 
 export default ({ ticketId }: { ticketId: number }) => {
-    const hooks = useTableHooks<ContextFilters>();
+    const hooks = useTableHooks<TicketMessageFilters>();
 
     return (
         <MessagesContext.Provider value={hooks}>

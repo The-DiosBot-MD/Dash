@@ -62,3 +62,24 @@ interface BillingException extends Model {
     created_at: Date;
     updated_at?: Date | null;
 }
+
+export interface Ticket {
+    id: number;
+    title: string;
+    user: User;
+    assigned_to?: User | undefined;
+    status: TicketStatus;
+    created_at: Date;
+    updated_at?: Date | null;
+    relationships: {
+        messages?: TicketMessage[];
+    };
+}
+
+export interface TicketMessage {
+    id: number;
+    message: string;
+    author: User;
+    created_at: Date;
+    updated_at?: Date | null;
+}

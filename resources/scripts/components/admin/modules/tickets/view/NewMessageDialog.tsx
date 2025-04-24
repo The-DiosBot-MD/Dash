@@ -5,35 +5,32 @@ import type { FormikHelpers } from 'formik';
 import type { ApplicationStore } from '@/state';
 import { Dialog } from '@elements/dialog';
 import SpinnerOverlay from '@elements/SpinnerOverlay';
-import { useTicketFromRoute } from '@/api/admin/tickets/getTicket';
-import createMessage from '@/api/admin/tickets/messages/createMessage';
-import type { Values } from '@/api/admin/tickets/messages/createMessage';
 import { useState } from 'react';
 import { Button } from '@elements/button';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import { TextareaField } from '@elements/Field';
+import { createMessage } from '@/api/admin/tickets/messages';
 
-const initialValues: Values = {
+const initialValues: { message: string } = {
     message: '',
 };
 
-export default () => {
-    const { data: ticket } = useTicketFromRoute();
+export default ({ ticketId }: { ticketId: number }) => {
     const [open, setOpen] = useState<boolean>(false);
 
     const { clearFlashes, clearAndAddHttpError } = useStoreActions(
         (actions: Actions<ApplicationStore>) => actions.flashes,
     );
 
-    if (!ticket) return <></>;
+    if (!ticketId) return <></>;
 
-    const submit = (values: Values, { setSubmitting }: FormikHelpers<Values>) => {
+    const submit = (values: { message: string }, { setSubmitting }: FormikHelpers<{ message: string }>) => {
         clearFlashes('ticket:message:create');
 
-        createMessage(ticket.id, values)
+        createMessage(ticketId, values)
             .then(() => {
                 // @ts-expect-error quit your whining
-                window.location = `/admin/tickets/${ticket.id}`;
+                window.location = `/admin/tickets/${ticketId}`;
             })
             .catch(error => {
                 console.error(error);

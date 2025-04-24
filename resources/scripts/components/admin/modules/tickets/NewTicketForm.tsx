@@ -9,21 +9,21 @@ import AdminContentBlock from '@elements/AdminContentBlock';
 import { Button } from '@elements/button';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import type { ApplicationStore } from '@/state';
-import type { Values } from '@/api/admin/tickets/createTicket';
 import AdminBox from '@elements/AdminBox';
-import createTicket from '@/api/admin/tickets/createTicket';
 import { object, string, number } from 'yup';
 import { faTicket } from '@fortawesome/free-solid-svg-icons';
 import UserSelect from './UserSelect';
 import { useStoreState } from '@/state/hooks';
 import Select from '@/components/elements/Select';
 import Label from '@/components/elements/Label';
+import { createTicket } from '@/api/admin/tickets';
+import { Values } from '@/api/admin/tickets/types';
 
 const initialValues: Values = {
     title: '',
     user_id: 0,
     assigned_to: null,
-    status: null,
+    status: undefined,
 };
 
 export default () => {

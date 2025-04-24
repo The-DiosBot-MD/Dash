@@ -1,5 +1,4 @@
 import tw from 'twin.macro';
-import { getTicket } from '@/api/admin/tickets/getTicket';
 import AdminContentBlock from '@elements/AdminContentBlock';
 import { differenceInHours, format, formatDistanceToNow } from 'date-fns';
 import { statusToColor } from '@admin/modules/tickets/TicketsContainer';
@@ -11,29 +10,25 @@ import { Form, Formik } from 'formik';
 import type { FormikHelpers } from 'formik';
 import useFlash from '@/plugins/useFlash';
 import { Button } from '@elements/button';
-import updateTicket from '@/api/admin/tickets/updateTicket';
-import type { Values } from '@/api/admin/tickets/updateTicket';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import Select from '@elements/Select';
 import Label from '@elements/Label';
-import { useEffect, useState } from 'react';
-import { TicketStatus } from '@/api/admin/tickets/getTickets';
+import { useState } from 'react';
 import NewMessageDialog from '@admin/modules/tickets/view/NewMessageDialog';
 import MessageTable from './MessageTable';
 import DeleteTicketDialog from './DeleteTicketDialog';
 import { Alert } from '@elements/alert';
-import { Ticket } from '@/api/admin/tickets/getTickets';
 import Spinner from '@elements/Spinner';
-import { useParams } from 'react-router-dom';
 import useStatus from '@/plugins/useStatus';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { TicketStatus, Values } from '@/api/admin/tickets/types';
+import { updateTicket, useTicketFromRoute } from '@/api/admin/tickets';
 
 export default () => {
-    const { id } = useParams();
+    const { data: ticket, isLoading } = useTicketFromRoute();
     const boxStatus = useStatus();
 
     const [unassign, setUnassign] = useState<boolean>(false);
-    const [ticket, setTicket] = useState<Ticket | undefined>();
     const { clearFlashes, clearAndAddHttpError } = useFlash();
     const [status, setStatus] = useState<TicketStatus>('pending');
 
@@ -50,7 +45,6 @@ export default () => {
             .then(() => {
                 setSubmitting(false);
                 boxStatus.setStatus('success');
-                getTicket(Number(id)).then(data => setTicket(data));
             })
             .catch(error => {
                 clearAndAddHttpError({ key: 'tickets:view', error });
@@ -58,17 +52,13 @@ export default () => {
             });
     };
 
-    useEffect(() => {
-        getTicket(Number(id)).then(data => setTicket(data));
-    }, []);
-
-    if (!ticket) return <Spinner size={'large'} centered />;
+    if (!ticket || isLoading) return <Spinner size={'large'} centered />;
 
     if (!ticket.user)
         return (
             <Alert type={'danger'}>
                 This ticket was created without an assigned user. This ticket must be deleted.&nbsp;
-                <DeleteTicketDialog />
+                <DeleteTicketDialog ticketId={ticket.id} />
             </Alert>
         );
 
@@ -103,6 +93,7 @@ export default () => {
             <Formik
                 onSubmit={submit}
                 initialValues={{
+                    title: ticket.title,
                     status: ticket.status,
                     user_id: ticket.user.id,
                 }}
@@ -154,7 +145,7 @@ export default () => {
                             </div>
                             <div css={tw`flex flex-row`}>
                                 <div className={'ml-auto mt-4'}>
-                                    <DeleteTicketDialog />
+                                    <DeleteTicketDialog ticketId={ticket.id} />
                                     <Button type={'submit'} disabled={isSubmitting}>
                                         Save Changes
                                     </Button>
@@ -170,7 +161,7 @@ export default () => {
                     <h2 className={'text-2xl font-header font-medium inline-flex'}>Ticket Messages</h2>
                 </div>
                 <div css={tw`flex ml-auto pl-4`}>
-                    <NewMessageDialog />
+                    <NewMessageDialog ticketId={ticket.id} />
                 </div>
             </div>
             <MessageTable ticketId={ticket.id} />

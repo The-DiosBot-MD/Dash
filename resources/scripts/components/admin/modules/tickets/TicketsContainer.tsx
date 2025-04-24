@@ -13,13 +13,14 @@ import AdminTable, {
     TableRow,
     useTableHooks,
 } from '@elements/AdminTable';
-import { useGetTickets, Context as TicketContext, TicketStatus, ContextFilters } from '@/api/admin/tickets/getTickets';
 import { Button } from '@elements/button';
 import CopyOnClick from '@elements/CopyOnClick';
 import { differenceInHours, format, formatDistanceToNow } from 'date-fns';
 import classNames from 'classnames';
 import { useStoreState } from '@/state/hooks';
 import Avatar from '@/components/Avatar';
+import { getTickets, Context as TicketsContext } from '@/api/admin/tickets';
+import { TicketFilters, type TicketStatus } from '@/api/admin/tickets/types';
 
 export const statusToColor = (status: TicketStatus): string => {
     switch (status) {
@@ -35,9 +36,9 @@ export const statusToColor = (status: TicketStatus): string => {
 };
 
 function TicketContainer() {
-    const { data: tickets } = useGetTickets();
+    const { data: tickets } = getTickets();
     const { colors } = useStoreState(state => state.theme.data!);
-    const { setPage, setFilters, sort, setSort, sortDirection } = useContext(TicketContext);
+    const { setPage, setFilters, sort, setSort, sortDirection } = useContext(TicketsContext);
 
     const onSearch = (query: string): Promise<void> => {
         return new Promise(resolve => {
@@ -156,11 +157,11 @@ function TicketContainer() {
 }
 
 export default () => {
-    const hooks = useTableHooks<ContextFilters>();
+    const hooks = useTableHooks<TicketFilters>();
 
     return (
-        <TicketContext.Provider value={hooks}>
+        <TicketsContext.Provider value={hooks}>
             <TicketContainer />
-        </TicketContext.Provider>
+        </TicketsContext.Provider>
     );
 };

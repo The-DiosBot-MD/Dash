@@ -3,27 +3,25 @@ import { useStoreActions } from 'easy-peasy';
 import { useNavigate } from 'react-router-dom';
 import type { ApplicationStore } from '@/state';
 import { Dialog } from '@elements/dialog';
-import { useTicketFromRoute } from '@/api/admin/tickets/getTicket';
 import { useState } from 'react';
 import { Button } from '@elements/button';
 import FlashMessageRender from '@/components/FlashMessageRender';
-import deleteTicket from '@/api/admin/tickets/deleteTicket';
+import { deleteTicket } from '@/api/admin/tickets';
 
-export default () => {
+export default ({ ticketId }: { ticketId: number }) => {
     const navigate = useNavigate();
-    const { data: ticket } = useTicketFromRoute();
     const [open, setOpen] = useState<boolean>(false);
 
     const { clearFlashes, clearAndAddHttpError } = useStoreActions(
         (actions: Actions<ApplicationStore>) => actions.flashes,
     );
 
-    if (!ticket) return <></>;
+    if (!ticketId) return <></>;
 
     const submit = () => {
         clearFlashes('tickets:view');
 
-        deleteTicket(ticket.id)
+        deleteTicket(ticketId)
             .then(() => navigate(`/admin/tickets`))
             .catch(error => {
                 console.error(error);

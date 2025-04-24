@@ -1,4 +1,6 @@
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
+import useSWR from 'swr';
+import http, { getPaginationSet, PaginatedResult } from '../http';
 
 export interface Model {
     relationships: Record<string, unknown>;
@@ -64,3 +66,41 @@ function create<T>() {
 }
 
 export { create as createContext };
+
+export interface PaginatedRequestConfig<T, F> {
+    url: string;
+    swrKey: string;
+    context: React.Context<ListContext<F>>;
+    transformer: (data: any) => T;
+    includes?: string[];
+}
+
+export function createPaginatedHook<T, F extends Record<string, any>>(config: PaginatedRequestConfig<T, F>) {
+    return (include: string[] = config.includes || []) => {
+        const { page, filters, sort, sortDirection } = useContext(config.context);
+
+        const params: Record<string, any> = {};
+        if (filters && typeof filters === 'object') {
+            Object.entries(filters).forEach(([key, value]) => {
+                if (value !== undefined && value !== null) {
+                    params[`filter[${key}]`] = value;
+                }
+            });
+        }
+
+        if (sort !== null) {
+            params.sort = (sortDirection ? '-' : '') + sort;
+        }
+
+        return useSWR<PaginatedResult<T>>([config.swrKey, page, filters, sort, sortDirection], async () => {
+            const { data } = await http.get(config.url, {
+                params: { include: include.join(','), page, ...params },
+            });
+
+            return {
+                items: (data.data || []).map(config.transformer),
+                pagination: getPaginationSet(data.meta.pagination),
+            };
+        });
+    };
+}

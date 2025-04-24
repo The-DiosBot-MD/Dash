@@ -10,8 +10,8 @@ import { useEffect } from 'react';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import Label from '@elements/Label';
 import { faFirstOrder } from '@fortawesome/free-brands-svg-icons';
-import updateTicketSettings from '@/api/admin/tickets/updateTicketSettings';
 import ToggleTicketsButton from './ToggleTicketsButton';
+import { updateTicketSettings } from '@/api/admin/tickets';
 
 export interface TicketSettings {
     maxCount: number;
