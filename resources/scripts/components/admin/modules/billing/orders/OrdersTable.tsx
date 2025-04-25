@@ -80,11 +80,11 @@ function OrderTable() {
 
     useEffect(() => {
         if (!error) {
-            clearFlashes('admin:billing:products');
+            clearFlashes('admin:billing:orders');
             return;
         }
 
-        clearAndAddHttpError({ key: 'admin:billing:products', error });
+        clearAndAddHttpError({ key: 'admin:billing:orders', error });
     }, [error]);
 
     return (
