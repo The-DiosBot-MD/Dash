@@ -4,7 +4,9 @@ namespace Everest\Http\Controllers\Api\Application\Billing;
 
 use Illuminate\Http\Request;
 use Everest\Models\Billing\Order;
+use Spatie\QueryBuilder\QueryBuilder;
 use Everest\Transformers\Api\Application\OrderTransformer;
+use Everest\Exceptions\Http\QueryValueOutOfRangeHttpException;
 use Everest\Http\Controllers\Api\Application\ApplicationApiController;
 
 class OrderController extends ApplicationApiController
@@ -22,7 +24,17 @@ class OrderController extends ApplicationApiController
      */
     public function index(Request $request): array
     {
-        return $this->fractal->collection(Order::orderBy('created_at', 'desc')->get())
+        $perPage = (int) $request->query('per_page', '20');
+        if ($perPage < 1 || $perPage > 100) {
+            throw new QueryValueOutOfRangeHttpException('per_page', 1, 100);
+        }
+
+        $orders = QueryBuilder::for(Order::query())
+            ->allowedFilters(['id', 'name'])
+            ->allowedSorts(['id', 'name', 'total', 'is_renewal', 'created_at', 'threat_index'])
+            ->paginate($perPage);
+
+        return $this->fractal->collection($orders)
             ->transformWith(OrderTransformer::class)
             ->toArray();
     }
