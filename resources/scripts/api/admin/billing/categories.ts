@@ -1,10 +1,11 @@
 import { AxiosError } from 'axios';
 import useSWR, { SWRResponse } from 'swr';
-import { createContext, createPaginatedHook, withRelationships } from '@/api/admin';
+import { createContext, withRelationships } from '@/api/admin';
 import { useParams } from 'react-router-dom';
 import http from '@/api/http';
 import { Category, Transformers } from '@/api/definitions/admin';
 import { CategoryFilters, CategoryValues } from './types';
+import createPaginatedHook from '@/api/createPaginatedHook';
 
 export const Context = createContext<CategoryFilters>();
 

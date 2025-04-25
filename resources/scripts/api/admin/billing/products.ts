@@ -4,7 +4,8 @@ import useSWR, { SWRResponse } from 'swr';
 import { useParams } from 'react-router-dom';
 import { Product, Transformers } from '@/api/definitions/admin';
 import { ProductFilters, ProductValues } from './types';
-import { createContext, createPaginatedHook } from '@/api/admin';
+import { createContext } from '@/api/admin';
+import createPaginatedHook from '@/api/createPaginatedHook';
 
 export const Context = createContext<ProductFilters>();
 

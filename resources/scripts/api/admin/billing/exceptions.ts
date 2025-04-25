@@ -1,7 +1,8 @@
 import http from '@/api/http';
 import { BillingException, Transformers } from '@/api/definitions/admin';
-import { createContext, createPaginatedHook } from '@/api/admin';
+import { createContext } from '@/api/admin';
 import { BillingExceptionFilters } from '@/api/admin/billing/types';
+import createPaginatedHook from '@/api/createPaginatedHook';
 
 export const Context = createContext<BillingExceptionFilters>();
 
