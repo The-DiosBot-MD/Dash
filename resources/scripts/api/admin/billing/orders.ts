@@ -1,10 +1,12 @@
 import { Order, Transformers } from '@/api/definitions/admin';
-import http from '@/api/http';
+import { OrderFilters } from './types';
+import { createContext, createPaginatedHook } from '@/api/admin';
 
-export const getOrders = (): Promise<Order[]> => {
-    return new Promise((resolve, reject) => {
-        http.get(`/api/application/billing/orders`)
-            .then(({ data }) => resolve((data.data || []).map(Transformers.toOrder)))
-            .catch(reject);
-    });
-};
+export const Context = createContext<OrderFilters>();
+
+export const useGetOrders = createPaginatedHook<Order, OrderFilters>({
+    url: '/api/application/billing/orders',
+    swrKey: 'orders',
+    context: Context,
+    transformer: Transformers.toOrder,
+});

@@ -36,3 +36,9 @@ export interface CategoryFilters {
     id?: number;
     name?: string;
 }
+
+export interface OrderFilters {
+    id?: number;
+    name?: string;
+    total?: number;
+}
