@@ -42,3 +42,8 @@ export interface OrderFilters {
     name?: string;
     total?: number;
 }
+
+export interface BillingExceptionFilters {
+    id?: number;
+    title?: string;
+}

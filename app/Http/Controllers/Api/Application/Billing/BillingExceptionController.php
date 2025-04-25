@@ -5,7 +5,9 @@ namespace Everest\Http\Controllers\Api\Application\Billing;
 use Illuminate\Http\Request;
 use Everest\Facades\Activity;
 use Illuminate\Http\Response;
+use Spatie\QueryBuilder\QueryBuilder;
 use Everest\Models\Billing\BillingException;
+use Everest\Exceptions\Http\QueryValueOutOfRangeHttpException;
 use Everest\Transformers\Api\Application\BillingExceptionTransformer;
 use Everest\Http\Controllers\Api\Application\ApplicationApiController;
 
@@ -24,7 +26,17 @@ class BillingExceptionController extends ApplicationApiController
      */
     public function index(Request $request): array
     {
-        return $this->fractal->collection(BillingException::orderBy('created_at', 'desc')->get())
+        $perPage = (int) $request->query('per_page', '20');
+        if ($perPage < 1 || $perPage > 100) {
+            throw new QueryValueOutOfRangeHttpException('per_page', 1, 100);
+        }
+
+        $categories = QueryBuilder::for(BillingException::query())
+            ->allowedFilters(['id', 'title'])
+            ->allowedSorts(['id', 'title', 'exception_type', 'created_at'])
+            ->paginate($perPage);
+
+        return $this->fractal->collection($categories)
             ->transformWith(BillingExceptionTransformer::class)
             ->toArray();
     }
