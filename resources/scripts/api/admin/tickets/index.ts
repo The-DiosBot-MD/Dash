@@ -1,12 +1,11 @@
 import http from '@/api/http';
 import { TicketFilters, Values } from '@/api/admin/tickets/types';
 import { Ticket, Transformers } from '@/api/definitions/admin';
-import { createContext } from '@/api/admin';
 import { SWRResponse } from 'swr';
 import { AxiosError } from 'axios';
 import useSWR from 'swr';
 import { useParams } from 'react-router-dom';
-import createPaginatedHook from '@/api/createPaginatedHook';
+import { createPaginatedHook, createContext } from '@/api';
 
 export const Context = createContext<TicketFilters>();
 

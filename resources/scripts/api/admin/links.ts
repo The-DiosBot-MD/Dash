@@ -1,7 +1,7 @@
-import { createContext } from '@/api/admin';
 import http, { FractalResponseData, getPaginationSet, PaginatedResult } from '@/api/http';
 import { useContext } from 'react';
 import useSWR from 'swr';
+import { createContext } from '@/api';
 
 export interface CustomLink {
     id: number;

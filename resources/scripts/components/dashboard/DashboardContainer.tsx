@@ -19,13 +19,12 @@ import DashboardAlert from '@/components/dashboard/DashboardAlert';
 import ServerSvg from '@/assets/images/themed/ServerSvg';
 import { Button } from '@elements/button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleArrowRight, faDollar, faEye, faHeart, faList, faLock } from '@fortawesome/free-solid-svg-icons';
+import { faCircleArrowRight, faEye, faHeart, faList, faLock } from '@fortawesome/free-solid-svg-icons';
 import { getServerGroups } from '@/api/server/groups';
 import { type ServerGroup } from '@/api/definitions/server';
 import ServerGroupDialog, { VisibleDialog } from '@/components/dashboard/groups/ServerGroupDialog';
 import TitledGreyBox from '../elements/TitledGreyBox';
 import { useActivityLogs } from '@/api/account/activity';
-import { getOrders, Order } from '@/api/billing/orders';
 import ActivityLogContainer from './activity/ActivityLogContainer';
 
 export default () => {
@@ -36,7 +35,6 @@ export default () => {
     const [open, setOpen] = useState<VisibleDialog>({ open: 'none', serverId: undefined });
     const colors = useStoreState(state => state.theme.data!.colors);
 
-    const [orders, setOrders] = useState<Order[]>([]);
     const [groups, setGroups] = useState<ServerGroup[]>([]);
     const [page, setPage] = useState(!isNaN(defaultPage) && defaultPage > 0 ? defaultPage : 1);
     const { clearFlashes, clearAndAddHttpError } = useFlash();
@@ -55,8 +53,6 @@ export default () => {
         getServerGroups()
             .then(data => setGroups(data))
             .catch(() => console.error());
-
-        getOrders().then(data => setOrders(data));
     }, []);
 
     useEffect(() => {
@@ -114,13 +110,6 @@ export default () => {
                         )}
                     </p>
                 </TitledGreyBox>
-                {billing && (
-                    <TitledGreyBox title={'Billing Orders'} icon={faDollar}>
-                        <p className={'text-2xl font-bold text-center py-4'}>
-                            {orders.filter(x => x.status === 'processed').length} completed, {orders.length} total
-                        </p>
-                    </TitledGreyBox>
-                )}
             </div>
             <FlashMessageRender className={'my-4'} byKey={'dashboard'} />
             <div className={'grid lg:grid-cols-3 gap-4'}>

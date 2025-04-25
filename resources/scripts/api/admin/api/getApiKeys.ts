@@ -2,7 +2,7 @@ import http, { PaginatedResult, getPaginationSet } from '@/api/http';
 import { type ApiKey } from '@/api/definitions/admin';
 import { Transformers } from '@/api/definitions/admin';
 import useSWR from 'swr';
-import { createContext } from '@/api/admin';
+import { createContext } from '@/api';
 import { useContext } from 'react';
 
 const filters = ['id', 'identifier', 'last_used_at'] as const;

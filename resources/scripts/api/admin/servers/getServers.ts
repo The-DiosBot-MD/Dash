@@ -1,7 +1,7 @@
 import { Allocation, rawDataToAllocation } from '@/api/admin/nodes/getAllocations';
 import { useContext } from 'react';
 import useSWR from 'swr';
-import { createContext } from '@/api/admin';
+import { createContext } from '@/api';
 import http, { FractalResponseData, FractalResponseList, getPaginationSet, PaginatedResult } from '@/api/http';
 import { Egg, rawDataToEgg } from '@/api/admin/eggs/getEgg';
 import { Node, rawDataToNode } from '@/api/admin/nodes/getNodes';

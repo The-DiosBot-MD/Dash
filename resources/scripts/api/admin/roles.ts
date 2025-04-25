@@ -2,7 +2,7 @@ import http, { getPaginationSet, PaginatedResult } from '@/api/http';
 import { Transformers, UserRole } from '@definitions/admin';
 import { useContext } from 'react';
 import useSWR from 'swr';
-import { createContext } from '@/api/admin/index';
+import { createContext } from '@/api';
 
 export interface Filters {
     id?: string;
