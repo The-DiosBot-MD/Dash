@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import { useContext } from 'react';
+import { createContext, useContext } from 'react';
 import http, { getPaginationSet, PaginatedResult } from '@/api/http';
 
 export interface ListContext<T> {
@@ -24,7 +24,25 @@ export interface PaginatedRequestConfig<T, F> {
     includes?: string[];
 }
 
-export default <T, F extends Record<string, any>>(config: PaginatedRequestConfig<T, F>) => {
+function create<T>() {
+    return createContext<ListContext<T>>({
+        page: 1,
+        setPage: () => 1,
+
+        filters: null,
+        setFilters: () => null,
+
+        sort: null,
+        setSort: () => null,
+
+        sortDirection: false,
+        setSortDirection: () => false,
+    });
+}
+
+export { create as createContext };
+
+export function createPaginatedHook<T, F extends Record<string, any>>(config: PaginatedRequestConfig<T, F>) {
     return (include: string[] = config.includes || []) => {
         const { page, filters, sort, sortDirection } = useContext(config.context);
 
@@ -52,4 +70,4 @@ export default <T, F extends Record<string, any>>(config: PaginatedRequestConfig
             };
         });
     };
-};
+}

@@ -3,7 +3,7 @@ import type { PaginatedResult, QueryBuilderParams } from '@/api/http';
 import http, { getPaginationSet, withQueryBuilderParams } from '@/api/http';
 import type { User } from '@definitions/admin';
 import { Transformers } from '@definitions/admin';
-import { createContext } from '@/api/admin';
+import { createContext } from '@/api';
 import { useContext } from 'react';
 
 export interface UpdateUserValues {

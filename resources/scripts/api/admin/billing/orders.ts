@@ -1,7 +1,6 @@
 import { Order, Transformers } from '@/api/definitions/admin';
 import { OrderFilters } from './types';
-import { createContext } from '@/api/admin';
-import createPaginatedHook from '@/api/createPaginatedHook';
+import { createPaginatedHook, createContext } from '@/api';
 
 export const Context = createContext<OrderFilters>();
 

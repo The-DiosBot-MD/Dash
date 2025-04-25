@@ -1,5 +1,3 @@
-import { createContext } from 'react';
-
 export interface Model {
     relationships: Record<string, unknown>;
 }
@@ -46,21 +44,3 @@ export interface ListContext<T> {
     sortDirection: boolean;
     setSortDirection: (direction: ((p: boolean) => boolean) | boolean) => void;
 }
-
-function create<T>() {
-    return createContext<ListContext<T>>({
-        page: 1,
-        setPage: () => 1,
-
-        filters: null,
-        setFilters: () => null,
-
-        sort: null,
-        setSort: () => null,
-
-        sortDirection: false,
-        setSortDirection: () => false,
-    });
-}
-
-export { create as createContext };

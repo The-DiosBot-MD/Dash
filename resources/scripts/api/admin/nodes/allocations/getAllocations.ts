@@ -2,7 +2,7 @@ import { Allocation, rawDataToAllocation } from '@/api/admin/nodes/getAllocation
 import http, { getPaginationSet, PaginatedResult } from '@/api/http';
 import { useContext } from 'react';
 import useSWR from 'swr';
-import { createContext } from '@/api/admin';
+import { createContext } from '@/api';
 
 export interface Filters {
     id?: string;
