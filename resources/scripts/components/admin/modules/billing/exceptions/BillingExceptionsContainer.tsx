@@ -1,26 +1,13 @@
-import Spinner from '@elements/Spinner';
 import AdminContentBlock from '@elements/AdminContentBlock';
-import { useEffect, useState } from 'react';
-import { BillingException } from '@/api/definitions/admin';
-import { getBillingExceptions, resolveAllBillingExceptions } from '@/api/admin/billing/exceptions';
+import { resolveAllBillingExceptions } from '@/api/admin/billing/exceptions';
 import BillingExceptionsTable from './BillingExceptionsTable';
-import TitledGreyBox from '@elements/TitledGreyBox';
-import { faBank, faDesktop, faLayerGroup, faXmarkCircle } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '@elements/button';
 import { CheckCircleIcon } from '@heroicons/react/outline';
 
 export default () => {
-    const [exceptions, setExceptions] = useState<BillingException[]>([]);
-
-    useEffect(() => {
-        getBillingExceptions().then(data => setExceptions(data));
-    }, []);
-
     const onResolveAll = () => {
         resolveAllBillingExceptions().then(() => window.location.reload());
     };
-
-    if (!exceptions) return <Spinner size={'large'} centered />;
 
     return (
         <AdminContentBlock title={'Billing Exceptions'}>
@@ -41,27 +28,7 @@ export default () => {
                     </Button>
                 </div>
             </div>
-            <div className={'grid lg:grid-cols-4 gap-6 mb-8'}>
-                <TitledGreyBox icon={faXmarkCircle} title={'Total Exceptions'}>
-                    <p className={'text-2xl font-bold text-center py-4'}>{exceptions.length}</p>
-                </TitledGreyBox>
-                <TitledGreyBox icon={faLayerGroup} title={'Exception Rate - Deployment'}>
-                    <p className={'text-2xl font-bold text-center py-4'}>
-                        {exceptions.filter(x => x.exception_type === 'deployment').length}
-                    </p>
-                </TitledGreyBox>
-                <TitledGreyBox icon={faBank} title={'Exception Rate - Payment'}>
-                    <p className={'text-2xl font-bold text-center py-4'}>
-                        {exceptions.filter(x => x.exception_type === 'payment').length}
-                    </p>
-                </TitledGreyBox>
-                <TitledGreyBox icon={faDesktop} title={'Exception Rate - Storefront'}>
-                    <p className={'text-2xl font-bold text-center py-4'}>
-                        {exceptions.filter(x => x.exception_type === 'storefront').length}
-                    </p>
-                </TitledGreyBox>
-            </div>
-            <BillingExceptionsTable data={exceptions} />
+            <BillingExceptionsTable />
         </AdminContentBlock>
     );
 };
