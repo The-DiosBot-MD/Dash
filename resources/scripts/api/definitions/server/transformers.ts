@@ -137,24 +137,26 @@ export default class Transformers {
         updatedAt: new Date(data.updated_at),
     });
 
-    static toSchedule = (data: any): Models.Schedule => ({
-        id: data.id,
-        name: data.name,
-        cron: {
-            dayOfWeek: data.cron.day_of_week,
-            month: data.cron.month,
-            dayOfMonth: data.cron.day_of_month,
-            hour: data.cron.hour,
-            minute: data.cron.minute,
-        },
-        isActive: data.is_active,
-        isProcessing: data.is_processing,
-        onlyWhenOnline: data.only_when_online,
-        lastRunAt: data.last_run_at ? new Date(data.last_run_at) : null,
-        nextRunAt: data.next_run_at ? new Date(data.next_run_at) : null,
-        createdAt: new Date(data.created_at),
-        updatedAt: new Date(data.updated_at),
-
-        tasks: (data.relationships?.tasks?.data || []).map(Transformers.toTask),
-    });
+    static toSchedule = ({ attributes }: FractalResponseData): Models.Schedule => {
+        return {
+            id: attributes.id,
+            name: attributes.name,
+            cron: {
+                dayOfWeek: attributes.cron.day_of_week,
+                month: attributes.cron.month,
+                dayOfMonth: attributes.cron.day_of_month,
+                hour: attributes.cron.hour,
+                minute: attributes.cron.minute,
+            },
+            isActive: attributes.is_active,
+            isProcessing: attributes.is_processing,
+            onlyWhenOnline: attributes.only_when_online,
+            lastRunAt: attributes.last_run_at ? new Date(attributes.last_run_at) : null,
+            nextRunAt: attributes.next_run_at ? new Date(attributes.next_run_at) : null,
+            createdAt: new Date(attributes.created_at),
+            updatedAt: new Date(attributes.updated_at),
+            // @ts-expect-error this is fine
+            tasks: (attributes.relationships?.tasks?.data || []).map((row: any) => this.toServerTask(row.attributes)),
+        };
+    };
 }
