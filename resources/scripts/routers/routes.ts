@@ -78,7 +78,7 @@ export default {
         {
             route: '',
             path: '',
-            permission: null,
+            permission: 'control.console',
             name: 'Console',
             component: ServerConsoleContainer,
             end: true,
