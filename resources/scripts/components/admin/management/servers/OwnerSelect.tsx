@@ -12,7 +12,13 @@ export default ({ selected }: { selected?: User }) => {
     const [users, setUsers] = useState<User[] | null>(null);
 
     const onSearch = async (query: string) => {
-        setUsers(await searchUserAccounts({ filters: { username_or_email: query } }));
+        const [byUsername, byEmail] = await Promise.all([
+            searchUserAccounts({ filters: { username: query } }),
+            searchUserAccounts({ filters: { email: query } }),
+        ]);
+
+        const combined = [...new Map([...byUsername, ...byEmail].map(n => [n.id, n])).values()];
+        setUsers(combined);
     };
 
     const onSelect = (user: User | null) => {
