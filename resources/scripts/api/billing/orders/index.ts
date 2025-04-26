@@ -6,7 +6,7 @@ import { type OrderFilters } from '@/api/billing/orders/types';
 export const Context = createContext<OrderFilters>();
 
 export const useGetOrders = createPaginatedHook<Order, OrderFilters>({
-    url: '/api/application/billing/orders',
+    url: '/api/client/billing/orders',
     swrKey: 'orders',
     context: Context,
     transformer: Transformers.toOrder,
