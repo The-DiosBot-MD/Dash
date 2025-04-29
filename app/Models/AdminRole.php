@@ -2,7 +2,7 @@
 
 namespace Everest\Models;
 
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 
 /**
  * @property int $id
@@ -31,6 +31,7 @@ class AdminRole extends Model
         'name',
         'description',
         'sort_id',
+        'permissions',
     ];
 
     /**
@@ -45,15 +46,31 @@ class AdminRole extends Model
         'name' => 'required|string|max:64',
         'description' => 'nullable|string|max:255',
         'sort_id' => 'sometimes|numeric',
+        'permissions' => 'nullable|array',
     ];
 
     public $timestamps = false;
 
     /**
+     * All the permissions available on the system. You should use self::permissions()
+     * to retrieve them, and not directly access this array as it is subject to change.
+     *
+     * @see \Everest\Models\Permission::permissions()
+     */
+    protected static array $permissions = [
+        'overview' => [
+            'description' => 'Allows the administrator to interact with the admin overview page.',
+            'keys' => [
+                'read' => 'Allows the administrator to read the contents of the overview.',
+            ],
+        ],
+    ];
+
+    /**
      * Gets the permissions associated with an admin role.
      */
-    public function permissions(): HasMany
+    public function permissions(): Collection
     {
-        return $this->hasMany(Permission::class);
+        return Collection::make(self::$permissions);
     }
 }

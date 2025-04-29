@@ -82,6 +82,8 @@ import {
 import LinksTable from '@/components/admin/modules/links/LinksContainer';
 import ActivityContainer from '@admin/general/ActivityContainer';
 import WebhookRouter from '@/components/admin/modules/webhooks/WebhookRouter';
+import RolesContainer from '@/components/admin/management/roles/RolesContainer';
+import RoleEditContainer from '@/components/admin/management/roles/RoleEditContainer';
 
 function AdminRouter() {
     const theme = useStoreState(state => state.theme.data!);
@@ -268,6 +270,8 @@ function AdminRouter() {
                         <Route path="users" element={<UsersContainer />} />
                         <Route path="users/new" element={<NewUserContainer />} />
                         <Route path="users/:id/*" element={<UserRouter />} />
+                        <Route path={'roles'} element={<RolesContainer />} />
+                        <Route path={`roles/:id`} element={<RoleEditContainer />} />
                         <Route path="nests" element={<NestsContainer />} />
                         <Route path="nests/:nestId" element={<NestEditContainer />} />
                         <Route path="nests/:nestId/new" element={<NewEggContainer />} />
