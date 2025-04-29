@@ -56,6 +56,14 @@ class RoleController extends ApplicationApiController
     }
 
     /**
+     * Returns the permissions assignable to any role.
+     */
+    public function permissions(GetRolesRequest $request): array
+    {
+        return AdminRole::permissions()->toArray();
+    }
+
+    /**
      * Creates a new role.
      */
     public function store(StoreRoleRequest $request): JsonResponse

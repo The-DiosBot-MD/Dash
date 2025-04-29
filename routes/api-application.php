@@ -384,6 +384,7 @@ Route::middleware([AdminSubject::class])->group(function () {
     */
     Route::group(['prefix' => '/roles'], function () {
         Route::get('/', [Application\Roles\RoleController::class, 'index']);
+        Route::get('/permissions', [Application\Roles\RoleController::class, 'permissions']);
         Route::get('/{role:id}', [Application\Roles\RoleController::class, 'view']);
 
         Route::post('/', [Application\Roles\RoleController::class, 'store']);

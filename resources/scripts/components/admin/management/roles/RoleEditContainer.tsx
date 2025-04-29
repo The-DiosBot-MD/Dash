@@ -15,6 +15,8 @@ import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import { ApplicationStore } from '@/state';
 import { UserRole } from '@definitions/admin';
 import { useNavigate, useParams } from 'react-router-dom';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import PermissionsTable from './PermissionsTable';
 
 interface ctx {
     role: UserRole | undefined;
@@ -74,7 +76,7 @@ const EditInformationContainer = () => {
         >
             {({ isSubmitting, isValid }) => (
                 <React.Fragment>
-                    <AdminBox title={'Edit Role'} css={tw`relative`}>
+                    <AdminBox title={'Edit Role'} css={tw`relative mb-6`} icon={faPencil}>
                         <SpinnerOverlay visible={isSubmitting} />
 
                         <Form css={tw`mb-0`}>
@@ -156,10 +158,17 @@ const RoleEditContainer = () => {
                     )}
                 </div>
             </div>
-
             <FlashMessageRender byKey={'role'} css={tw`mb-4`} />
-
             <EditInformationContainer />
+            <div css={tw`w-full flex flex-row items-center my-8`}>
+                <div css={tw`flex flex-col flex-shrink`} style={{ minWidth: '0' }}>
+                    <h2 css={tw`text-2xl text-neutral-50 font-header font-medium`}>Role Permissions</h2>
+                    <p css={tw`text-base text-neutral-400 whitespace-nowrap overflow-ellipsis overflow-hidden`}>
+                        This table contains the permissions that you can assign to the role.
+                    </p>
+                </div>
+            </div>
+            <PermissionsTable />
         </AdminContentBlock>
     );
 };

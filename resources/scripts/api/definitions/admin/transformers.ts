@@ -115,6 +115,11 @@ export default class Transformers {
         relationships: {},
     });
 
+    static toAdminRolePermission = ({ attributes }: FractalResponseData): Models.AdminRolePermission => ({
+        key: attributes.key,
+        description: attributes.description,
+    });
+
     static toApiKey = ({ attributes }: FractalResponseData): Models.ApiKey => ({
         id: attributes.id,
         identifier: attributes.identifier,

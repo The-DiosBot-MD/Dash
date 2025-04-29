@@ -149,3 +149,8 @@ interface Category extends Model {
         products?: Product[];
     };
 }
+
+interface AdminRolePermission extends Model {
+    key: string;
+    description: string;
+}
