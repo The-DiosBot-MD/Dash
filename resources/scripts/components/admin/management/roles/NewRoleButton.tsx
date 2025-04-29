@@ -6,8 +6,9 @@ import { getRoles, createRole } from '@/api/admin/roles';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import { Button } from '@/components/elements/button';
 import Field from '@/components/elements/Field';
-import Modal from '@/components/elements/Modal';
 import useFlash from '@/plugins/useFlash';
+import { Dialog } from '@/components/elements/dialog';
+import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 
 interface Values {
     name: string;
@@ -43,15 +44,15 @@ export default () => {
         <>
             <Formik onSubmit={submit} initialValues={{ name: '', description: '' }} validationSchema={schema}>
                 {({ isSubmitting, resetForm }) => (
-                    <Modal
-                        visible={visible}
-                        dismissable={!isSubmitting}
-                        showSpinnerOverlay={isSubmitting}
-                        onDismissed={() => {
+                    <Dialog
+                        open={visible}
+                        preventExternalClose={isSubmitting}
+                        onClose={() => {
                             resetForm();
                             setVisible(false);
                         }}
                     >
+                        <SpinnerOverlay visible={isSubmitting} />
                         <FlashMessageRender byKey={'role:create'} css={tw`mb-6`} />
                         <h2 css={tw`mb-6 text-2xl text-neutral-100`}>New Role</h2>
                         <Form css={tw`m-0`}>
@@ -88,7 +89,7 @@ export default () => {
                                 </Button>
                             </div>
                         </Form>
-                    </Modal>
+                    </Dialog>
                 )}
             </Formik>
 

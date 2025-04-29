@@ -16,6 +16,7 @@ import {
     SparklesIcon,
     TerminalIcon,
     TicketIcon,
+    UserGroupIcon,
     UsersIcon,
     ViewGridIcon,
 } from '@heroicons/react/outline';
@@ -77,6 +78,7 @@ import {
     faServer,
     faTicket,
     faUser,
+    faUserGroup,
     faWandSparkles,
 } from '@fortawesome/free-solid-svg-icons';
 import LinksTable from '@/components/admin/modules/links/LinksContainer';
@@ -118,6 +120,7 @@ function AdminRouter() {
                 <MobileSidebar.Link icon={faLayerGroup} text={'Nodes'} linkTo={'/admin/nodes'} />
                 <MobileSidebar.Link icon={faServer} text={'Servers'} linkTo={'/admin/servers'} />
                 <MobileSidebar.Link icon={faUser} text={'Users'} linkTo={'/admin/users'} />
+                <MobileSidebar.Link icon={faUserGroup} text={'Roles'} linkTo={'/admin/roles'} />
                 <MobileSidebar.Link icon={faFolder} text={'Mounts'} linkTo={'/admin/mounts'} />
                 <MobileSidebar.Link icon={faEgg} text={'Nests'} linkTo={'/admin/nests'} />
             </MobileSidebar>
@@ -212,6 +215,10 @@ function AdminRouter() {
                     <NavLink to="/admin/users">
                         <UsersIcon />
                         <span>Users</span>
+                    </NavLink>
+                    <NavLink to="/admin/roles">
+                        <UserGroupIcon />
+                        <span>Roles</span>
                     </NavLink>
                     <Sidebar.Section>Services</Sidebar.Section>
                     <NavLink to="/admin/nests">

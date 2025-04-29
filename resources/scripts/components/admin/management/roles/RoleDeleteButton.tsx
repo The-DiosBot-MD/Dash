@@ -2,10 +2,11 @@ import { Actions, useStoreActions } from 'easy-peasy';
 import { useState } from 'react';
 import { deleteRole } from '@/api/admin/roles';
 import { Button } from '@/components/elements/button';
-import ConfirmationModal from '@/components/elements/ConfirmationModal';
 import { ApplicationStore } from '@/state';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { Dialog } from '@/components/elements/dialog';
+import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 
 interface Props {
     roleId: number;
@@ -40,16 +41,18 @@ export default ({ roleId, onDeleted }: Props) => {
 
     return (
         <>
-            <ConfirmationModal
-                visible={visible}
+            <Dialog.Confirm
+                open={visible}
                 title={'Delete role?'}
-                buttonText={'Yes, delete role'}
+                confirm={'Yes, delete role'}
                 onConfirmed={onDelete}
-                showSpinnerOverlay={loading}
-                onModalDismissed={() => setVisible(false)}
+                onClose={() => setVisible(false)}
+                buttonType={'danger'}
             >
-                Are you sure you want to delete this role?
-            </ConfirmationModal>
+                <SpinnerOverlay visible={loading} />
+                Are you sure you want to delete this role? All administrators with this role assigned will have full
+                access.
+            </Dialog.Confirm>
 
             <Button.Danger type={'button'} size={Button.Sizes.Small} onClick={() => setVisible(true)}>
                 <FontAwesomeIcon icon={faTrash} />
