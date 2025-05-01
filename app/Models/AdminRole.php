@@ -52,6 +52,103 @@ class AdminRole extends Model
     public $timestamps = false;
 
     /**
+     * The list of constants from self::$permissions.
+     */
+    public const OVERVIEW_READ = 'overview.read';
+
+    public const SETTINGS_READ = 'settings.read';
+    public const SETTINGS_UPDATE = 'settings.update';
+    
+    public const ACTIVITY_READ = 'activity.read';
+    
+    public const API_READ = 'api.read';
+    public const API_CREATE = 'api.create';
+    public const API_UPDATE = 'api.update';
+    public const API_DELETE = 'api.delete';
+    
+    public const AUTH_READ = 'auth.read';
+    public const AUTH_CREATE = 'auth.create';
+    public const AUTH_UPDATE = 'auth.update';
+    public const AUTH_DELETE = 'auth.delete';
+    
+    public const BILLING_READ = 'billing.read';
+    public const BILLING_PRODUCT_CREATE = 'billing.product-create';
+    public const BILLING_PRODUCT_UPDATE = 'billing.product-update';
+    public const BILLING_PRODUCT_DELETE = 'billing.product-delete';
+    public const BILLING_CATEGORY_CREATE = 'billing.category-create';
+    public const BILLING_CATEGORY_UPDATE = 'billing.category-update';
+    public const BILLING_CATEGORY_DELETE = 'billing.category-delete';
+    public const BILLING_EXCEPTIONS = 'billing.exceptions';
+    public const BILLING_UPDATE = 'billing.update';
+    public const BILLING_EXPORT = 'billing.export';
+    public const BILLING_IMPORT = 'billing.import';
+    
+    public const TICKETS_READ = 'tickets.read';
+    public const TICKETS_CREATE = 'tickets.create';
+    public const TICKETS_UPDATE = 'tickets.update';
+    public const TICKETS_DELETE = 'tickets.delete';
+    public const TICKETS_MESSAGE = 'tickets.message';
+    
+    public const AI_READ = 'ai.read';
+    public const AI_UPDATE = 'ai.update';
+    
+    public const WEBHOOKS_READ = 'webhooks.read';
+    public const WEBHOOKS_UPDATE = 'webhooks.update';
+    
+    public const ALERTS_READ = 'alerts.read';
+    public const ALERTS_UPDATE = 'alerts.update';
+    
+    public const THEME_READ = 'theme.read';
+    public const THEME_UPDATE = 'theme.update';
+    
+    public const LINKS_READ = 'links.read';
+    public const LINKS_CREATE = 'links.create';
+    public const LINKS_UPDATE = 'links.update';
+    public const LINKS_DELETE = 'links.delete';
+    
+    public const DATABASES_READ = 'databases.read';
+    public const DATABASES_CREATE = 'databases.create';
+    public const DATABASES_UPDATE = 'databases.update';
+    public const DATABASES_DELETE = 'databases.delete';
+    
+    public const NODES_READ = 'nodes.read';
+    public const NODES_CREATE = 'nodes.create';
+    public const NODES_UPDATE = 'nodes.update';
+    public const NODES_DELETE = 'nodes.delete';
+    
+    public const SERVERS_READ = 'servers.read';
+    public const SERVERS_CREATE = 'servers.create';
+    public const SERVERS_UPDATE = 'servers.update';
+    public const SERVERS_DELETE = 'servers.delete';
+    
+    public const USERS_READ = 'users.read';
+    public const USERS_CREATE = 'users.create';
+    public const USERS_UPDATE = 'users.update';
+    public const USERS_DELETE = 'users.delete';
+    
+    public const ROLES_READ = 'roles.read';
+    public const ROLES_CREATE = 'roles.create';
+    public const ROLES_UPDATE = 'roles.update';
+    public const ROLES_DELETE = 'roles.delete';
+    
+    public const NESTS_READ = 'nests.read';
+    public const NESTS_CREATE = 'nests.create';
+    public const NESTS_UPDATE = 'nests.update';
+    public const NESTS_DELETE = 'nests.delete';
+    
+    public const EGGS_READ = 'eggs.read';
+    public const EGGS_CREATE = 'eggs.create';
+    public const EGGS_UPDATE = 'eggs.update';
+    public const EGGS_DELETE = 'eggs.delete';
+    public const EGGS_IMPORT = 'eggs.import';
+    public const EGGS_EXPORT = 'eggs.export';
+    
+    public const MOUNTS_READ = 'mounts.read';
+    public const MOUNTS_CREATE = 'mounts.create';
+    public const MOUNTS_UPDATE = 'mounts.update';
+    public const MOUNTS_DELETE = 'mounts.delete';
+
+    /**
      * All the permissions available on the system. You should use self::permissions()
      * to retrieve them, and not directly access this array as it is subject to change.
      *
