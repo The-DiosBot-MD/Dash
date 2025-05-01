@@ -1,76 +1,37 @@
-import { useGetRolePermissions, Context as PermissionContext } from '@/api/admin/roles/permissions';
-import AdminTable, {
-    ContentWrapper,
-    Pagination,
-    TableHead,
-    TableHeader,
-    TableBody,
-    TableRow,
-    Loading,
-    NoItems,
-} from '@elements/AdminTable';
-import { useContext } from 'react';
+import { getRolePermisisons } from '@/api/admin/roles';
+import Spinner from '@/components/elements/Spinner';
+import { useEffect, useState } from 'react';
+import { PanelPermissions } from '@/state/permissions';
+import AdminBox from '@/components/elements/AdminBox';
+import Checkbox from '@/components/elements/inputs/Checkbox';
 
 export default () => {
-    const { data: permissions, error, isValidating } = useGetRolePermissions();
-    const { setPage, sort, sortDirection, setSort, setFilters } = useContext(PermissionContext);
+    const [permissions, setPermissions] = useState<PanelPermissions>();
 
-    const length = permissions?.items?.length || 0;
+    useEffect(() => {
+        getRolePermisisons().then(data => setPermissions(data.attributes.permissions));
+    }, []);
 
-    const onSearch = (query: string): Promise<void> => {
-        return new Promise(resolve => {
-            if (query.length < 2) {
-                setFilters(null);
-            } else {
-                setPage(1);
-                setFilters({
-                    key: query,
-                });
-            }
-            return resolve();
-        });
-    };
+    if (!permissions) return <Spinner size={'large'} centered />;
 
     return (
-        <AdminTable>
-            <ContentWrapper onSearch={onSearch}>
-                <Pagination data={permissions} onPageSelect={setPage}>
-                    <div className={'overflow-x-auto'}>
-                        <table className={'w-full table-auto'}>
-                            <TableHead>
-                                <TableHeader
-                                    name={'Key'}
-                                    direction={sort === 'key' ? (sortDirection ? 1 : 2) : null}
-                                    onClick={() => setSort('key')}
-                                />
-                                <TableHeader name={'Description'} />
-                            </TableHead>
-
-                            <TableBody>
-                                {permissions !== undefined &&
-                                    !error &&
-                                    !isValidating &&
-                                    length > 0 &&
-                                    permissions.items.map(permission => (
-                                        <TableRow key={permission.key}>
-                                            <td className={'px-6 text-sm text-neutral-200 text-left whitespace-nowrap'}>
-                                                <code className={'font-mono bg-neutral-900 rounded py-1 px-2'}>
-                                                    {permission.key}
-                                                </code>
-                                            </td>
-                                        </TableRow>
-                                    ))}
-                            </TableBody>
-                        </table>
-
-                        {permissions === undefined || (error && isValidating) ? (
-                            <Loading />
-                        ) : length < 1 ? (
-                            <NoItems />
-                        ) : null}
+        <div className={'grid lg:grid-cols-3 gap-4'}>
+            {Object.keys(permissions).map(key => (
+                <AdminBox title={key[0]?.toUpperCase() + key.slice(1, key.length).toString()} key={key}>
+                    <p className={'mb-4 text-gray-400 text-xs'}>{permissions[key]?.description}</p>
+                    <div className={'px-1'}>
+                        {Object.keys(permissions[key]?.keys ?? {}).map(pkey => (
+                            <>
+                                <Checkbox id={`${key}.${pkey}`} name={`${key}.${pkey}`} />
+                                <div
+                                    className={'inline-flex my-auto ml-2 font-semibold'}
+                                    key={pkey.toString()}
+                                >{`${key}.${pkey}`}</div>
+                            </>
+                        ))}
                     </div>
-                </Pagination>
-            </ContentWrapper>
-        </AdminTable>
+                </AdminBox>
+            ))}
+        </div>
     );
 };

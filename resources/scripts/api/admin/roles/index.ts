@@ -9,6 +9,13 @@ export interface Filters {
     name?: string;
 }
 
+export interface AdminRolePermissions {
+    [key: string]: {
+        description: string;
+        keys: { [k: string]: string };
+    };
+}
+
 export const Context = createContext<Filters>();
 
 const createRole = (name: string, description: string | null, include: string[] = []): Promise<UserRole> => {
@@ -38,6 +45,19 @@ const getRole = (id: number, include: string[] = []): Promise<UserRole> => {
     return new Promise((resolve, reject) => {
         http.get(`/api/application/roles/${id}`, { params: { include: include.join(',') } })
             .then(({ data }) => resolve(Transformers.toUserRole(data)))
+            .catch(reject);
+    });
+};
+
+const getRolePermisisons = (): Promise<{
+    object: string;
+    attributes: {
+        permissions: AdminRolePermissions;
+    };
+}> => {
+    return new Promise((resolve, reject) => {
+        http.get(`/api/application/roles/permissions`)
+            .then(({ data }) => resolve(data))
             .catch(reject);
     });
 };
@@ -108,4 +128,4 @@ const getRoles = (include: string[] = []) => {
     });
 };
 
-export { createRole, deleteRole, getRole, searchRoles, updateRole, getRoles };
+export { getRolePermisisons, createRole, deleteRole, getRole, searchRoles, updateRole, getRoles };

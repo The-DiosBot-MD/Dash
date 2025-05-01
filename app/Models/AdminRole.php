@@ -69,7 +69,7 @@ class AdminRole extends Model
     /**
      * Gets the permissions associated with an admin role.
      */
-    public function permissions(): Collection
+    public static function permissions(): Collection
     {
         return Collection::make(self::$permissions);
     }
