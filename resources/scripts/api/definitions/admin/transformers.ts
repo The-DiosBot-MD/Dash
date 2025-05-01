@@ -112,6 +112,7 @@ export default class Transformers {
         id: attributes.id,
         name: attributes.name,
         description: attributes.description,
+        permissions: attributes.permissions,
         relationships: {},
     });
 

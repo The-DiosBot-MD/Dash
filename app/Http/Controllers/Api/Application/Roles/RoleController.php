@@ -96,6 +96,18 @@ class RoleController extends ApplicationApiController
     }
 
     /**
+     * Updates the assigned permissions to a role.
+     */
+    public function updatePermissions(UpdateRoleRequest $request, AdminRole $role): array
+    {
+        dd($request->input('permissions'));
+
+        return $this->fractal->item($role)
+            ->transformWith(AdminRoleTransformer::class)
+            ->toArray();
+    }
+
+    /**
      * Deletes a role.
      *
      * @throws \Exception

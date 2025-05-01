@@ -80,8 +80,9 @@ const searchRoles = (filters?: { name?: string }): Promise<UserRole[]> => {
 
 const updateRole = (
     id: number,
-    name: string,
-    description: string | null,
+    name?: string,
+    description?: string | null,
+    permissions?: string[],
     include: string[] = [],
 ): Promise<UserRole> => {
     return new Promise((resolve, reject) => {
@@ -90,6 +91,7 @@ const updateRole = (
             {
                 name,
                 description,
+                permissions,
             },
             { params: { include: include.join(',') } },
         )

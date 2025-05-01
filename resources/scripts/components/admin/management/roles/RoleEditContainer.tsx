@@ -168,7 +168,7 @@ const RoleEditContainer = () => {
                     </p>
                 </div>
             </div>
-            <PermissionsTable />
+            <PermissionsTable role={role} />
         </AdminContentBlock>
     );
 };

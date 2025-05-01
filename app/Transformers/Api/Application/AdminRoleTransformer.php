@@ -24,6 +24,7 @@ class AdminRoleTransformer extends Transformer
             'id' => $model->id,
             'name' => $model->name,
             'description' => $model->description,
+            'permissions' => $model->permissions ? $model->permissions : [],
         ];
     }
 }

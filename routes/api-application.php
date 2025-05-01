@@ -390,6 +390,7 @@ Route::middleware([AdminSubject::class])->group(function () {
         Route::post('/', [Application\Roles\RoleController::class, 'store']);
 
         Route::patch('/{role:id}', [Application\Roles\RoleController::class, 'update']);
+        Route::patch('/{role:id}/permissions', [Application\Roles\RoleController::class, 'updatePermissions']);
 
         Route::delete('/{role:id}', [Application\Roles\RoleController::class, 'delete']);
     });
