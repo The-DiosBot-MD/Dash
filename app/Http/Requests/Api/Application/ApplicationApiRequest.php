@@ -2,17 +2,29 @@
 
 namespace Everest\Http\Requests\Api\Application;
 
+use Everest\Models\AdminRole;
 use Everest\Http\Requests\Api\ApiRequest;
 
 abstract class ApplicationApiRequest extends ApiRequest
 {
     /**
-     * This will eventually be replaced with per-request permissions checking
-     * on the API key and for the user.
+     * Authorize users based on their Admin Role (if exists)
+     * to allow admins to visit specific permissable endpoints.
      */
     public function authorize(): bool
     {
-        return $this->user()->root_admin;
+        $id = $this->user()->admin_role_id;
+
+        if ($id) {
+            if (method_exists($this, 'permission')) {
+                $required = $this->permission();
+
+                return in_array($required, AdminRole::find($id)->permissions);
+            }
+            return true;
+        } else {
+            return true;
+        }
     }
 
     /**
