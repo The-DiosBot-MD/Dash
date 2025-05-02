@@ -19,7 +19,7 @@ abstract class ApplicationApiRequest extends ApiRequest
             if (method_exists($this, 'permission')) {
                 $required = $this->permission();
 
-                return in_array($required, AdminRole::find($id)->permissions);
+                return in_array($required, AdminRole::find($id)->permissions ?? []);
             }
             return true;
         } else {
