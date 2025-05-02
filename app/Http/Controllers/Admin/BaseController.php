@@ -13,7 +13,7 @@ class BaseController extends Controller
     {
         $user = $request->user();
 
-        if (!$user || !$user->root_admin) {
+        if (!$user || (!$user->root_admin && !$user->admin_role_id)) {
             throw new AccessDeniedHttpException('You do not have permission to access this resource.');
         }
 
