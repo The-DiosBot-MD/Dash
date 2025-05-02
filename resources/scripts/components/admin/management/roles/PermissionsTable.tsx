@@ -7,17 +7,27 @@ import Checkbox from '@/components/elements/inputs/Checkbox';
 import Tooltip from '@/components/elements/tooltip/Tooltip';
 import { Button } from '@/components/elements/button';
 import { UserRole } from '@/api/definitions/admin';
+import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 
 export default ({ role }: { role: UserRole }) => {
     const [permissions, setPermissions] = useState<PanelPermissions>();
     const [selected, setSelected] = useState<string[] | undefined>(role.permissions);
+    const [submitting, setSubmitting] = useState<boolean>(false);
 
     const updateSelected = (value: string) => {
-        setSelected(selected => [value, ...(selected ?? [])]);
+        setSelected(selected => {
+            const current = selected ?? [];
+            if (current.includes(value)) {
+                return current.filter(v => v !== value);
+            } else {
+                return [value, ...current];
+            }
+        });
     };
 
     const save = () => {
-        updateRole(role.id, role.name, role.description, selected).then(() => window.location.reload());
+        setSubmitting(true);
+        updateRole(role.id, role.name, role.description, selected).then(() => setSubmitting(false));
     };
 
     useEffect(() => {
@@ -29,6 +39,7 @@ export default ({ role }: { role: UserRole }) => {
     return (
         <>
             <div className={'grid lg:grid-cols-4 gap-4'}>
+                <SpinnerOverlay visible={submitting} />
                 {Object.keys(permissions).map(key => (
                     <AdminBox title={key[0]?.toUpperCase() + key.slice(1, key.length).toString()} key={key}>
                         <p className={'mb-4 text-gray-400 text-xs'}>{permissions[key]?.description}</p>
