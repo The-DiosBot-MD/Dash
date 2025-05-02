@@ -28,7 +28,6 @@ import AdminTable, {
 } from '@/components/elements/AdminTable';
 import { useStoreState } from '@/state/hooks';
 import Pill from '@/components/elements/Pill';
-import CopyOnClick from '@/components/elements/CopyOnClick';
 
 function UsersContainer() {
     const { data: users, error, isValidating } = useGetUsers();
@@ -83,11 +82,6 @@ function UsersContainer() {
                                         onClick={() => setSort('id')}
                                     />
                                     <TableHeader
-                                        name={'UUID'}
-                                        direction={sort === 'uuid' ? (sortDirection ? 1 : 2) : null}
-                                        onClick={() => setSort('uuid')}
-                                    />
-                                    <TableHeader
                                         name={'Username'}
                                         direction={sort === 'username' ? (sortDirection ? 1 : 2) : null}
                                         onClick={() => setSort('username')}
@@ -98,14 +92,19 @@ function UsersContainer() {
                                         onClick={() => setSort('email')}
                                     />
                                     <TableHeader
-                                        name={'Account State'}
-                                        direction={sort === 'root_admin' ? (sortDirection ? 1 : 2) : null}
-                                        onClick={() => setSort('root_admin')}
-                                    />
-                                    <TableHeader
                                         name={'2FA Enabled'}
                                         direction={sort === 'use_totp' ? (sortDirection ? 1 : 2) : null}
                                         onClick={() => setSort('use_totp')}
+                                    />
+                                    <TableHeader
+                                        name={'State'}
+                                        direction={sort === 'state' ? (sortDirection ? 1 : 2) : null}
+                                        onClick={() => setSort('state')}
+                                    />
+                                    <TableHeader
+                                        name={'permissions'}
+                                        direction={sort === 'root_admin' ? (sortDirection ? 1 : 2) : null}
+                                        onClick={() => setSort('root_admin')}
                                     />
                                 </TableHead>
 
@@ -121,13 +120,6 @@ function UsersContainer() {
                                                         {user.id}
                                                     </code>
                                                 </td>
-                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
-                                                    <CopyOnClick text={user.uuid}>
-                                                        <code css={tw`font-mono bg-neutral-900 rounded py-1 px-2`}>
-                                                            {user.uuid.slice(0, 8)}
-                                                        </code>
-                                                    </CopyOnClick>
-                                                </td>
                                                 <td
                                                     css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap hover:brightness-125`}
                                                     style={{ color: colors.primary }}
@@ -137,38 +129,28 @@ function UsersContainer() {
                                                 <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
                                                     {user.email}
                                                 </td>
-                                                <td className={'px-6 py-4 whitespace-nowrap text-sm text-neutral-50'}>
-                                                    {user.isRootAdmin ? (
-                                                        <>
-                                                            <Pill type={'success'}>
-                                                                <FontAwesomeIcon
-                                                                    icon={faUserGear}
-                                                                    className={'my-auto mr-1'}
-                                                                    size={'sm'}
-                                                                />{' '}
-                                                                Admin
-                                                            </Pill>
-                                                            {user.admin_role_id && (
-                                                                <Pill type={'info'}>
-                                                                    <FontAwesomeIcon
-                                                                        icon={faIdBadge}
-                                                                        className={'my-auto mr-1'}
-                                                                        size={'sm'}
-                                                                    />{' '}
-                                                                    {user.roleName}
-                                                                </Pill>
-                                                            )}
-                                                        </>
-                                                    ) : (
-                                                        <Pill type={'unknown'}>
+                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
+                                                    {user.isUsingTwoFactor ? (
+                                                        <Pill type={'success'}>
                                                             <FontAwesomeIcon
-                                                                icon={faUser}
+                                                                icon={faLock}
                                                                 className={'my-auto mr-1'}
                                                                 size={'sm'}
                                                             />{' '}
-                                                            Standard
+                                                            Enabled
+                                                        </Pill>
+                                                    ) : (
+                                                        <Pill type={'danger'}>
+                                                            <FontAwesomeIcon
+                                                                icon={faLockOpen}
+                                                                className={'my-auto mr-1'}
+                                                                size={'sm'}
+                                                            />{' '}
+                                                            Disabled
                                                         </Pill>
                                                     )}
+                                                </td>
+                                                <td className={'px-6 py-4 whitespace-nowrap text-sm text-neutral-50'}>
                                                     {user.state === 'suspended' ? (
                                                         <Pill type={'warn'}>
                                                             <FontAwesomeIcon
@@ -189,24 +171,45 @@ function UsersContainer() {
                                                         </Pill>
                                                     )}
                                                 </td>
-                                                <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
-                                                    {user.isUsingTwoFactor ? (
-                                                        <Pill type={'success'}>
-                                                            <FontAwesomeIcon
-                                                                icon={faLock}
-                                                                className={'my-auto mr-1'}
-                                                                size={'sm'}
-                                                            />{' '}
-                                                            Enabled
-                                                        </Pill>
+                                                <td className={'px-6 py-4 whitespace-nowrap text-sm text-neutral-50'}>
+                                                    {user.isRootAdmin || user.admin_role_id ? (
+                                                        <>
+                                                            <Pill type={'success'}>
+                                                                <FontAwesomeIcon
+                                                                    icon={faUserGear}
+                                                                    className={'my-auto mr-1'}
+                                                                    size={'sm'}
+                                                                />{' '}
+                                                                Admin
+                                                            </Pill>
+                                                            {user.admin_role_id ? (
+                                                                <Pill type={'info'}>
+                                                                    <FontAwesomeIcon
+                                                                        icon={faIdBadge}
+                                                                        className={'my-auto mr-1'}
+                                                                        size={'sm'}
+                                                                    />{' '}
+                                                                    {user.roleName}
+                                                                </Pill>
+                                                            ) : (
+                                                                <Pill type={'warn'}>
+                                                                    <FontAwesomeIcon
+                                                                        icon={faIdBadge}
+                                                                        className={'my-auto mr-1'}
+                                                                        size={'sm'}
+                                                                    />{' '}
+                                                                    Full Access
+                                                                </Pill>
+                                                            )}
+                                                        </>
                                                     ) : (
-                                                        <Pill type={'danger'}>
+                                                        <Pill type={'unknown'}>
                                                             <FontAwesomeIcon
-                                                                icon={faLockOpen}
+                                                                icon={faUser}
                                                                 className={'my-auto mr-1'}
                                                                 size={'sm'}
                                                             />{' '}
-                                                            Disabled
+                                                            Standard
                                                         </Pill>
                                                     )}
                                                 </td>

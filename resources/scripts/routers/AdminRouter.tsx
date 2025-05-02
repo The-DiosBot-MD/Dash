@@ -62,6 +62,7 @@ import AIRouter from '@admin/modules/ai/AIRouter';
 import MobileSidebar from '@elements/MobileSidebar';
 import {
     faCog,
+    faCrown,
     faDatabase,
     faDesktop,
     faDollar,
@@ -87,6 +88,7 @@ import WebhookRouter from '@/components/admin/modules/webhooks/WebhookRouter';
 import RolesContainer from '@/components/admin/management/roles/RolesContainer';
 import RoleEditContainer from '@/components/admin/management/roles/RoleEditContainer';
 import Pill from '@/components/elements/Pill';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function AdminRouter() {
     const theme = useStoreState(state => state.theme.data!);
@@ -245,7 +247,16 @@ function AdminRouter() {
                         >
                             <div className={'w-full flex justify-between mb-1'}>
                                 <p className={'text-sm text-gray-400'}>Welcome,</p>
-                                <Pill size={'xsmall'}>{user.roleName}</Pill>
+                                <Pill size={'xsmall'} type={'info'}>
+                                    {user.roleName === 'None' ? (
+                                        <>
+                                            <FontAwesomeIcon icon={faCrown} className={'m-auto text-yellow-500 mr-1'} />{' '}
+                                            Owner
+                                        </>
+                                    ) : (
+                                        user.roleName
+                                    )}
+                                </Pill>
                             </div>
                             {user.email}
                         </span>

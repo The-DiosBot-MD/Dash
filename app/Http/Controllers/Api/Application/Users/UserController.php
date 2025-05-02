@@ -66,7 +66,7 @@ class UserController extends ApplicationApiController
                     }
                 }),
             ])
-            ->allowedSorts(['id', 'uuid', 'username', 'email', 'admin_role_id', 'use_totp', 'root_admin', 'created_at'])
+            ->allowedSorts(['id', 'uuid', 'username', 'email', 'admin_role_id', 'use_totp', 'root_admin', 'state', 'created_at'])
             ->paginate($perPage);
 
         return $this->fractal->collection($users)
