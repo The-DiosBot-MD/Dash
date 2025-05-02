@@ -10,6 +10,9 @@ use Everest\Models\Billing\Product;
 use Everest\Models\Billing\Category;
 use Everest\Contracts\Repository\SettingsRepositoryInterface;
 use Everest\Http\Controllers\Api\Application\ApplicationApiController;
+use Everest\Http\Requests\Api\Application\Billing\DeleteStripeKeysRequest;
+use Everest\Http\Requests\Api\Application\Billing\GetBillingAnalyticsRequest;
+use Everest\Http\Requests\Api\Application\Billing\UpdateBillingSettingsRequest;
 
 class BillingController extends ApplicationApiController
 {
@@ -27,7 +30,7 @@ class BillingController extends ApplicationApiController
      *
      * @throws \Throwable
      */
-    public function settings(Request $request): Response
+    public function settings(UpdateBillingSettingsRequest $request): Response
     {
         $this->settings->set('settings::modules:billing:' . $request->input('key'), $request->input('value'));
 
@@ -44,7 +47,7 @@ class BillingController extends ApplicationApiController
     /**
      * Gather and return billing analytics.
      */
-    public function analytics(Request $request): array
+    public function analytics(GetBillingAnalyticsRequest $request): array
     {
         return [
             'orders' => Order::all(),
@@ -56,7 +59,7 @@ class BillingController extends ApplicationApiController
     /**
      * Delete all Stripe API keys saved to the Panel.
      */
-    public function resetKeys(Request $request): Response
+    public function resetKeys(DeleteStripeKeysRequest $request): Response
     {
         $this->settings->forget('settings::modules:billing:keys:publishable');
         $this->settings->forget('settings:modules:billing:keys:secret');

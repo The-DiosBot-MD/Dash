@@ -10,6 +10,8 @@ use Everest\Models\Billing\BillingException;
 use Everest\Exceptions\Http\QueryValueOutOfRangeHttpException;
 use Everest\Transformers\Api\Application\BillingExceptionTransformer;
 use Everest\Http\Controllers\Api\Application\ApplicationApiController;
+use Everest\Http\Requests\Api\Application\Billing\Exceptions\GetBillingExceptionsRequest;
+use Everest\Http\Requests\Api\Application\Billing\Exceptions\ResolveBillingExceptionRequest;
 
 class BillingExceptionController extends ApplicationApiController
 {
@@ -24,7 +26,7 @@ class BillingExceptionController extends ApplicationApiController
     /**
      * Get all billing exceptions.
      */
-    public function index(Request $request): array
+    public function index(GetBillingExceptionsRequest $request): array
     {
         $perPage = (int) $request->query('per_page', '20');
         if ($perPage < 1 || $perPage > 100) {
@@ -44,7 +46,7 @@ class BillingExceptionController extends ApplicationApiController
     /**
      * Resolve a billing exception.
      */
-    public function resolve(string $uuid): Response
+    public function resolve(ResolveBillingExceptionRequest $request, string $uuid): Response
     {
         $exception = BillingException::where('uuid', $uuid);
 
@@ -61,7 +63,7 @@ class BillingExceptionController extends ApplicationApiController
     /**
      * Resolve all billing exceptions.
      */
-    public function resolveAll(): Response
+    public function resolveAll(ResolveBillingExceptionRequest $request): Response
     {
         $exceptions = BillingException::all();
 

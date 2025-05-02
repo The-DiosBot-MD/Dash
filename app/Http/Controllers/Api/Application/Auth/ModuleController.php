@@ -7,6 +7,9 @@ use Everest\Facades\Activity;
 use Illuminate\Http\Response;
 use Everest\Contracts\Repository\SettingsRepositoryInterface;
 use Everest\Http\Controllers\Api\Application\ApplicationApiController;
+use Everest\Http\Requests\Api\Application\Auth\EnableAuthModuleRequest;
+use Everest\Http\Requests\Api\Application\Auth\UpdateAuthModuleRequest;
+use Everest\Http\Requests\Api\Application\Auth\DisableAuthModuleRequest;
 
 class ModuleController extends ApplicationApiController
 {
@@ -24,7 +27,7 @@ class ModuleController extends ApplicationApiController
      *
      * @throws \Throwable
      */
-    public function enable(Request $request): Response
+    public function enable(EnableAuthModuleRequest $request): Response
     {
         $this->settings->set('settings::modules:auth:' . $request->all()[0] . ':enabled', true);
 
@@ -41,7 +44,7 @@ class ModuleController extends ApplicationApiController
      *
      * @throws \Throwable
      */
-    public function disable(Request $request): Response
+    public function disable(DisableAuthModuleRequest $request): Response
     {
         $this->settings->set('settings::modules:auth:' . $request->all()[0] . ':enabled', false);
 
@@ -59,7 +62,7 @@ class ModuleController extends ApplicationApiController
      *
      * @throws \Throwable
      */
-    public function update(Request $request): Response
+    public function update(UpdateAuthModuleRequest $request): Response
     {
         $this->settings->set(
             'settings::modules:auth:' . $request->input('module') . ':' . $request->input('key'),

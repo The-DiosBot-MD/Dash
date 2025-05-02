@@ -13,6 +13,11 @@ use Spatie\QueryBuilder\QueryBuilder;
 use Everest\Transformers\Api\Application\CategoryTransformer;
 use Everest\Exceptions\Http\QueryValueOutOfRangeHttpException;
 use Everest\Http\Controllers\Api\Application\ApplicationApiController;
+use Everest\Http\Requests\Api\Application\Billing\Categories\GetBillingCategoryRequest;
+use Everest\Http\Requests\Api\Application\Billing\Categories\StoreBillingCategoryRequest;
+use Everest\Http\Requests\Api\Application\Billing\Categories\GetBillingCategoriesRequest;
+use Everest\Http\Requests\Api\Application\Billing\Categories\UpdateBillingCategoryRequest;
+use Everest\Http\Requests\Api\Application\Billing\Categories\DeleteBillingCategoryRequest;
 
 class CategoryController extends ApplicationApiController
 {
@@ -27,7 +32,7 @@ class CategoryController extends ApplicationApiController
     /**
      * Get all categories associated with the panel.
      */
-    public function index(Request $request): array
+    public function index(GetBillingCategoriesRequest $request): array
     {
         $perPage = (int) $request->query('per_page', '20');
         if ($perPage < 1 || $perPage > 100) {
@@ -47,7 +52,7 @@ class CategoryController extends ApplicationApiController
     /**
      * Store a new product category in the database.
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreBillingCategoryRequest $request): JsonResponse
     {
         $egg = Egg::query()->findOrFail($request->input('eggId'));
 
@@ -78,7 +83,7 @@ class CategoryController extends ApplicationApiController
     /**
      * Update an existing category.
      */
-    public function update(Request $request, Category $category): Response
+    public function update(UpdateBillingCategoryRequest $request, Category $category): Response
     {
         $egg = Egg::query()->findOrFail($request->input('eggId'));
 
@@ -107,7 +112,7 @@ class CategoryController extends ApplicationApiController
     /**
      * View an existing category.
      */
-    public function view(Request $request, Category $category): array
+    public function view(GetBillingCategoryRequest $request, Category $category): array
     {
         return $this->fractal->item($category)
             ->transformWith(CategoryTransformer::class)
@@ -117,7 +122,7 @@ class CategoryController extends ApplicationApiController
     /**
      * Delete a category and the products linked to it.
      */
-    public function delete(Request $request, Category $category): Response
+    public function delete(DeleteBillingCategoryRequest $request, Category $category): Response
     {
         foreach ((array) $category->products() as $product) {
             $product->delete();

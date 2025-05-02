@@ -11,6 +11,8 @@ use Everest\Models\Billing\Category;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Everest\Services\Billing\BillingConfigImportService;
 use Everest\Http\Controllers\Api\Application\ApplicationApiController;
+use Everest\Http\Requests\Api\Application\Billing\Config\ExportBillingConfigRequest;
+use Everest\Http\Requests\Api\Application\Billing\Config\ImportBillingConfigRequest;
 
 class ConfigController extends ApplicationApiController
 {
@@ -28,7 +30,7 @@ class ConfigController extends ApplicationApiController
      *
      * @throws \Throwable
      */
-    public function export(Request $request): StreamedResponse
+    public function export(ExportBillingConfigRequest $request): StreamedResponse
     {
         $data = [
             'export_info' => [
@@ -57,7 +59,7 @@ class ConfigController extends ApplicationApiController
      *
      * @throws \Throwable
      */
-    public function import(Request $request): Response
+    public function import(ImportBillingConfigRequest $request): Response
     {
         $data = (array) $request->input('data');
         $override = (bool) $request->input('override');

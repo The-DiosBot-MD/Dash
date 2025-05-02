@@ -65,7 +65,6 @@ class AdminRole extends Model
     
     public const API_READ = 'api.read';
     public const API_CREATE = 'api.create';
-    public const API_UPDATE = 'api.update';
     public const API_DELETE = 'api.delete';
     
     public const AUTH_READ = 'auth.read';
@@ -74,16 +73,18 @@ class AdminRole extends Model
     public const AUTH_DELETE = 'auth.delete';
     
     public const BILLING_READ = 'billing.read';
-    public const BILLING_PRODUCT_CREATE = 'billing.product-create';
-    public const BILLING_PRODUCT_UPDATE = 'billing.product-update';
-    public const BILLING_PRODUCT_DELETE = 'billing.product-delete';
-    public const BILLING_CATEGORY_CREATE = 'billing.category-create';
-    public const BILLING_CATEGORY_UPDATE = 'billing.category-update';
-    public const BILLING_CATEGORY_DELETE = 'billing.category-delete';
+    public const BILLING_PRODUCTS_CREATE = 'billing.product-create';
+    public const BILLING_PRODUCTS_UPDATE = 'billing.product-update';
+    public const BILLING_PRODUCTS_DELETE = 'billing.product-delete';
+    public const BILLING_CATEGORIES_CREATE = 'billing.category-create';
+    public const BILLING_CATEGORIES_UPDATE = 'billing.category-update';
+    public const BILLING_CATEGORIES_DELETE = 'billing.category-delete';
+    public const BILLING_ORDERS = 'billing.orders';
     public const BILLING_EXCEPTIONS = 'billing.exceptions';
     public const BILLING_UPDATE = 'billing.update';
     public const BILLING_EXPORT = 'billing.export';
     public const BILLING_IMPORT = 'billing.import';
+    public const BILLING_DELETE_KEYS = 'billing.delete-keys';
     
     public const TICKETS_READ = 'tickets.read';
     public const TICKETS_CREATE = 'tickets.create';
@@ -181,7 +182,6 @@ class AdminRole extends Model
             'keys' => [
                 'read' => 'View the existing Application API keys.',
                 'create' => 'Create a new Application API key.',
-                'update' => 'Change Application API key permissions.',
                 'delete' => 'Delete Application API keys.',
             ],
         ],
@@ -198,16 +198,18 @@ class AdminRole extends Model
             'description' => 'Permissions to configure the Billing module.',
             'keys' => [
                 'read' => 'Read basic billing information.',
-                'product-create' => 'Create a billing product.',
-                'product-update' => 'Update a billing product.',
-                'product-delete' => 'Delete a billing product.',
-                'category-create' => 'Create a billing category.',
-                'category-update' => 'Update a billing category.',
-                'category-delete' => 'Delete a billing category.',
+                'orders' => 'Read all user orders on the system.',
+                'products-create' => 'Create a billing product.',
+                'products-update' => 'Update a billing product.',
+                'products-delete' => 'Delete a billing product.',
+                'categories-create' => 'Create a billing category.',
+                'categories-update' => 'Update a billing category.',
+                'categories-delete' => 'Delete a billing category.',
                 'exceptions' => 'Manage and resolve billing exceptions.',
                 'update' => 'Update billing settings.',
                 'export' => 'Export current billing configuration to JSON.',
                 'import' => 'Import current billing configuration from JSON.',
+                'delete-keys' => 'Delete Stripe API billing keys used for payment.',
             ],
         ],
         'tickets' => [

@@ -8,6 +8,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 use Everest\Transformers\Api\Application\OrderTransformer;
 use Everest\Exceptions\Http\QueryValueOutOfRangeHttpException;
 use Everest\Http\Controllers\Api\Application\ApplicationApiController;
+use Everest\Http\Requests\Api\Application\Billing\Orders\GetBillingOrdersRequest;
 
 class OrderController extends ApplicationApiController
 {
@@ -22,7 +23,7 @@ class OrderController extends ApplicationApiController
     /**
      * Get all orders.
      */
-    public function index(Request $request): array
+    public function index(GetBillingOrdersRequest $request): array
     {
         $perPage = (int) $request->query('per_page', '20');
         if ($perPage < 1 || $perPage > 100) {
