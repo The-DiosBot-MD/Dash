@@ -224,7 +224,7 @@ export default class Transformers {
             username: attributes.username,
             email: attributes.email,
             language: attributes.language,
-            adminRoleId: attributes.adminRoleId || null,
+            admin_role_id: attributes.admin_role_id || null,
             roleName: attributes.role_name,
             state: attributes.state || null,
             isRootAdmin: attributes.root_admin,

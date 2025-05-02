@@ -38,13 +38,14 @@ export default () => {
                 externalId: user.externalId,
                 username: user.username,
                 email: user.email,
-                adminRoleId: user.adminRoleId,
+                admin_role_id: user.admin_role_id,
                 password: '',
                 state: user.state,
                 rootAdmin: user.isRootAdmin,
             }}
             onSubmit={submit}
             uuid={user.uuid}
+            admin_role_id={user.admin_role_id}
         />
     );
 };

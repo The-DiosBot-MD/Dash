@@ -127,6 +127,7 @@ class User extends Model implements
         'language',
         'use_totp',
         'totp_secret',
+        'admin_role_id',
         'totp_authenticated_at',
         'gravatar',
         'state',
@@ -174,6 +175,7 @@ class User extends Model implements
         'language' => 'string',
         'state' => 'sometimes|nullable|string',
         'use_totp' => 'boolean',
+        'admin_role_id' => 'nullable|exists:admin_roles,id',
         'totp_secret' => 'nullable|string',
         'recovery_code' => 'nullable|string',
     ];

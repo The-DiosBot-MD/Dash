@@ -11,7 +11,7 @@ interface User extends ModelWithRelationships {
     username: string;
     email: string;
     language: string;
-    adminRoleId: number | null;
+    admin_role_id: number | null;
     roleName: string;
     isRootAdmin: boolean;
     isUsingTwoFactor: boolean;
