@@ -27,7 +27,7 @@ export default ({ role }: { role: UserRole }) => {
 
     const save = () => {
         setSubmitting(true);
-        updateRole(role.id, role.name, role.description, selected).then(() => setSubmitting(false));
+        updateRole(role.id, role.name, role.description, role.color, selected).then(() => setSubmitting(false));
     };
 
     useEffect(() => {
@@ -40,28 +40,58 @@ export default ({ role }: { role: UserRole }) => {
         <>
             <div className={'grid lg:grid-cols-4 gap-4'}>
                 <SpinnerOverlay visible={submitting} />
-                {Object.keys(permissions).map(key => (
-                    <AdminBox title={key[0]?.toUpperCase() + key.slice(1, key.length).toString()} key={key}>
-                        <p className={'mb-4 text-gray-400 text-xs'}>{permissions[key]?.description}</p>
-                        <div className={'px-1'}>
-                            {Object.keys(permissions[key]?.keys ?? {}).map(pkey => (
-                                <div key={`${key}.${pkey}`}>
-                                    <Checkbox
-                                        id={`${key}.${pkey}`}
-                                        defaultChecked={selected?.includes(`${key}.${pkey}`) ?? false}
-                                        name={`${key}.${pkey}`}
-                                        onClick={() => updateSelected(`${key}.${pkey}`)}
-                                    />
-                                    <Tooltip placement={'top'} content={permissions[key]?.keys[pkey] ?? ''}>
-                                        <div
-                                            className={'inline-flex my-auto ml-2 font-semibold'}
-                                        >{`${key}.${pkey}`}</div>
-                                    </Tooltip>
-                                </div>
-                            ))}
-                        </div>
-                    </AdminBox>
-                ))}
+                {Object.keys(permissions).map(key => {
+                    const keys = Object.keys(permissions[key]?.keys ?? {});
+                    const allSelected = keys.every(pkey => selected?.includes(`${key}.${pkey}`));
+                    const someSelected = keys.some(pkey => selected?.includes(`${key}.${pkey}`));
+                    const handleSelectAll = () => {
+                        setSelected(selected => {
+                            const current = selected ?? [];
+                            if (allSelected) {
+                                // Remove all keys in this group
+                                return current.filter(v => !keys.map(pkey => `${key}.${pkey}`).includes(v));
+                            } else {
+                                // Add all keys in this group
+                                const toAdd = keys.map(pkey => `${key}.${pkey}`).filter(k => !current.includes(k));
+                                return [...current, ...toAdd];
+                            }
+                        });
+                    };
+                    return (
+                        <AdminBox
+                            title={key[0]?.toUpperCase() + key.slice(1, key.length).toString()}
+                            key={key}
+                            className={'relative'}
+                        >
+                            <p className={'mb-4 text-gray-400 text-xs'}>{permissions[key]?.description}</p>
+                            <div className={'absolute top-0 right-0 pt-2 pr-4'}>
+                                <Checkbox
+                                    id={`select-all-${key}`}
+                                    checked={allSelected}
+                                    indeterminate={!allSelected && someSelected}
+                                    onChange={handleSelectAll}
+                                />
+                            </div>
+                            <div className={'px-1'}>
+                                {keys.map(pkey => (
+                                    <div key={`${key}.${pkey}`}>
+                                        <Checkbox
+                                            id={`${key}.${pkey}`}
+                                            checked={selected?.includes(`${key}.${pkey}`) ?? false}
+                                            name={`${key}.${pkey}`}
+                                            onChange={() => updateSelected(`${key}.${pkey}`)}
+                                        />
+                                        <Tooltip placement={'top'} content={permissions[key]?.keys[pkey] ?? ''}>
+                                            <div
+                                                className={'inline-flex my-auto ml-2 font-semibold'}
+                                            >{`${key}.${pkey}`}</div>
+                                        </Tooltip>
+                                    </div>
+                                ))}
+                            </div>
+                        </AdminBox>
+                    );
+                })}
             </div>
             <div className={'text-right mt-4'}>
                 <Button onClick={save}>Save</Button>

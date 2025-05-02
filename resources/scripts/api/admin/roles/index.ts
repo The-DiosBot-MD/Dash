@@ -18,13 +18,19 @@ export interface AdminRolePermissions {
 
 export const Context = createContext<Filters>();
 
-const createRole = (name: string, description: string | null, include: string[] = []): Promise<UserRole> => {
+const createRole = (
+    name: string,
+    description: string | null,
+    color?: string | null,
+    include: string[] = [],
+): Promise<UserRole> => {
     return new Promise((resolve, reject) => {
         http.post(
             '/api/application/roles',
             {
                 name,
                 description,
+                color,
             },
             { params: { include: include.join(',') } },
         )
@@ -82,6 +88,7 @@ const updateRole = (
     id: number,
     name?: string,
     description?: string | null,
+    color?: string | null,
     permissions?: string[],
     include: string[] = [],
 ): Promise<UserRole> => {
@@ -92,6 +99,7 @@ const updateRole = (
                 name,
                 description,
                 permissions,
+                color,
             },
             { params: { include: include.join(',') } },
         )

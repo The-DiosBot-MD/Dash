@@ -113,6 +113,7 @@ export default class Transformers {
         name: attributes.name,
         description: attributes.description,
         permissions: attributes.permissions,
+        color: attributes.color,
         relationships: {},
     });
 

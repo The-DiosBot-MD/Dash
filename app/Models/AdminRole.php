@@ -32,6 +32,7 @@ class AdminRole extends Model
         'description',
         'sort_id',
         'permissions',
+        'color',
     ];
 
     /**
@@ -47,6 +48,7 @@ class AdminRole extends Model
         'description' => 'nullable|string|max:255',
         'sort_id' => 'sometimes|numeric',
         'permissions' => 'nullable|array',
+        'color' => 'nullable|string',
     ];
 
     public $timestamps = false;

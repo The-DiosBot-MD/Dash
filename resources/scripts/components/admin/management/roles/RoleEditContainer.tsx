@@ -34,6 +34,7 @@ export const Context = createContextStore<ctx>({
 interface Values {
     name: string;
     description: string;
+    color: string;
 }
 
 const EditInformationContainer = () => {
@@ -50,11 +51,11 @@ const EditInformationContainer = () => {
         return <></>;
     }
 
-    const submit = ({ name, description }: Values, { setSubmitting }: FormikHelpers<Values>) => {
+    const submit = ({ name, description, color }: Values, { setSubmitting }: FormikHelpers<Values>) => {
         clearFlashes('role');
 
-        updateRole(role.id, name, description)
-            .then(() => setRole({ ...role, name, description }))
+        updateRole(role.id, name, description, color)
+            .then(() => setRole({ ...role, name, description, color }))
             .catch(error => {
                 console.error(error);
                 clearAndAddHttpError({ key: 'role', error });
@@ -68,10 +69,12 @@ const EditInformationContainer = () => {
             initialValues={{
                 name: role.name,
                 description: role.description || '',
+                color: role.color || '',
             }}
             validationSchema={object().shape({
                 name: string().required().min(1),
                 description: string().max(255, ''),
+                color: string().nullable(),
             })}
         >
             {({ isSubmitting, isValid }) => (
@@ -85,7 +88,11 @@ const EditInformationContainer = () => {
                             </div>
 
                             <div css={tw`mt-6`}>
-                                <Field id={'description'} name={'description'} label={'description'} type={'text'} />
+                                <Field id={'description'} name={'description'} label={'Description'} type={'text'} />
+                            </div>
+
+                            <div css={tw`mt-6`}>
+                                <Field id={'color'} type={'color'} name={'color'} label={'Color'} />
                             </div>
 
                             <div css={tw`w-full flex flex-row items-center mt-6`}>
@@ -146,7 +153,12 @@ const RoleEditContainer = () => {
         <AdminContentBlock title={'Role - ' + role.name}>
             <div css={tw`w-full flex flex-row items-center mb-8`}>
                 <div css={tw`flex flex-col flex-shrink`} style={{ minWidth: '0' }}>
-                    <h2 css={tw`text-2xl text-neutral-50 font-header font-medium`}>{role.name}</h2>
+                    <h2
+                        css={tw`text-2xl text-neutral-50 font-header font-medium`}
+                        style={{ color: role.color ?? 'white' }}
+                    >
+                        {role.name}
+                    </h2>
                     {(role.description || '').length < 1 ? (
                         <p css={tw`text-base text-neutral-400`}>
                             <span css={tw`italic`}>No description</span>

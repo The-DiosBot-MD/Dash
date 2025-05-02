@@ -19,11 +19,14 @@ import AdminTable, {
     useTableHooks,
 } from '@elements/AdminTable';
 import CopyOnClick from '@/components/elements/CopyOnClick';
+import { useStoreState } from '@/state/hooks';
 
 const RolesContainer = () => {
     const { page, setPage, setFilters, sort, setSort, sortDirection } = useContext(RolesContext);
     const { clearFlashes, clearAndAddHttpError } = useFlash();
     const { data: roles, error, isValidating } = getRoles();
+
+    const { colors } = useStoreState(state => state.theme.data!);
 
     useEffect(() => {
         if (!error) {
@@ -108,7 +111,8 @@ const RolesContainer = () => {
                                                 <td css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap`}>
                                                     <NavLink
                                                         to={`${window.location.pathname}/${role.id}`}
-                                                        css={tw`text-primary-400 hover:text-primary-300`}
+                                                        style={{ color: role.color ?? colors.primary }}
+                                                        className={'hover:brightness-125 duration-300'}
                                                     >
                                                         {role.name}
                                                     </NavLink>

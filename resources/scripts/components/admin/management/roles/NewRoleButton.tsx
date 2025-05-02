@@ -13,11 +13,13 @@ import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 interface Values {
     name: string;
     description: string;
+    color: string;
 }
 
 const schema = object().shape({
     name: string().required('A role name must be provided.').max(32, 'Role name must not exceed 32 characters.'),
     description: string().max(255, 'Role description must not exceed 255 characters.'),
+    color: string().nullable(),
 });
 
 export default () => {
@@ -25,11 +27,11 @@ export default () => {
     const { clearFlashes, clearAndAddHttpError } = useFlash();
     const { mutate } = getRoles();
 
-    const submit = ({ name, description }: Values, { setSubmitting }: FormikHelpers<Values>) => {
+    const submit = ({ name, description, color }: Values, { setSubmitting }: FormikHelpers<Values>) => {
         clearFlashes('role:create');
         setSubmitting(true);
 
-        createRole(name, description)
+        createRole(name, description, color)
             .then(async role => {
                 await mutate(data => ({ ...data!, items: data!.items.concat(role) }), false);
                 setVisible(false);
@@ -42,7 +44,11 @@ export default () => {
 
     return (
         <>
-            <Formik onSubmit={submit} initialValues={{ name: '', description: '' }} validationSchema={schema}>
+            <Formik
+                onSubmit={submit}
+                initialValues={{ name: '', description: '', color: '' }}
+                validationSchema={schema}
+            >
                 {({ isSubmitting, resetForm }) => (
                     <Dialog
                         open={visible}
@@ -72,6 +78,15 @@ export default () => {
                                     name={'description'}
                                     label={'Description'}
                                     description={'A description for this role.'}
+                                />
+                            </div>
+                            <div css={tw`mt-6`}>
+                                <Field
+                                    type={'color'}
+                                    id={'color'}
+                                    name={'color'}
+                                    label={'Role Color'}
+                                    description={'Set a color for this role. (optional)'}
                                 />
                             </div>
 

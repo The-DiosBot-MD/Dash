@@ -30,6 +30,7 @@ interface UserRole extends ModelWithRelationships {
     id: number;
     name: string;
     description: string;
+    color?: string | null;
     permissions: string[];
 }
 
