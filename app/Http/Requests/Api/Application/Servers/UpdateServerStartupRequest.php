@@ -3,6 +3,7 @@
 namespace Everest\Http\Requests\Api\Application\Servers;
 
 use Everest\Models\Server;
+use Everest\Models\AdminRole;
 use Everest\Http\Requests\Api\Application\ApplicationApiRequest;
 
 class UpdateServerStartupRequest extends ApplicationApiRequest
@@ -18,5 +19,10 @@ class UpdateServerStartupRequest extends ApplicationApiRequest
             'image' => $rules['image'],
             'skip_scripts' => 'present|boolean',
         ];
+    }
+
+    public function permission(): string
+    {
+        return AdminRole::SERVERS_UPDATE;
     }
 }

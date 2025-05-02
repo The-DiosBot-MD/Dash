@@ -2,6 +2,7 @@
 
 namespace Everest\Http\Requests\Api\Application\AI;
 
+use Everest\Models\AdminRole;
 use Everest\Http\Requests\Api\Application\ApplicationApiRequest;
 
 class AISettingsRequest extends ApplicationApiRequest
@@ -13,5 +14,10 @@ class AISettingsRequest extends ApplicationApiRequest
             'key' => 'nullable',
             'user_access' => 'nullable|bool',
         ];
+    }
+
+    public function permission(): string
+    {
+        return AdminRole::AI_UPDATE;
     }
 }

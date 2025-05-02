@@ -10,4 +10,9 @@ class UpdateRoleRequest extends StoreRoleRequest
     {
         return $rules ?? AdminRole::getRulesForUpdate($this->route()->parameter('role'));
     }
+
+    public function permission(): string
+    {
+        return AdminRole::ROLES_UPDATE;
+    }
 }

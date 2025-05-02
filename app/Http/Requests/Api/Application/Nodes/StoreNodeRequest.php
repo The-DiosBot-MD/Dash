@@ -4,6 +4,7 @@ namespace Everest\Http\Requests\Api\Application\Nodes;
 
 use Everest\Models\Node;
 use Illuminate\Support\Arr;
+use Everest\Models\AdminRole;
 use Everest\Http\Requests\Api\Application\ApplicationApiRequest;
 
 class StoreNodeRequest extends ApplicationApiRequest
@@ -66,5 +67,10 @@ class StoreNodeRequest extends ApplicationApiRequest
         }
 
         return $response;
+    }
+
+    public function permission(): string
+    {
+        return AdminRole::NODES_CREATE;
     }
 }

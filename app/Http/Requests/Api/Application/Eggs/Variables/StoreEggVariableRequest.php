@@ -2,6 +2,7 @@
 
 namespace Everest\Http\Requests\Api\Application\Eggs\Variables;
 
+use Everest\Models\AdminRole;
 use Everest\Models\EggVariable;
 use Everest\Http\Requests\Api\Application\ApplicationApiRequest;
 
@@ -18,5 +19,10 @@ class StoreEggVariableRequest extends ApplicationApiRequest
             'user_editable' => 'required|boolean',
             'rules' => 'bail|required|string',
         ];
+    }
+
+    public function permission(): string
+    {
+        return AdminRole::EGGS_CREATE;
     }
 }

@@ -11,4 +11,9 @@ class StoreRoleRequest extends ApplicationApiRequest
     {
         return $rules ?? AdminRole::getRules();
     }
+
+    public function permission(): string
+    {
+        return AdminRole::ROLES_CREATE;
+    }
 }

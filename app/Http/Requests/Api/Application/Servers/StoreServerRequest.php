@@ -4,6 +4,7 @@ namespace Everest\Http\Requests\Api\Application\Servers;
 
 use Everest\Models\Server;
 use Illuminate\Support\Arr;
+use Everest\Models\AdminRole;
 use Everest\Http\Requests\Api\Application\ApplicationApiRequest;
 
 class StoreServerRequest extends ApplicationApiRequest
@@ -87,5 +88,10 @@ class StoreServerRequest extends ApplicationApiRequest
         ];
 
         return is_null($key) ? $response : Arr::get($response, $key, $default);
+    }
+
+    public function permission(): string
+    {
+        return AdminRole::SERVERS_CREATE;
     }
 }
