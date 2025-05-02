@@ -5,13 +5,15 @@ interface AlertProps {
     type: 'success' | 'info' | 'warning' | 'danger';
     className?: string;
     children: React.ReactNode;
+    small?: boolean;
 }
 
-export default ({ type, className, children }: AlertProps) => {
+export default ({ type, className, children, small }: AlertProps) => {
     return (
         <div
             className={classNames(
-                'flex items-center border-l-8 text-gray-50 rounded-md shadow px-4 py-3',
+                'flex items-center border-l-8 text-gray-50 rounded-md shadow',
+                small ? 'px-2 py-2 text-xs' : 'px-4 py-3',
                 {
                     ['border-green-500 bg-green-500/25']: type === 'success',
                     ['border-blue-500 bg-blue-500/25']: type === 'info',

@@ -20,6 +20,7 @@ import { useStoreState } from '@/state/hooks';
 import RoleSelect from './RoleSelect';
 import { useEffect, useState } from 'react';
 import { getRole } from '@/api/admin/roles';
+import { Alert } from '@/components/elements/alert';
 
 interface ctx {
     user: User | undefined;
@@ -147,6 +148,10 @@ export default function UserForm({ title, initialValues, children, onSubmit, uui
                                         label={'Root Admin'}
                                         description={'Should this user be a root administrator?'}
                                     />
+                                    <Alert type={'warning'} className={'mt-2'} small>
+                                        Enabling RootAdmin gives the user full access. It is recommended to keep this
+                                        off, but assign an admin role to the user to grant specific permissions.
+                                    </Alert>
                                 </div>
                             </div>
                             <div>
