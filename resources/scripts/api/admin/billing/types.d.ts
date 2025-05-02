@@ -40,6 +40,7 @@ export interface CategoryFilters {
 export interface OrderFilters {
     id?: number;
     name?: string;
+    description?: string;
     total?: number;
 }
 

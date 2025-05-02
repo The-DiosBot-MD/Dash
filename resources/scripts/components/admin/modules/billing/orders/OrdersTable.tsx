@@ -72,7 +72,7 @@ function OrderTable() {
             if (query.length < 2) {
                 setFilters(null);
             } else {
-                setFilters({ name: query });
+                setFilters({ description: query });
             }
             return resolve();
         });
