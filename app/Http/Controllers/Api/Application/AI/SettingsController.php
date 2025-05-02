@@ -3,13 +3,12 @@
 namespace Everest\Http\Controllers\Api\Application\AI;
 
 use GeminiAPI\Client;
-use Illuminate\Http\Request;
 use Everest\Facades\Activity;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use GeminiAPI\Resources\Parts\TextPart;
-use Everest\Contracts\Repository\SettingsRepositoryInterface;
 use Everest\Http\Requests\Api\Application\AI\AIQueryRequest;
+use Everest\Contracts\Repository\SettingsRepositoryInterface;
 use Everest\Http\Requests\Api\Application\AI\AISettingsRequest;
 use Everest\Http\Controllers\Api\Application\ApplicationApiController;
 

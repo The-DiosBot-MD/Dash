@@ -2,7 +2,6 @@
 
 namespace Everest\Http\Controllers\Api\Application\Billing;
 
-use Illuminate\Http\Request;
 use Everest\Models\Billing\Order;
 use Spatie\QueryBuilder\QueryBuilder;
 use Everest\Transformers\Api\Application\OrderTransformer;

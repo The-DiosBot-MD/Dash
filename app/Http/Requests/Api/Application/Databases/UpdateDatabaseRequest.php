@@ -11,7 +11,7 @@ class UpdateDatabaseRequest extends StoreDatabaseRequest
     {
         return $rules ?? DatabaseHost::getRulesForUpdate($this->route()->parameter('databaseHost'));
     }
-    
+
     public function permission(): string
     {
         return AdminRole::DATABASES_UPDATE;

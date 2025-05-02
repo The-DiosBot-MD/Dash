@@ -3,7 +3,6 @@
 namespace Everest\Http\Controllers\Api\Application\Billing;
 
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Everest\Facades\Activity;
 use Illuminate\Http\Response;
 use Everest\Models\Billing\Product;

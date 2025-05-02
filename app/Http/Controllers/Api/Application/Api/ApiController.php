@@ -3,7 +3,6 @@
 namespace Everest\Http\Controllers\Api\Application\Api;
 
 use Everest\Models\ApiKey;
-use Illuminate\Http\Request;
 use Everest\Facades\Activity;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;

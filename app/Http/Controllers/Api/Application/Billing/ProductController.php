@@ -3,7 +3,6 @@
 namespace Everest\Http\Controllers\Api\Application\Billing;
 
 use Ramsey\Uuid\Uuid;
-use Illuminate\Http\Request;
 use Everest\Facades\Activity;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
@@ -16,8 +15,8 @@ use Everest\Http\Controllers\Api\Application\ApplicationApiController;
 use Everest\Http\Requests\Api\Application\Billing\Products\GetBillingProductRequest;
 use Everest\Http\Requests\Api\Application\Billing\Products\GetBillingProductsRequest;
 use Everest\Http\Requests\Api\Application\Billing\Products\StoreBillingProductRequest;
-use Everest\Http\Requests\Api\Application\Billing\Products\UpdateBillingProductRequest;
 use Everest\Http\Requests\Api\Application\Billing\Products\DeleteBillingProductRequest;
+use Everest\Http\Requests\Api\Application\Billing\Products\UpdateBillingProductRequest;
 
 class ProductController extends ApplicationApiController
 {

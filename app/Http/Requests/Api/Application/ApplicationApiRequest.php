@@ -21,6 +21,7 @@ abstract class ApplicationApiRequest extends ApiRequest
 
                 return in_array($required, AdminRole::find($id)->permissions ?? []);
             }
+
             return true;
         } else {
             return true;

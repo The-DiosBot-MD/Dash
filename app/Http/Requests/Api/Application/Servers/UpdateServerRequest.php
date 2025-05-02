@@ -77,7 +77,7 @@ class UpdateServerRequest extends ApplicationApiRequest
 
         return is_null($key) ? $response : Arr::get($response, $key, $default);
     }
-    
+
     public function permission(): string
     {
         return AdminRole::SERVERS_UPDATE;

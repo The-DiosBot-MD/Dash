@@ -4,7 +4,6 @@ namespace Everest\Http\Controllers\Api\Application\Billing;
 
 use Ramsey\Uuid\Uuid;
 use Everest\Models\Egg;
-use Illuminate\Http\Request;
 use Everest\Facades\Activity;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
@@ -14,10 +13,10 @@ use Everest\Transformers\Api\Application\CategoryTransformer;
 use Everest\Exceptions\Http\QueryValueOutOfRangeHttpException;
 use Everest\Http\Controllers\Api\Application\ApplicationApiController;
 use Everest\Http\Requests\Api\Application\Billing\Categories\GetBillingCategoryRequest;
-use Everest\Http\Requests\Api\Application\Billing\Categories\StoreBillingCategoryRequest;
 use Everest\Http\Requests\Api\Application\Billing\Categories\GetBillingCategoriesRequest;
-use Everest\Http\Requests\Api\Application\Billing\Categories\UpdateBillingCategoryRequest;
+use Everest\Http\Requests\Api\Application\Billing\Categories\StoreBillingCategoryRequest;
 use Everest\Http\Requests\Api\Application\Billing\Categories\DeleteBillingCategoryRequest;
+use Everest\Http\Requests\Api\Application\Billing\Categories\UpdateBillingCategoryRequest;
 
 class CategoryController extends ApplicationApiController
 {

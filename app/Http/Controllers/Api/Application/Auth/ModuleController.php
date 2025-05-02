@@ -2,7 +2,6 @@
 
 namespace Everest\Http\Controllers\Api\Application\Auth;
 
-use Illuminate\Http\Request;
 use Everest\Facades\Activity;
 use Illuminate\Http\Response;
 use Everest\Contracts\Repository\SettingsRepositoryInterface;
