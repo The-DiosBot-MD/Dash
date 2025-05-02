@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import classNames from 'classnames';
 
-export type PillSize = 'normal' | 'large' | 'small';
+export type PillSize = 'normal' | 'large' | 'small' | 'xsmall';
 export type PillStatus = 'success' | 'info' | 'warn' | 'danger' | 'unknown';
 
 function getColor(type?: PillStatus): string {
@@ -37,6 +37,7 @@ export default ({ type, size, children }: { type?: PillStatus; size?: PillSize; 
             !size && 'text-xs px-2 rounded-full',
             size === 'large' && 'px-6 py-4 rounded-lg w-full',
             size === 'small' && 'text-sm px-3 py-0.5 rounded-full',
+            size === 'xsmall' && 'text-2xs px-1 rounded-full',
             'relative mx-1 inline-flex leading-5 font-medium capitalize',
         )}
     >

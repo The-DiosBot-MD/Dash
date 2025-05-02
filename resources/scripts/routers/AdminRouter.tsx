@@ -86,6 +86,7 @@ import ActivityContainer from '@admin/general/ActivityContainer';
 import WebhookRouter from '@/components/admin/modules/webhooks/WebhookRouter';
 import RolesContainer from '@/components/admin/management/roles/RolesContainer';
 import RoleEditContainer from '@/components/admin/management/roles/RoleEditContainer';
+import Pill from '@/components/elements/Pill';
 
 function AdminRouter() {
     const theme = useStoreState(state => state.theme.data!);
@@ -242,7 +243,10 @@ function AdminRouter() {
                                 'font-sans font-normal text-xs text-gray-300 whitespace-nowrap leading-tight select-none'
                             }
                         >
-                            <div className={'text-gray-400 text-sm'}>Welcome back,</div>
+                            <div className={'w-full flex justify-between mb-1'}>
+                                <p className={'text-sm text-gray-400'}>Welcome,</p>
+                                <Pill size={'xsmall'}>{user.roleName}</Pill>
+                            </div>
                             {user.email}
                         </span>
                     </div>
