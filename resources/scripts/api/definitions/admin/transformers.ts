@@ -112,7 +112,14 @@ export default class Transformers {
         id: attributes.id,
         name: attributes.name,
         description: attributes.description,
+        permissions: attributes.permissions,
+        color: attributes.color,
         relationships: {},
+    });
+
+    static toAdminRolePermission = ({ attributes }: FractalResponseData): Models.AdminRolePermission => ({
+        key: attributes.key,
+        description: attributes.description,
     });
 
     static toApiKey = ({ attributes }: FractalResponseData): Models.ApiKey => ({
@@ -217,7 +224,7 @@ export default class Transformers {
             username: attributes.username,
             email: attributes.email,
             language: attributes.language,
-            adminRoleId: attributes.adminRoleId || null,
+            admin_role_id: attributes.admin_role_id || null,
             roleName: attributes.role_name,
             state: attributes.state || null,
             isRootAdmin: attributes.root_admin,

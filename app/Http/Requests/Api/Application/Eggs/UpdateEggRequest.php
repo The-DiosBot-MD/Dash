@@ -2,6 +2,8 @@
 
 namespace Everest\Http\Requests\Api\Application\Eggs;
 
+use Everest\Models\AdminRole;
+
 class UpdateEggRequest extends StoreEggRequest
 {
     public function rules(array $rules = null): array
@@ -24,5 +26,10 @@ class UpdateEggRequest extends StoreEggRequest
             'script_entry' => 'sometimes|string',
             'script_install' => 'sometimes|string',
         ];
+    }
+
+    public function permission(): string
+    {
+        return AdminRole::EGGS_UPDATE;
     }
 }

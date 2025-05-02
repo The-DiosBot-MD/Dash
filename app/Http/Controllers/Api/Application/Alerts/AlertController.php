@@ -7,7 +7,7 @@ use Everest\Facades\Activity;
 use Illuminate\Http\JsonResponse;
 use Everest\Contracts\Repository\SettingsRepositoryInterface;
 use Everest\Http\Controllers\Api\Application\ApplicationApiController;
-use Everest\Http\Requests\Api\Application\Alerts\GeneralSettingsRequest;
+use Everest\Http\Requests\Api\Application\Alerts\AlertSettingsRequest;
 
 class AlertController extends ApplicationApiController
 {
@@ -25,7 +25,7 @@ class AlertController extends ApplicationApiController
      *
      * @throws \Throwable
      */
-    public function update(GeneralSettingsRequest $request): JsonResponse
+    public function update(AlertSettingsRequest $request): JsonResponse
     {
         $uuid = Uuid::uuid4()->toString();
 

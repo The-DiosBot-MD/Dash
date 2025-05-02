@@ -2,6 +2,7 @@
 
 namespace Everest\Http\Requests\Api\Application\Api;
 
+use Everest\Models\AdminRole;
 use Everest\Http\Requests\Api\Application\ApplicationApiRequest;
 
 class StoreApplicationApiKeyRequest extends ApplicationApiRequest
@@ -15,5 +16,10 @@ class StoreApplicationApiKeyRequest extends ApplicationApiRequest
         }
 
         return $arr;
+    }
+
+    public function permission(): string
+    {
+        return AdminRole::API_CREATE;
     }
 }

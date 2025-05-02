@@ -2,6 +2,7 @@
 
 namespace Everest\Http\Requests\Api\Application\Eggs\Variables;
 
+use Everest\Models\AdminRole;
 use Everest\Models\EggVariable;
 use Everest\Http\Requests\Api\Application\ApplicationApiRequest;
 
@@ -20,5 +21,10 @@ class UpdateEggVariablesRequest extends ApplicationApiRequest
             '*.user_editable' => 'sometimes|boolean',
             '*.rules' => 'sometimes|string',
         ];
+    }
+
+    public function permission(): string
+    {
+        return AdminRole::EGGS_UPDATE;
     }
 }

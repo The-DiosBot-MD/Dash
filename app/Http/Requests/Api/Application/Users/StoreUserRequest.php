@@ -3,6 +3,7 @@
 namespace Everest\Http\Requests\Api\Application\Users;
 
 use Everest\Models\User;
+use Everest\Models\AdminRole;
 use Everest\Http\Requests\Api\Application\ApplicationApiRequest;
 
 class StoreUserRequest extends ApplicationApiRequest
@@ -19,5 +20,10 @@ class StoreUserRequest extends ApplicationApiRequest
             'admin_role_id',
             'root_admin',
         ])->toArray();
+    }
+
+    public function permission(): string
+    {
+        return AdminRole::USERS_CREATE;
     }
 }

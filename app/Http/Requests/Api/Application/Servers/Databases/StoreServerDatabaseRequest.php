@@ -5,6 +5,7 @@ namespace Everest\Http\Requests\Api\Application\Servers\Databases;
 use Everest\Models\Server;
 use Illuminate\Support\Arr;
 use Webmozart\Assert\Assert;
+use Everest\Models\AdminRole;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Query\Builder;
 use Everest\Services\Databases\DatabaseManagementService;
@@ -65,5 +66,10 @@ class StoreServerDatabaseRequest extends ApplicationApiRequest
         Assert::isInstanceOf($server, Server::class);
 
         return DatabaseManagementService::generateUniqueDatabaseName($this->input('database'), $server->id);
+    }
+
+    public function permission(): string
+    {
+        return AdminRole::SERVERS_UPDATE;
     }
 }

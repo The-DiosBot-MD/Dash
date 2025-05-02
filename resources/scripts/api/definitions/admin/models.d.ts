@@ -11,7 +11,7 @@ interface User extends ModelWithRelationships {
     username: string;
     email: string;
     language: string;
-    adminRoleId: number | null;
+    admin_role_id: number | null;
     roleName: string;
     isRootAdmin: boolean;
     isUsingTwoFactor: boolean;
@@ -30,6 +30,8 @@ interface UserRole extends ModelWithRelationships {
     id: number;
     name: string;
     description: string;
+    color?: string | null;
+    permissions: string[];
 }
 
 interface ApiKeyPermission extends Model {
@@ -148,4 +150,9 @@ interface Category extends Model {
     relationships: {
         products?: Product[];
     };
+}
+
+interface AdminRolePermission extends Model {
+    key: string;
+    description: string;
 }

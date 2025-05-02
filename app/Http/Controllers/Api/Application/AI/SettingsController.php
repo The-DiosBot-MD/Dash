@@ -3,11 +3,11 @@
 namespace Everest\Http\Controllers\Api\Application\AI;
 
 use GeminiAPI\Client;
-use Illuminate\Http\Request;
 use Everest\Facades\Activity;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use GeminiAPI\Resources\Parts\TextPart;
+use Everest\Http\Requests\Api\Application\AI\AIQueryRequest;
 use Everest\Contracts\Repository\SettingsRepositoryInterface;
 use Everest\Http\Requests\Api\Application\AI\AISettingsRequest;
 use Everest\Http\Controllers\Api\Application\ApplicationApiController;
@@ -51,7 +51,7 @@ class SettingsController extends ApplicationApiController
      *
      * @throws \Throwable
      */
-    public function query(Request $request): JsonResponse
+    public function query(AIQueryRequest $request): JsonResponse
     {
         if (!config('modules.ai.enabled')) {
             throw new \Exception('The Jexactyl AI module is not enabled.');

@@ -11,7 +11,7 @@ export interface UpdateUserValues {
     username: string;
     email: string;
     password: string;
-    adminRoleId: number | null;
+    admin_role_id: number | null;
     rootAdmin: boolean;
     state: string;
 }

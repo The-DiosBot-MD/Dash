@@ -3,7 +3,6 @@
 namespace Everest\Http\Controllers\Api\Application\Api;
 
 use Everest\Models\ApiKey;
-use Illuminate\Http\Request;
 use Everest\Facades\Activity;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
@@ -12,6 +11,7 @@ use Everest\Services\Api\KeyCreationService;
 use Everest\Transformers\Api\Application\ApiKeyTransformer;
 use Everest\Exceptions\Http\QueryValueOutOfRangeHttpException;
 use Everest\Http\Controllers\Api\Application\ApplicationApiController;
+use Everest\Http\Requests\Api\Application\Api\GetApplicationApiKeysRequest;
 use Everest\Http\Requests\Api\Application\Api\StoreApplicationApiKeyRequest;
 
 class ApiController extends ApplicationApiController
@@ -28,7 +28,7 @@ class ApiController extends ApplicationApiController
     /**
      * Return all the Admin API keys currently registered on the Panel.
      */
-    public function index(Request $request): array
+    public function index(GetApplicationApiKeysRequest $request): array
     {
         $perPage = (int) $request->query('per_page', '20');
         if ($perPage < 1 || $perPage > 100) {

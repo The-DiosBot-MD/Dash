@@ -56,6 +56,19 @@ class RoleController extends ApplicationApiController
     }
 
     /**
+     * Returns all of the available admin permissions assignable to users.
+     */
+    protected function permissions(GetRoleRequest $request): array
+    {
+        return [
+            'object' => 'role_permissions',
+            'attributes' => [
+                'permissions' => AdminRole::permissions(),
+            ],
+        ];
+    }
+
+    /**
      * Creates a new role.
      */
     public function store(StoreRoleRequest $request): JsonResponse
@@ -76,6 +89,18 @@ class RoleController extends ApplicationApiController
     public function update(UpdateRoleRequest $request, AdminRole $role): array
     {
         $role->update($request->validated());
+
+        return $this->fractal->item($role)
+            ->transformWith(AdminRoleTransformer::class)
+            ->toArray();
+    }
+
+    /**
+     * Updates the assigned permissions to a role.
+     */
+    public function updatePermissions(UpdateRoleRequest $request, AdminRole $role): array
+    {
+        dd($request->input('permissions'));
 
         return $this->fractal->item($role)
             ->transformWith(AdminRoleTransformer::class)

@@ -373,4 +373,25 @@ Route::middleware([AdminSubject::class])->group(function () {
 
         Route::delete('/{user:id}', [Application\Users\UserController::class, 'delete']);
     });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Role Controller Routes
+    |--------------------------------------------------------------------------
+    |
+    | Endpoint: /api/application/roles
+    |
+    */
+    Route::group(['prefix' => '/roles'], function () {
+        Route::get('/', [Application\Roles\RoleController::class, 'index']);
+        Route::get('/permissions', [Application\Roles\RoleController::class, 'permissions']);
+        Route::get('/{role:id}', [Application\Roles\RoleController::class, 'view']);
+
+        Route::post('/', [Application\Roles\RoleController::class, 'store']);
+
+        Route::patch('/{role:id}', [Application\Roles\RoleController::class, 'update']);
+        Route::patch('/{role:id}/permissions', [Application\Roles\RoleController::class, 'updatePermissions']);
+
+        Route::delete('/{role:id}', [Application\Roles\RoleController::class, 'delete']);
+    });
 });

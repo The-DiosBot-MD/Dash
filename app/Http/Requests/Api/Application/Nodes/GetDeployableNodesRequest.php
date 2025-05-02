@@ -2,6 +2,8 @@
 
 namespace Everest\Http\Requests\Api\Application\Nodes;
 
+use Everest\Models\AdminRole;
+
 class GetDeployableNodesRequest extends GetNodesRequest
 {
     public function rules(): array
@@ -13,5 +15,10 @@ class GetDeployableNodesRequest extends GetNodesRequest
             'location_ids' => 'array',
             'location_ids.*' => 'integer',
         ];
+    }
+
+    public function permission(): string
+    {
+        return AdminRole::NODES_READ;
     }
 }

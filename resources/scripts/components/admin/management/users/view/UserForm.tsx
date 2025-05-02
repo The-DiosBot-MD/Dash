@@ -14,14 +14,19 @@ import Label from '@elements/Label';
 import SpinnerOverlay from '@elements/SpinnerOverlay';
 import { Button } from '@elements/button';
 import Field, { FieldRow } from '@elements/Field';
-import type { User } from '@definitions/admin';
+import { UserRole, type User } from '@definitions/admin';
+import { faIdBadge, faToggleOn } from '@fortawesome/free-solid-svg-icons';
+import { useStoreState } from '@/state/hooks';
+import RoleSelect from './RoleSelect';
+import { useEffect, useState } from 'react';
+import { getRole } from '@/api/admin/roles';
 
 interface ctx {
     user: User | undefined;
     setUser: Action<ctx, User | undefined>;
 }
 
-export const Context = createContextStore<ctx>({
+export const Context: ReturnType<typeof createContextStore<ctx>> = createContextStore<ctx>({
     user: undefined,
 
     setUser: action((state, payload) => {
@@ -37,12 +42,23 @@ export interface Params {
     onSubmit: (values: UpdateUserValues, helpers: FormikHelpers<UpdateUserValues>) => void;
 
     uuid?: string;
+    admin_role_id?: number | null;
 }
 
-export default function UserForm({ title, initialValues, children, onSubmit, uuid }: Params) {
+export default function UserForm({ title, initialValues, children, onSubmit, uuid, admin_role_id }: Params) {
+    const { colors } = useStoreState(state => state.theme.data!);
+
+    const [currentRole, setCurrentRole] = useState<UserRole | undefined>();
+
     const submit = (values: UpdateUserValues, helpers: FormikHelpers<UpdateUserValues>) => {
         onSubmit(values, helpers);
     };
+
+    useEffect(() => {
+        getRole(Number(admin_role_id))
+            .then(setCurrentRole)
+            .catch(error => console.log(error));
+    }, []);
 
     if (!initialValues) {
         initialValues = {
@@ -50,7 +66,7 @@ export default function UserForm({ title, initialValues, children, onSubmit, uui
             username: '',
             email: '',
             password: '',
-            adminRoleId: null,
+            admin_role_id: null,
             state: '',
             rootAdmin: false,
         };
@@ -67,62 +83,65 @@ export default function UserForm({ title, initialValues, children, onSubmit, uui
             })}
         >
             {({ isSubmitting, isValid }) => (
-                <>
-                    <AdminBox title={title} css={tw`relative`}>
+                <Form>
+                    <AdminBox title={title} css={tw`relative`} icon={faIdBadge}>
                         <SpinnerOverlay visible={isSubmitting} />
-
-                        <Form css={tw`mb-0`}>
-                            <FieldRow>
-                                {uuid && (
-                                    <div>
-                                        <Label>UUID</Label>
-                                        <CopyOnClick text={uuid}>
-                                            <Input type={'text'} value={uuid} readOnly />
-                                        </CopyOnClick>
-                                    </div>
-                                )}
-                                {uuid && (
-                                    <Field
-                                        id={'externalId'}
-                                        name={'externalId'}
-                                        label={'External ID'}
-                                        type={'text'}
-                                        description={
-                                            'Used by external integrations, this field should not be modified unless you know what you are doing.'
-                                        }
-                                    />
-                                )}
+                        <FieldRow>
+                            {uuid && (
+                                <div>
+                                    <Label>UUID</Label>
+                                    <CopyOnClick text={uuid}>
+                                        <Input type={'text'} value={uuid} readOnly />
+                                    </CopyOnClick>
+                                </div>
+                            )}
+                            {uuid && (
                                 <Field
-                                    id={'username'}
-                                    name={'username'}
-                                    label={'Username'}
+                                    id={'externalId'}
+                                    name={'externalId'}
+                                    label={'External ID'}
                                     type={'text'}
-                                    description={"The user's username, what else would go here?"}
-                                />
-                                <Field
-                                    id={'email'}
-                                    name={'email'}
-                                    label={'Email Address'}
-                                    type={'email'}
-                                    description={"The user's email address, what else would go here?"}
-                                />
-                                <Field
-                                    id={'password'}
-                                    name={'password'}
-                                    label={'Password'}
-                                    type={'password'}
-                                    placeholder={'••••••••'}
-                                    autoComplete={'new-password'}
-                                    /* TODO: Change description depending on if user is being created or updated. */
                                     description={
-                                        'Leave empty to email the user a link where they will be required to set a password.'
+                                        'Used by external integrations, this field should not be modified unless you know what you are doing.'
                                     }
                                 />
-                            </FieldRow>
-
-                            {/* TODO: Remove toggle once role permissions are implemented. */}
+                            )}
+                            <Field
+                                id={'username'}
+                                name={'username'}
+                                label={'Username'}
+                                type={'text'}
+                                description={"The user's username, what else would go here?"}
+                            />
+                            <Field
+                                id={'email'}
+                                name={'email'}
+                                label={'Email Address'}
+                                type={'email'}
+                                description={"The user's email address, what else would go here?"}
+                            />
+                            <Field
+                                id={'password'}
+                                name={'password'}
+                                label={'Password'}
+                                type={'password'}
+                                placeholder={'••••••••'}
+                                autoComplete={'new-password'}
+                                /* TODO: Change description depending on if user is being created or updated. */
+                                description={
+                                    'Leave empty to email the user a link where they will be required to set a password.'
+                                }
+                            />
+                        </FieldRow>
+                    </AdminBox>
+                    <AdminBox title={'Permission Control'} css={tw`relative mt-6`} icon={faToggleOn}>
+                        <SpinnerOverlay visible={isSubmitting} />
+                        <div className={'grid lg:grid-cols-2 gap-4'}>
                             <div css={tw`w-full flex flex-row mb-6`}>
-                                <div css={tw`w-full bg-neutral-800 border border-neutral-900 shadow-inner p-4 rounded`}>
+                                <div
+                                    css={tw`w-full border border-neutral-900 shadow-inner p-4 rounded`}
+                                    style={{ backgroundColor: colors.headers }}
+                                >
                                     <FormikSwitch
                                         name={'rootAdmin'}
                                         label={'Root Admin'}
@@ -130,18 +149,23 @@ export default function UserForm({ title, initialValues, children, onSubmit, uui
                                     />
                                 </div>
                             </div>
-
-                            <div css={tw`w-full flex flex-row items-center mt-6`}>
-                                {children}
-                                <div css={tw`flex ml-auto`}>
-                                    <Button type={'submit'} disabled={isSubmitting || !isValid}>
-                                        Save Changes
-                                    </Button>
-                                </div>
+                            <div>
+                                <RoleSelect selected={currentRole} />
+                                <p className={'mt-1 text-xs'}>
+                                    If you wish, you can assign an administrator role to restrict permissions.
+                                </p>
                             </div>
-                        </Form>
+                        </div>
                     </AdminBox>
-                </>
+                    <div css={tw`w-full flex flex-row items-center mt-6`}>
+                        {children}
+                        <div css={tw`flex ml-auto`}>
+                            <Button type={'submit'} disabled={isSubmitting || !isValid}>
+                                Save Changes
+                            </Button>
+                        </div>
+                    </div>
+                </Form>
             )}
         </Formik>
     );

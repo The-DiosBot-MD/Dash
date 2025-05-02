@@ -9,15 +9,28 @@ export interface Filters {
     name?: string;
 }
 
+export interface AdminRolePermissions {
+    [key: string]: {
+        description: string;
+        keys: { [k: string]: string };
+    };
+}
+
 export const Context = createContext<Filters>();
 
-const createRole = (name: string, description: string | null, include: string[] = []): Promise<UserRole> => {
+const createRole = (
+    name: string,
+    description: string | null,
+    color?: string | null,
+    include: string[] = [],
+): Promise<UserRole> => {
     return new Promise((resolve, reject) => {
         http.post(
             '/api/application/roles',
             {
                 name,
                 description,
+                color,
             },
             { params: { include: include.join(',') } },
         )
@@ -42,6 +55,19 @@ const getRole = (id: number, include: string[] = []): Promise<UserRole> => {
     });
 };
 
+const getRolePermisisons = (): Promise<{
+    object: string;
+    attributes: {
+        permissions: AdminRolePermissions;
+    };
+}> => {
+    return new Promise((resolve, reject) => {
+        http.get(`/api/application/roles/permissions`)
+            .then(({ data }) => resolve(data))
+            .catch(reject);
+    });
+};
+
 const searchRoles = (filters?: { name?: string }): Promise<UserRole[]> => {
     const params = {};
     if (filters !== undefined) {
@@ -60,8 +86,10 @@ const searchRoles = (filters?: { name?: string }): Promise<UserRole[]> => {
 
 const updateRole = (
     id: number,
-    name: string,
-    description: string | null,
+    name?: string,
+    description?: string | null,
+    color?: string | null,
+    permissions?: string[],
     include: string[] = [],
 ): Promise<UserRole> => {
     return new Promise((resolve, reject) => {
@@ -70,6 +98,8 @@ const updateRole = (
             {
                 name,
                 description,
+                permissions,
+                color,
             },
             { params: { include: include.join(',') } },
         )
@@ -108,4 +138,4 @@ const getRoles = (include: string[] = []) => {
     });
 };
 
-export { createRole, deleteRole, getRole, searchRoles, updateRole, getRoles };
+export { getRolePermisisons, createRole, deleteRole, getRole, searchRoles, updateRole, getRoles };

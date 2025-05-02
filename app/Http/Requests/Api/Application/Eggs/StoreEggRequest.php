@@ -2,6 +2,7 @@
 
 namespace Everest\Http\Requests\Api\Application\Eggs;
 
+use Everest\Models\AdminRole;
 use Everest\Http\Requests\Api\Application\ApplicationApiRequest;
 
 class StoreEggRequest extends ApplicationApiRequest
@@ -26,5 +27,10 @@ class StoreEggRequest extends ApplicationApiRequest
             'script_entry' => 'sometimes|string',
             'script_install' => 'sometimes|string',
         ];
+    }
+
+    public function permission(): string
+    {
+        return AdminRole::EGGS_CREATE;
     }
 }

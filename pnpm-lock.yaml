@@ -110,6 +110,9 @@ importers:
       '@stripe/stripe-js':
         specifier: ^5.2.0
         version: 5.2.0
+      '@types/react-transition-group':
+        specifier: ^4.4.12
+        version: 4.4.12(@types/react@18.0.28)
       '@types/use-persisted-state':
         specifier: ^0.3.4
         version: 0.3.4
@@ -185,6 +188,9 @@ importers:
       react-select:
         specifier: 5.7.0
         version: 5.7.0(@types/react@18.0.28)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      react-transition-group:
+        specifier: ^4.4.5
+        version: 4.4.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       reaptcha:
         specifier: 1.12.1
         version: 1.12.1(react@18.2.0)
@@ -1110,8 +1116,10 @@ packages:
   '@types/react-dom@18.0.11':
     resolution: {integrity: sha512-O38bPbI2CWtgw/OoQoY+BRelw7uysmXbWvw3nLWO21H1HSh+GOlqPuXshJfjmpNlKiiSDG9cc1JZAaMmVdcTlw==}
 
-  '@types/react-transition-group@4.4.5':
-    resolution: {integrity: sha512-juKD/eiSM3/xZYzjuzH6ZwpP+/lejltmiS3QEzV/vmb/Q8+HfDmxu+Baga8UEMGBqV88Nbg4l2hY/K2DkyaLLA==}
+  '@types/react-transition-group@4.4.12':
+    resolution: {integrity: sha512-8TV6R3h2j7a91c+1DXdJi3Syo69zzIZbz7Lg5tORM5LEJG7X/E6a1V3drRyBRZq7/utz7A+c4OgYLiLcYGHG6w==}
+    peerDependencies:
+      '@types/react': '*'
 
   '@types/react@18.0.28':
     resolution: {integrity: sha512-RD0ivG1kEztNBdoAK7lekI9M+azSnitIn85h4iOiaLjaTrMjzslhaqCGaI4IyCJ1RljWiLCEu4jyrLLgqxBTew==}
@@ -4231,7 +4239,7 @@ snapshots:
     dependencies:
       '@types/react': 18.0.28
 
-  '@types/react-transition-group@4.4.5':
+  '@types/react-transition-group@4.4.12(@types/react@18.0.28)':
     dependencies:
       '@types/react': 18.0.28
 
@@ -6027,7 +6035,7 @@ snapshots:
       '@emotion/cache': 11.10.5
       '@emotion/react': 11.10.6(@types/react@18.0.28)(react@18.2.0)
       '@floating-ui/dom': 1.2.1
-      '@types/react-transition-group': 4.4.5
+      '@types/react-transition-group': 4.4.12(@types/react@18.0.28)
       memoize-one: 6.0.0
       prop-types: 15.8.1
       react: 18.2.0

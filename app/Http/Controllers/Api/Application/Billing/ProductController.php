@@ -3,7 +3,6 @@
 namespace Everest\Http\Controllers\Api\Application\Billing;
 
 use Ramsey\Uuid\Uuid;
-use Illuminate\Http\Request;
 use Everest\Facades\Activity;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
@@ -13,6 +12,11 @@ use Spatie\QueryBuilder\QueryBuilder;
 use Everest\Transformers\Api\Application\ProductTransformer;
 use Everest\Exceptions\Http\QueryValueOutOfRangeHttpException;
 use Everest\Http\Controllers\Api\Application\ApplicationApiController;
+use Everest\Http\Requests\Api\Application\Billing\Products\GetBillingProductRequest;
+use Everest\Http\Requests\Api\Application\Billing\Products\GetBillingProductsRequest;
+use Everest\Http\Requests\Api\Application\Billing\Products\StoreBillingProductRequest;
+use Everest\Http\Requests\Api\Application\Billing\Products\DeleteBillingProductRequest;
+use Everest\Http\Requests\Api\Application\Billing\Products\UpdateBillingProductRequest;
 
 class ProductController extends ApplicationApiController
 {
@@ -27,7 +31,7 @@ class ProductController extends ApplicationApiController
     /**
      * Get all categories associated with the panel.
      */
-    public function index(Request $request, int $id): array
+    public function index(GetBillingProductsRequest $request, int $id): array
     {
         $category = Category::findOrFail($id);
 
@@ -50,7 +54,7 @@ class ProductController extends ApplicationApiController
     /**
      * Store a new product category in the database.
      */
-    public function store(Request $request, Category $category): JsonResponse
+    public function store(StoreBillingProductRequest $request, Category $category): JsonResponse
     {
         // TODO(jex): clean this up, make a service or somethin'
         try {
@@ -85,7 +89,7 @@ class ProductController extends ApplicationApiController
     /**
      * Update an existing product.
      */
-    public function update(Request $request, Category $category, int $productId): Response
+    public function update(UpdateBillingProductRequest $request, Category $category, int $productId): Response
     {
         $product = Product::findOrFail($productId);
 
@@ -118,7 +122,7 @@ class ProductController extends ApplicationApiController
     /**
      * View an existing product.
      */
-    public function view(Request $request, Category $category, int $productId): array
+    public function view(GetBillingProductRequest $request, Category $category, int $productId): array
     {
         $product = Product::findOrFail($productId);
 
@@ -130,7 +134,7 @@ class ProductController extends ApplicationApiController
     /**
      * Delete a product.
      */
-    public function delete(Request $request, Category $category, int $productId): Response
+    public function delete(DeleteBillingProductRequest $request, Category $category, int $productId): Response
     {
         $product = Product::findOrFail($productId);
 

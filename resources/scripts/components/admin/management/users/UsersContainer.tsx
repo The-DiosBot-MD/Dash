@@ -4,6 +4,7 @@ import AdminContentBlock from '@elements/AdminContentBlock';
 import { Button } from '@elements/button';
 import { RealFilters, useGetUsers, Context as UsersContext } from '@/api/admin/users';
 import {
+    faIdBadge,
     faLock,
     faLockOpen,
     faPlus,
@@ -128,7 +129,7 @@ function UsersContainer() {
                                                     </CopyOnClick>
                                                 </td>
                                                 <td
-                                                    css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap font-bold hover:brightness-125`}
+                                                    css={tw`px-6 text-sm text-neutral-200 text-left whitespace-nowrap hover:brightness-125`}
                                                     style={{ color: colors.primary }}
                                                 >
                                                     <NavLink to={`/admin/users/${user.id}`}>{user.username}</NavLink>
@@ -138,14 +139,26 @@ function UsersContainer() {
                                                 </td>
                                                 <td className={'px-6 py-4 whitespace-nowrap text-sm text-neutral-50'}>
                                                     {user.isRootAdmin ? (
-                                                        <Pill type={'success'}>
-                                                            <FontAwesomeIcon
-                                                                icon={faUserGear}
-                                                                className={'my-auto mr-1'}
-                                                                size={'sm'}
-                                                            />{' '}
-                                                            Admin
-                                                        </Pill>
+                                                        <>
+                                                            <Pill type={'success'}>
+                                                                <FontAwesomeIcon
+                                                                    icon={faUserGear}
+                                                                    className={'my-auto mr-1'}
+                                                                    size={'sm'}
+                                                                />{' '}
+                                                                Admin
+                                                            </Pill>
+                                                            {user.admin_role_id && (
+                                                                <Pill type={'info'}>
+                                                                    <FontAwesomeIcon
+                                                                        icon={faIdBadge}
+                                                                        className={'my-auto mr-1'}
+                                                                        size={'sm'}
+                                                                    />{' '}
+                                                                    {user.roleName}
+                                                                </Pill>
+                                                            )}
+                                                        </>
                                                     ) : (
                                                         <Pill type={'unknown'}>
                                                             <FontAwesomeIcon

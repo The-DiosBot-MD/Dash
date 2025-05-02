@@ -16,6 +16,7 @@ import {
     SparklesIcon,
     TerminalIcon,
     TicketIcon,
+    UserGroupIcon,
     UsersIcon,
     ViewGridIcon,
 } from '@heroicons/react/outline';
@@ -77,11 +78,15 @@ import {
     faServer,
     faTicket,
     faUser,
+    faUserGroup,
     faWandSparkles,
 } from '@fortawesome/free-solid-svg-icons';
 import LinksTable from '@/components/admin/modules/links/LinksContainer';
 import ActivityContainer from '@admin/general/ActivityContainer';
 import WebhookRouter from '@/components/admin/modules/webhooks/WebhookRouter';
+import RolesContainer from '@/components/admin/management/roles/RolesContainer';
+import RoleEditContainer from '@/components/admin/management/roles/RoleEditContainer';
+import Pill from '@/components/elements/Pill';
 
 function AdminRouter() {
     const theme = useStoreState(state => state.theme.data!);
@@ -116,6 +121,7 @@ function AdminRouter() {
                 <MobileSidebar.Link icon={faLayerGroup} text={'Nodes'} linkTo={'/admin/nodes'} />
                 <MobileSidebar.Link icon={faServer} text={'Servers'} linkTo={'/admin/servers'} />
                 <MobileSidebar.Link icon={faUser} text={'Users'} linkTo={'/admin/users'} />
+                <MobileSidebar.Link icon={faUserGroup} text={'Roles'} linkTo={'/admin/roles'} />
                 <MobileSidebar.Link icon={faFolder} text={'Mounts'} linkTo={'/admin/mounts'} />
                 <MobileSidebar.Link icon={faEgg} text={'Nests'} linkTo={'/admin/nests'} />
             </MobileSidebar>
@@ -211,6 +217,10 @@ function AdminRouter() {
                         <UsersIcon />
                         <span>Users</span>
                     </NavLink>
+                    <NavLink to="/admin/roles">
+                        <UserGroupIcon />
+                        <span>Roles</span>
+                    </NavLink>
                     <Sidebar.Section>Services</Sidebar.Section>
                     <NavLink to="/admin/nests">
                         <ViewGridIcon />
@@ -233,7 +243,10 @@ function AdminRouter() {
                                 'font-sans font-normal text-xs text-gray-300 whitespace-nowrap leading-tight select-none'
                             }
                         >
-                            <div className={'text-gray-400 text-sm'}>Welcome back,</div>
+                            <div className={'w-full flex justify-between mb-1'}>
+                                <p className={'text-sm text-gray-400'}>Welcome,</p>
+                                <Pill size={'xsmall'}>{user.roleName}</Pill>
+                            </div>
                             {user.email}
                         </span>
                     </div>
@@ -268,6 +281,8 @@ function AdminRouter() {
                         <Route path="users" element={<UsersContainer />} />
                         <Route path="users/new" element={<NewUserContainer />} />
                         <Route path="users/:id/*" element={<UserRouter />} />
+                        <Route path={'roles'} element={<RolesContainer />} />
+                        <Route path={`roles/:id`} element={<RoleEditContainer />} />
                         <Route path="nests" element={<NestsContainer />} />
                         <Route path="nests/:nestId" element={<NestEditContainer />} />
                         <Route path="nests/:nestId/new" element={<NewEggContainer />} />

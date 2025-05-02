@@ -2,9 +2,10 @@
 
 namespace Everest\Http\Requests\Api\Application\Alerts;
 
+use Everest\Models\AdminRole;
 use Everest\Http\Requests\Api\Application\ApplicationApiRequest;
 
-class GeneralSettingsRequest extends ApplicationApiRequest
+class AlertSettingsRequest extends ApplicationApiRequest
 {
     public function rules(): array
     {
@@ -14,5 +15,10 @@ class GeneralSettingsRequest extends ApplicationApiRequest
             'position' => 'nullable|string|in:top-center,bottom-right,bottom-left,center',
             'content' => 'nullable|string|min:3|max:300',
         ];
+    }
+
+    public function permission(): string
+    {
+        return AdminRole::ALERTS_UPDATE;
     }
 }
