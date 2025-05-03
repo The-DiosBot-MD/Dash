@@ -10,6 +10,7 @@ export interface UserData {
     useTotp: boolean;
     avatarURL: string;
     roleName: string;
+    admin_role_id?: number;
     state: string;
     createdAt: Date;
     updatedAt: Date;

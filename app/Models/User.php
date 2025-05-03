@@ -200,7 +200,7 @@ class User extends Model implements
     public function toReactObject(): array
     {
         return Collection::make($this->append(['avatar_url', 'admin_role_name'])->toArray())
-            ->except(['id', 'external_id', 'admin_role', 'admin_role_id'])
+            ->except(['id', 'external_id', 'admin_role'])
             ->toArray();
     }
 

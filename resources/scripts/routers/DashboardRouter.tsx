@@ -55,6 +55,8 @@ function DashboardRouter() {
         });
     };
 
+    console.log(user);
+
     return (
         <div className={'h-screen flex'}>
             <MobileSidebar>
@@ -69,7 +71,9 @@ function DashboardRouter() {
                         <MobileSidebar.Link icon={faShoppingBag} text={'Orders'} linkTo={'/billing/orders'} />
                     </>
                 )}
-                <MobileSidebar.Link icon={faCog} text={'Admin'} linkTo={'/admin'} />
+                {(user.rootAdmin || user.admin_role_id) && (
+                    <MobileSidebar.Link icon={faCog} text={'Admin'} linkTo={'/admin'} />
+                )}
             </MobileSidebar>
             <Sidebar className={'flex-none'} $collapsed={collapsed} theme={theme}>
                 <div
@@ -136,7 +140,7 @@ function DashboardRouter() {
                             ))}
                         </>
                     )}
-                    {user.rootAdmin && (
+                    {(user.rootAdmin || user.admin_role_id) && (
                         <NavLink to={'/admin'}>
                             <CogIcon />
                             <span className={collapsed ? 'hidden' : ''}>Settings</span>
