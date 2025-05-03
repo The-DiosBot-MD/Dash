@@ -16,7 +16,11 @@ class AdminAuthenticate
     {
         $user = $request->user();
 
-        if (!$user && (!$user->root_admin && !$user->admin_role_id)) {
+        if (!$user) {
+            throw new AccessDeniedHttpException();
+        }
+
+        if (!$user->root_admin && !$user->admin_role_id) {
             throw new AccessDeniedHttpException();
         }
 
