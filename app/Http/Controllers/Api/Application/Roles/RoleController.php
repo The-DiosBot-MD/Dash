@@ -2,9 +2,11 @@
 
 namespace Everest\Http\Controllers\Api\Application\Roles;
 
+use Everest\Models\User;
 use Everest\Models\AdminRole;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\QueryBuilder;
 use Everest\Exceptions\Http\QueryValueOutOfRangeHttpException;
 use Everest\Transformers\Api\Application\AdminRoleTransformer;
@@ -114,7 +116,12 @@ class RoleController extends ApplicationApiController
      */
     public function delete(DeleteRoleRequest $request, AdminRole $role): Response
     {
-        $role->delete();
+        // Use DB::transaction to ensure both changes happen successfully, or not at all.
+        DB::transaction(function () use ($role) {
+            User::where('admin_role_id', $role->id)->update(['admin_role_id' => null]);
+
+            $role->delete();
+        });
 
         return $this->returnNoContent();
     }
