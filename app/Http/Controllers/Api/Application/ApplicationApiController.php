@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Container\Container;
 use Everest\Http\Controllers\Controller;
 use Everest\Extensions\Spatie\Fractalistic\Fractal;
+use Everest\Services\Permission\AdminPermissionService;
 
 abstract class ApplicationApiController extends Controller
 {
@@ -17,7 +18,7 @@ abstract class ApplicationApiController extends Controller
     /**
      * ApplicationApiController constructor.
      */
-    public function __construct()
+    public function __construct(private AdminPermissionService $permissionService)
     {
         Container::getInstance()->call([$this, 'loadDependencies']);
 
@@ -57,5 +58,18 @@ abstract class ApplicationApiController extends Controller
     protected function returnNoContent(): Response
     {
         return new Response('', Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * Return an HTTP/204 response for the API.
+     */
+    protected function permissions(Request $request): array
+    {
+        return [
+            'object' => 'admin_permissions',
+            'attributes' => [
+                'permissions' => $this->permissionService->handle($request->user()),
+            ],
+        ];
     }
 }
