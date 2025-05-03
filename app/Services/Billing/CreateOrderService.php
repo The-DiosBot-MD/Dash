@@ -19,7 +19,7 @@ class CreateOrderService
         $order->name = $uuid;
         $order->payment_intent_id = $intent;
         $order->user_id = $user->id;
-        $order->description =  substr($uuid, 0, 8) . ' - Order for ' . $product->name . ' by ' . $user->email;
+        $order->description = substr($uuid, 0, 8) . ' - Order for ' . $product->name . ' by ' . $user->email;
         $order->total = $product->price;
         $order->status = $status ?? Order::STATUS_EXPIRED;
         $order->product_id = $product->id;

@@ -9,6 +9,7 @@ use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
+use Everest\Exceptions\DisplayException;
 use Illuminate\Database\Eloquent\Builder;
 use Everest\Services\Users\UserUpdateService;
 use Everest\Services\Users\UserCreationService;
@@ -99,6 +100,16 @@ class UserController extends ApplicationApiController
      */
     public function update(UpdateUserRequest $request, User $user): array
     {
+        if (
+            !$request->user()->root_admin &&
+            (
+                $request->input('root_admin') ||
+                $request->input('admin_role_id') !== $user->admin_role_id
+            )
+        ) {
+            throw new DisplayException('You must be a root administrator to grant another user permissions.');
+        }
+
         $this->updateService->setUserLevel(User::USER_LEVEL_ADMIN);
         $user = $this->updateService->handle($user, $request->validated());
 
