@@ -14,11 +14,12 @@ abstract class ApplicationApiController extends Controller
 {
     protected Fractal $fractal;
     protected Request $request;
+    protected AdminPermissionService $permissionService;
 
     /**
      * ApplicationApiController constructor.
      */
-    public function __construct(private AdminPermissionService $permissionService)
+    public function __construct()
     {
         Container::getInstance()->call([$this, 'loadDependencies']);
 
