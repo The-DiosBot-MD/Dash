@@ -4,7 +4,6 @@ namespace Everest\Services\Billing;
 
 use Everest\Models\User;
 use Everest\Models\Billing\Order;
-use Everest\Models\Billing\Product;
 
 class AdminPermissionService
 {
@@ -20,7 +19,7 @@ class AdminPermissionService
             $permissions[] = $role->permissions;
         } else {
             $permissions[] = ['*'];
-        };
+        }
 
         return $permissions;
     }
