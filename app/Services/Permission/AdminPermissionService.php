@@ -1,15 +1,14 @@
 <?php
 
-namespace Everest\Services\Billing;
+namespace Everest\Services\Permission;
 
 use Everest\Models\User;
-use Everest\Models\Billing\Order;
-use Everest\Models\Billing\Product;
+use Everest\Models\AdminRole;
 
 class AdminPermissionService
 {
     /**
-     * Process the creation of an order.
+     * Get the permissions associated with the admin user.
      */
     public function handle(User $user): array
     {
@@ -20,7 +19,7 @@ class AdminPermissionService
             $permissions[] = $role->permissions;
         } else {
             $permissions[] = ['*'];
-        };
+        }
 
         return $permissions;
     }

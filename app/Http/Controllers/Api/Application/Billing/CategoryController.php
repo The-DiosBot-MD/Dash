@@ -7,6 +7,7 @@ use Everest\Models\Egg;
 use Everest\Facades\Activity;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Everest\Models\Billing\Category;
 use Spatie\QueryBuilder\QueryBuilder;
 use Everest\Transformers\Api\Application\CategoryTransformer;
@@ -123,11 +124,13 @@ class CategoryController extends ApplicationApiController
      */
     public function delete(DeleteBillingCategoryRequest $request, Category $category): Response
     {
-        foreach ((array) $category->products() as $product) {
-            $product->delete();
-        }
-
-        $category->delete();
+        DB::transaction(function () use ($category) {
+            foreach ($category->products()->get() as $product) {
+                $product->forceDelete();
+            }
+        
+            $category->forceDelete();
+        });
 
         Activity::event('admin:billing:categories:delete')
             ->property('category', $category)

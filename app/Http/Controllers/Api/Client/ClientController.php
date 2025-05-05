@@ -1,8 +1,9 @@
 <?php
 
 namespace Everest\Http\Controllers\Api\Client;
-use Illuminate\Http\Request;
+
 use Everest\Models\Server;
+use Illuminate\Http\Request;
 use Everest\Models\Permission;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
