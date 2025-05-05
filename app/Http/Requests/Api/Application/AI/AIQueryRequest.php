@@ -5,7 +5,7 @@ namespace Everest\Http\Requests\Api\Application\AI;
 use Everest\Models\AdminRole;
 use Everest\Http\Requests\Api\Application\ApplicationApiRequest;
 
-class AISettingsRequest extends ApplicationApiRequest
+class AIQueryRequest extends ApplicationApiRequest
 {
     public function rules(): array
     {
