@@ -64,7 +64,7 @@ abstract class ApplicationApiController extends Controller
     /**
      * Return an HTTP/204 response for the API.
      */
-    protected function permissions(Request $request): array
+    protected function adminPermissions(Request $request): array
     {
         return [
             'object' => 'admin_permissions',
