@@ -61,9 +61,9 @@ Route::prefix('/')->middleware([SuspendedAccount::class])->group(function () {
             Route::get('/', [Client\TicketController::class, 'index']);
             Route::post('/', [Client\TicketController::class, 'store']);
 
-            Route::get('/{ticket}', [Client\TicketController::class, 'view']);
-            Route::delete('/{ticket}', [Client\TicketController::class, 'delete']);
-            Route::post('/{ticket}/messages', [Client\TicketController::class, 'message']);
+            Route::get('/{ticket:id}', [Client\TicketController::class, 'view']);
+            Route::delete('/{ticket:id}', [Client\TicketController::class, 'delete']);
+            Route::post('/{ticket:id}/messages', [Client\TicketController::class, 'message']);
         });
 
         Route::post('/setup', [Client\AccountController::class, 'setup']);
