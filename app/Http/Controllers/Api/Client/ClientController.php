@@ -1,7 +1,7 @@
 <?php
 
 namespace Everest\Http\Controllers\Api\Client;
-
+use Illuminate\Http\Request;
 use Everest\Models\Server;
 use Everest\Models\Permission;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -74,7 +74,7 @@ class ClientController extends ClientApiController
     /**
      * Returns all the subuser permissions available on the system.
      */
-    public function permissions(): array
+    public function permissions(Request $request): array
     {
         return [
             'object' => 'system_permissions',
