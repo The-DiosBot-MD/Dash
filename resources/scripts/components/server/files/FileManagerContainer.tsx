@@ -4,7 +4,7 @@ import tw from 'twin.macro';
 
 import { httpErrorToHuman } from '@/api/http';
 import Spinner from '@elements/Spinner';
-import FileObjectRow from '@/components/server/files/FileObjectRow';
+import FileObjectGrid from '@/components/server/files/FileObjectGrid';
 import FileManagerBreadcrumbs from '@/components/server/files/FileManagerBreadcrumbs';
 import { type FileObject } from '@definitions/server';
 import NewDirectoryButton from '@/components/server/files/NewDirectoryButton';
@@ -24,6 +24,10 @@ import { FileActionCheckbox } from '@/components/server/files/SelectFileCheckbox
 import { hashToPath } from '@/helpers';
 import style from './style.module.css';
 import FadeTransition from '@elements/transitions/FadeTransition';
+import { usePersistedState } from '@/plugins/usePersistedState';
+import { faBorderAll, faList } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import FileObjectList from './FileObjectList';
 
 const sortFiles = (files: FileObject[]): FileObject[] => {
     const sortedFiles: FileObject[] = files
@@ -39,6 +43,7 @@ export default () => {
     const directory = ServerContext.useStoreState(state => state.files.directory);
     const clearFlashes = useStoreActions(actions => actions.flashes.clearFlashes);
     const setDirectory = ServerContext.useStoreActions(actions => actions.files.setDirectory);
+    const [gridView, setGridView] = usePersistedState<boolean>(`${id}_file_manager_view`, false);
 
     const setSelectedFiles = ServerContext.useStoreActions(actions => actions.files.setSelectedFiles);
     const selectedFilesLength = ServerContext.useStoreState(state => state.files.selectedFiles.length);
@@ -83,6 +88,9 @@ export default () => {
                             <NavLink to={`/server/${id}/files/new${window.location.hash}`}>
                                 <Button>New File</Button>
                             </NavLink>
+                            <Button onClick={() => setGridView(!gridView)}>
+                                <FontAwesomeIcon icon={gridView ? faList : faBorderAll} fixedWidth />
+                            </Button>
                         </div>
                     </Can>
                 </div>
@@ -104,11 +112,19 @@ export default () => {
                                         </p>
                                     </div>
                                 )}
-                                <div className={'grid grid-cols-2 lg:grid-cols-6 gap-2 lg:gap-4'}>
-                                    {sortFiles(files.slice(0, 250)).map(file => (
-                                        <FileObjectRow key={file.key} file={file} />
-                                    ))}
-                                </div>
+                                {gridView ? (
+                                    <div className={'grid grid-cols-2 lg:grid-cols-6 gap-2 lg:gap-4'}>
+                                        {sortFiles(files.slice(0, 250)).map(file => (
+                                            <FileObjectGrid key={file.key} file={file} />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <>
+                                        {sortFiles(files.slice(0, 250)).map(file => (
+                                            <FileObjectList key={file.key} file={file} />
+                                        ))}
+                                    </>
+                                )}
                                 <MassActionsBar />
                             </div>
                         </FadeTransition>
