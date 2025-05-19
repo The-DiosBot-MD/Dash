@@ -15,7 +15,9 @@ interface Props {
 }
 
 export default ({ nestId, selectedEggId, onEggSelect }: Props) => {
-    const [, , { setValue, setTouched }] = useField<Record<string, string | undefined>>('environment');
+    const [, , { setValue: setEnvValue, setTouched: setEnvTouched }] =
+        useField<Record<string, string | undefined>>('environment');
+    const [, , { setValue: setEggIdValue, setTouched: setEggIdTouched }] = useField<number>('eggId');
     const [eggs, setEggs] = useState<WithRelationships<Egg, 'variables'>[] | undefined>(undefined);
 
     const selectEgg = (egg: WithRelationships<Egg, 'variables'> | undefined) => {
@@ -25,8 +27,12 @@ export default ({ nestId, selectedEggId, onEggSelect }: Props) => {
         }
 
         // Clear values
-        setValue({});
-        setTouched(true);
+        setEnvValue({});
+        setEnvTouched(true);
+
+        // Set eggId in form
+        setEggIdValue(egg.id);
+        setEggIdTouched(true);
 
         onEggSelect(egg);
 
@@ -34,8 +40,8 @@ export default ({ nestId, selectedEggId, onEggSelect }: Props) => {
         egg.relationships.variables?.forEach(v => {
             values[v.environmentVariable] = v.defaultValue;
         });
-        setValue(values);
-        setTouched(true);
+        setEnvValue(values);
+        setEnvTouched(true);
     };
 
     useEffect(() => {
