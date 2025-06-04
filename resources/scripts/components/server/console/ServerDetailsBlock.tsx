@@ -12,6 +12,7 @@ import { capitalize } from '@/lib/strings';
 import styled from 'styled-components/macro';
 import tw from 'twin.macro';
 import RenewalInfo from './RenewalInfo';
+import { useStoreState } from '@/state/hooks';
 
 type Stats = Record<'memory' | 'cpu' | 'disk' | 'uptime', number>;
 
@@ -35,6 +36,7 @@ export default ({ className }: { className?: string }) => {
     const connected = ServerContext.useStoreState((state) => state.socket.connected);
     const limits = ServerContext.useStoreState((state) => state.server.data!.limits);
     const renewable = ServerContext.useStoreState((state) => state.server.data!.renewable);
+    const renewalEnabled = useStoreState((state) => state.storefront.data!.renewals);
 
     const textLimits = useMemo(
         () => ({
@@ -134,7 +136,7 @@ export default ({ className }: { className?: string }) => {
             <StatBlock icon={faScroll} title={'Save Console Logs'}>
                 <ConsoleShareContainer />
             </StatBlock>
-            {renewable && (
+            {renewable && renewalEnabled && (
                 <StatBlock icon={faClock} title={'Renewal Date'}>
                     <RenewalInfo />
                 </StatBlock>
