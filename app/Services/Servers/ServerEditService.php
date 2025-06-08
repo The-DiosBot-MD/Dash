@@ -56,9 +56,9 @@ class ServerEditService
             throw new DisplayException('You cannot add this resource because an administrator has set a maximum limit.');
         }
 
-        // Verify baseline limits. We don't want servers with -4% CPU.
-        if ($this->toServer($resource, $server) <= $this->toMin($resource) && $amount < 0) {
-            throw new DisplayException('You cannot go below this amount.');
+        // Prevent resource from going below minimum
+        if (($this->toServer($resource, $server) + $amount) < $this->toMin($resource)) {
+            throw new DisplayException('You cannot go below the minimum amount of ' . $this->toMin($resource) . '.');
         }
 
         // Verify that the user has the resource in their account.
