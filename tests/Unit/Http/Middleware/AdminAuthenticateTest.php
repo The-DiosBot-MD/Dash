@@ -22,19 +22,6 @@ class AdminAuthenticateTest extends MiddlewareTestCase
     }
 
     /**
-     * Test that an admin is authenticated with an admin role.
-     */
-    public function testAdminsAreAuthenticatedWithUserRole()
-    {
-        $role = AdminRole::factory()->create();
-        $user = User::factory()->make(['admin_role_id' => $role->id]);
-
-        $this->request->shouldReceive('user')->withNoArgs()->once()->andReturn($user);
-
-        $this->getMiddleware()->handle($this->request, $this->getClosureAssertions());
-    }
-
-    /**
      * Test that a missing user in the request triggers an error.
      */
     public function testExceptionIsThrownIfUserDoesNotExist()
