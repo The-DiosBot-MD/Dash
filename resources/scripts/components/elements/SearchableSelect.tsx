@@ -123,6 +123,7 @@ export const SearchableSelect = <T extends IdObj>({
     name,
     label,
     placeholder,
+    nullable,
     selected,
     setSelected,
     items,
@@ -187,7 +188,9 @@ export const SearchableSelect = <T extends IdObj>({
             e.preventDefault();
 
             if (highlighted === null) {
-                setHighlighted(items[0].id);
+                if (items.length > 0 && items[0]) {
+                    setHighlighted(items[0].id);
+                }
                 return;
             }
 
@@ -207,7 +210,9 @@ export const SearchableSelect = <T extends IdObj>({
                 }
             }
 
-            setHighlighted(items[index].id);
+            if (items[index]) {
+                setHighlighted(items[index].id);
+            }
             return;
         }
 
@@ -318,10 +323,10 @@ export const SearchableSelect = <T extends IdObj>({
                 <div
                     css={[
                         tw`absolute inset-y-0 right-0 flex items-center pr-2 ml-3`,
-                        !expanded && tw`pointer-events-none`,
+                        !expanded && !(nullable && selected) && tw`pointer-events-none`,
                     ]}
                 >
-                    {inputText !== '' && expanded && (
+                    {((inputText !== '' && expanded) || (nullable && selected && !expanded)) && (
                         <svg
                             css={tw`w-5 h-5 text-neutral-400 cursor-pointer`}
                             xmlns="http://www.w3.org/2000/svg"
@@ -329,7 +334,13 @@ export const SearchableSelect = <T extends IdObj>({
                             fill="currentColor"
                             onMouseDown={e => {
                                 e.preventDefault();
-                                setInputText('');
+                                if (expanded) {
+                                    setInputText('');
+                                } else if (nullable && selected) {
+                                    setSelected(null);
+                                    onSelect(null);
+                                    setInputText('');
+                                }
                             }}
                         >
                             <path
