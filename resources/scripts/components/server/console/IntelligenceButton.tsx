@@ -7,6 +7,7 @@ import { SocketEvent } from '@/components/server/events';
 import Dialog from '@elements/dialog/Dialog';
 import Spinner from '@elements/Spinner';
 import { handleQuery } from '@/api/server/ai';
+import { useStoreState } from '@/state/hooks';
 
 type Visibility = 'none' | 'button' | 'dialog';
 
@@ -16,6 +17,7 @@ export default () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [visible, setVisible] = useState<Visibility>('none');
 
+    const isEnabled = useStoreState(state => state.everest.data!.ai.enabled);
     const status = ServerContext.useStoreState(state => state.status.value);
     const uuid = ServerContext.useStoreState(state => state.server.data!.uuid);
     const { connected, instance } = ServerContext.useStoreState(state => state.socket);
@@ -50,6 +52,8 @@ export default () => {
             instance.removeListener(SocketEvent.CONSOLE_OUTPUT, listener);
         };
     }, [connected, instance, status]);
+
+    if (!isEnabled) return <></>;
 
     return visible === 'button' ? (
         <Button onClick={submit}>
