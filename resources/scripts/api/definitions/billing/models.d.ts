@@ -6,6 +6,7 @@ interface Order extends Model {
     user_id: number;
     description: string;
     total: number;
+    product_id: number;
     status: OrderStatus;
     is_renewal: boolean;
     created_at: Date;

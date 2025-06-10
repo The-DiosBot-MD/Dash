@@ -6,7 +6,7 @@ import { ServerContext } from '@/state/server';
 import ServerContentBlock from '@elements/ServerContentBlock';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import { getOrder, Order } from '@/api/billing/orders';
+import { getOrder } from '@/api/billing/orders';
 import useFlash from '@/plugins/useFlash';
 import { getProduct } from '@/api/billing/products';
 import { Product } from '@/api/billing/products';
@@ -14,6 +14,7 @@ import SpinnerOverlay from '@elements/SpinnerOverlay';
 import { Alert } from '@elements/alert';
 import PaymentContainer from './PaymentContainer';
 import { useStoreState } from '@/state/hooks';
+import { Order } from '@/api/definitions/billing';
 
 function futureDate(days: number): string {
     const today = new Date();
@@ -47,6 +48,8 @@ export default () => {
 
     useEffect(() => {
         if (!order) return;
+
+        console.log(order);
 
         getProduct(order.product_id)
             .then(data => setProduct(data))

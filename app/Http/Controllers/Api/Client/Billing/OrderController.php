@@ -36,4 +36,18 @@ class OrderController extends ClientApiController
             ->transformWith(OrderTransformer::class)
             ->toArray();
     }
+
+    /**
+     * Return the data regarding a specific order.
+     */
+    public function view(Request $request, int $id): array
+    {
+        $order = Order::where('user_id', $request->user()->id)
+            ->where('id', $id)
+            ->first();
+
+        return $this->fractal->item($order)
+            ->transformWith(OrderTransformer::class)
+            ->toArray();
+    }
 }

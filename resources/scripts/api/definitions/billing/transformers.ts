@@ -10,6 +10,7 @@ export default class Transformers {
         description: data.description,
         total: data.total,
         status: data.status,
+        product_id: data.product_id,
         is_renewal: data.is_renewal,
         created_at: new Date(data.created_at),
     });
