@@ -1,4 +1,4 @@
-import { createRoot } from 'react-dom/client';
+import { render } from 'preact';
 import { App } from '@/components/App';
 
-createRoot(document.getElementById('app')!).render(<App />);
+render(<App />, document.getElementById('app')!);

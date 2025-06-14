@@ -60,6 +60,11 @@ export default defineConfig({
                 'features',
             ),
             '@admin': resolve(dirname(fileURLToPath(import.meta.url)), 'resources', 'scripts', 'components', 'admin'),
+
+            react: 'preact/compat',
+            'react-dom': 'preact/compat',
+            'react/jsx-runtime': 'preact/jsx-runtime',
+            'react-dom/test-utils': 'preact/test-utils',
         },
     },
 
