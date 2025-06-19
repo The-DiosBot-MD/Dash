@@ -40,10 +40,6 @@
                     <li @if($activeTab === 'coupons') class="active" @endif>
                         <a href="{{ route('admin.jexactyl.coupons') }}">Coupons</a>
                     </li>
-                    <li style="margin-left: 5px; margin-right: 5px;"><a>-</a></li>
-                    <li @if($activeTab === 'upgrade') class="active" @endif style="color: #ffffff;">
-                        <a href="{{ route('admin.jexactyl.upgrade') }}">Upgrade to Jexactyl v4</a>
-                    </li>
                 </ul>
             </div>
         </div>
