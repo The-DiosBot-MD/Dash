@@ -10,6 +10,7 @@ use Illuminate\Auth\Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Builder;
 use Everest\Models\Traits\HasAccessTokens;
+use Webauthn\PublicKeyCredentialUserEntity;
 use Everest\Traits\Helpers\AvailableLanguages;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -52,6 +53,8 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  * @property int|null $notifications_count
  * @property \Illuminate\Database\Eloquent\Collection|\Everest\Models\RecoveryToken[] $recoveryTokens
  * @property int|null $recovery_tokens_count
+ * @property \Illuminate\Database\Eloquent\Collection|\Pterodactyl\Models\SecurityKey[] $securityKeys
+ * @property int|null $security_keys_count
  * @property \Illuminate\Database\Eloquent\Collection|\Everest\Models\Server[] $servers
  * @property int|null $servers_count
  * @property \Illuminate\Database\Eloquent\Collection|\Everest\Models\UserSSHKey[] $sshKeys
@@ -278,6 +281,11 @@ class User extends Model implements
         return $this->hasMany(UserSSHKey::class);
     }
 
+    public function securityKeys(): HasMany
+    {
+        return $this->hasMany(SecurityKey::class);
+    }
+
     public function tickets(): HasMany
     {
         return $this->hasMany(Ticket::class);
@@ -296,5 +304,18 @@ class User extends Model implements
                 $builder->where('servers.owner_id', $this->id)->orWhere('subusers.user_id', $this->id);
             })
             ->groupBy('servers.id');
+    }
+
+    public function toPublicKeyCredentialEntity(): PublicKeyCredentialUserEntity
+    {
+        return PublicKeyCredentialUserEntity::create($this->username, $this->uuid, $this->email);
+    }
+
+    /**
+     * Returns true if the user has two-factor authentication enabled.
+     */
+    public function has2FAEnabled(): bool
+    {
+        return $this->use_totp || $this->securityKeys->isNotEmpty();
     }
 }

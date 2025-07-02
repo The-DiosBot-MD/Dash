@@ -25,7 +25,8 @@ Route::get('/password/reset/{token}', [Auth\LoginController::class, 'index'])->n
 Route::middleware(['throttle:authentication'])->group(function () {
     // Login endpoints.
     Route::post('/login', [Auth\LoginController::class, 'login'])->middleware('recaptcha');
-    Route::post('/login/checkpoint', Auth\LoginCheckpointController::class)->name('auth.login-checkpoint');
+    Route::post('/login/checkpoint', [Auth\LoginCheckpointController::class, 'token'])->name('auth.checkpoint');
+    Route::post('/login/checkpoint/key', [Auth\LoginCheckpointController::class, 'key'])->name('auth.checkpoint.key');
 
     Route::post('/register', [Auth\LoginController::class, 'register'])->middleware('recaptcha');
 

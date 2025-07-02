@@ -19,6 +19,15 @@ interface SSHKey extends Model {
     created_at: Date;
 }
 
+interface SecurityKey extends Model {
+    uuid: UUID;
+    name: string;
+    type: 'public-key';
+    publicKeyId: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
 interface ApiKey extends Model {
     id?: number;
     identifier: string;

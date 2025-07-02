@@ -26,6 +26,7 @@
         "league/flysystem-aws-s3-v3": "~3.12.2",
         "league/flysystem-memory": "~3.10.3",
         "matriphe/iso-639": "~1.2",
+        "nyholm/psr7": "~1.5",
         "phpseclib/phpseclib": "~3.0.18",
         "pragmarx/google2fa": "~8.0.0",
         "predis/predis": "~2.1.1",
@@ -38,7 +39,9 @@
         "symfony/http-client": "~6.2.6",
         "symfony/mailgun-mailer": "~6.2.5",
         "symfony/postmark-mailer": "~6.2.5",
+        "symfony/psr-http-message-bridge": "~2.1",
         "symfony/yaml": "~6.2.5",
+        "web-auth/webauthn-lib": "~4.3",
         "webmozart/assert": "~1.11.0"
     },
     "require-dev": {
