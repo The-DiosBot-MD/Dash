@@ -6,10 +6,11 @@ use Everest\Models\Node;
 use Everest\Models\Billing\BillingException;
 use Everest\Transformers\Api\Client\NodeTransformer;
 use Everest\Http\Controllers\Api\Client\ClientApiController;
+use Everest\Repositories\Wings\DaemonConfigurationRepository;
 
 class BillingController extends ClientApiController
 {
-    public function __construct()
+    public function __construct(private DaemonConfigurationRepository $repository)
     {
         parent::__construct();
     }
