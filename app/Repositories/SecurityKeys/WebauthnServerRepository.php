@@ -114,12 +114,13 @@ final class WebauthnServerRepository
         PublicKeyCredentialRequestOptions $publicKeyCredentialRequestOptions,
         ServerRequestInterface $request
     ): PublicKeyCredentialSource {
-        $credential = $this->credentialLoader->loadArray($data);
+        $sanitizedData = $this->sanitizeBase64UrlInput($data);
+
+        $credential = $this->credentialLoader->loadArray($sanitizedData);
 
         $authenticatorAssertionResponse = $credential->getResponse();
         if (!$authenticatorAssertionResponse instanceof AuthenticatorAssertionResponse) {
-            // TODO
-            throw new \Exception('');
+            throw new \Exception('Invalid assertion response.');
         }
 
         return $this->assertionValidator->check(
@@ -127,8 +128,7 @@ final class WebauthnServerRepository
             $authenticatorAssertionResponse,
             $publicKeyCredentialRequestOptions,
             $request,
-            null, // TODO: use handle?
-//            $user->toPublicKeyCredentialEntity()
+            null // optionally: $user->toPublicKeyCredentialEntity()
         );
     }
 
@@ -144,12 +144,12 @@ final class WebauthnServerRepository
         PublicKeyCredentialCreationOptions $publicKeyCredentialCreationOptions,
         ServerRequestInterface $request
     ): PublicKeyCredentialSource {
-        $credential = $this->credentialLoader->loadArray($data);
+        $sanitizedData = $this->sanitizeBase64UrlInput($data);
+        $credential = $this->credentialLoader->loadArray($sanitizedData);
 
         $authenticatorAttestationResponse = $credential->getResponse();
         if (!$authenticatorAttestationResponse instanceof AuthenticatorAttestationResponse) {
-            // TODO
-            throw new \Exception('');
+            throw new \Exception('Invalid attestation response.');
         }
 
         return $this->attestationValidator->check(
@@ -157,5 +157,20 @@ final class WebauthnServerRepository
             $publicKeyCredentialCreationOptions,
             $request,
         );
+    }
+
+    private function sanitizeBase64UrlInput(array $data): array
+    {
+        return array_map(function ($value) {
+            if (is_array($value)) {
+                return $this->sanitizeBase64UrlInput($value);
+            }
+
+            if (is_string($value) && preg_match('/^[A-Za-z0-9_-]+={0,2}$/', $value)) {
+                return rtrim($value, '=');
+            }
+
+            return $value;
+        }, $data);
     }
 }

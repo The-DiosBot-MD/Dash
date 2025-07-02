@@ -14,6 +14,7 @@ import AccountApiContainer from '@/components/dashboard/AccountApiContainer';
 import AccountSSHContainer from '@/components/dashboard/ssh/AccountSSHContainer';
 import ServerActivityLogContainer from '@/components/server/ServerActivityLogContainer';
 import ServerBillingContainer from '@/components/server/billing/ServerBillingContainer';
+import SecurityKeyContainer from '@/components/dashboard/security-keys/SecurityKeyContainer';
 
 // Each of the router files is already code split out appropriately — so
 // all the items above will only be loaded in when that router is loaded.
@@ -72,6 +73,12 @@ export default {
             path: 'ssh',
             name: 'SSH Keys',
             component: AccountSSHContainer,
+        },
+        {
+            route: 'security-keys',
+            path: 'security-keys',
+            name: 'Security Keys',
+            component: SecurityKeyContainer,
         },
     ],
     server: [

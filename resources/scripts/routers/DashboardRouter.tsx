@@ -20,6 +20,7 @@ import {
     TerminalIcon,
     TicketIcon,
     ViewListIcon,
+    KeyIcon,
 } from '@heroicons/react/outline';
 import Avatar from '@/components/Avatar';
 import MobileSidebar from '@elements/MobileSidebar';
@@ -64,6 +65,7 @@ function DashboardRouter() {
                 <MobileSidebar.Link icon={faUser} text={'Account'} linkTo={'/account'} end />
                 <MobileSidebar.Link icon={faKey} text={'API'} linkTo={'/account/api'} />
                 <MobileSidebar.Link icon={faTerminal} text={'SSH'} linkTo={'/account/ssh'} />
+                <MobileSidebar.Link icon={faTerminal} text={'Security Keys'} linkTo={'/account/security-keys'} />
                 {tickets.enabled && <MobileSidebar.Link icon={faTicket} text={'Tickets'} linkTo={'/account/tickets'} />}
                 {billing.enabled && (
                     <>
@@ -105,6 +107,10 @@ function DashboardRouter() {
                     <NavLink to={'/account/ssh'}>
                         <TerminalIcon />
                         <span>SSH Keys</span>
+                    </NavLink>
+                    <NavLink to={'/account/security-keys'}>
+                        <KeyIcon />
+                        <span>Security Keys</span>
                     </NavLink>
                     {tickets.enabled && (
                         <>
