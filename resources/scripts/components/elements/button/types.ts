@@ -19,5 +19,6 @@ export const Options = { Shape, Size, Variant };
 export type ButtonProps = JSX.IntrinsicElements['button'] & {
     shape?: Shape;
     size?: Size;
+    loading?: boolean;
     variant?: Variant;
 };

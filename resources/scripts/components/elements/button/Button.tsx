@@ -5,9 +5,11 @@ import type { ButtonProps } from '@elements/button/types';
 import { Options } from '@elements/button/types';
 import styles from './style.module.css';
 import { useStoreState } from '@/state/hooks';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-    ({ children, shape, size, variant, className, ...rest }, ref) => {
+    ({ children, shape, size, variant, className, loading, ...rest }, ref) => {
         return (
             <button
                 ref={ref}
@@ -20,10 +22,13 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                         [styles.large]: size === Options.Size.Large,
                     },
                     className,
+                    loading && 'text-gray-300',
                 )}
                 {...rest}
+                disabled={loading}
             >
                 {children}
+                {loading && <FontAwesomeIcon icon={faSpinner} className={'w-3 h-3 mt-1 ml-2 animate-spin'} />}
             </button>
         );
     },

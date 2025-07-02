@@ -15,8 +15,7 @@ import useFlash from '@/plugins/useFlash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDiscord, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import Label from '@elements/Label';
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
-import Tooltip from '@elements/tooltip/Tooltip';
+import { faAt, faEnvelope, faKey } from '@fortawesome/free-solid-svg-icons';
 
 interface Values {
     username: string;
@@ -97,21 +96,41 @@ function LoginContainer() {
         >
             {({ isSubmitting, setSubmitting, submitForm }) => (
                 <LoginFormContainer title={`Welcome to ${appName}`}>
-                    <Field type={'text'} label={'Username or Email'} name={'username'} disabled={isSubmitting} />
+                    <Field
+                        icon={faAt}
+                        type={'text'}
+                        label={'Username or Email'}
+                        name={'username'}
+                        disabled={isSubmitting}
+                        placeholder={'user@jexactyl.com'}
+                    />
                     <div css={tw`mt-6`}>
                         <Label>
                             Password
                             <Link
                                 to={'/auth/password'}
+                                tabIndex={-1}
                                 className={'ml-1 text-green-400 hover:text-green-200 duration-300 text-xs'}
                             >
                                 Forgot Password?
                             </Link>
                         </Label>
-                        <Field type={'password'} name={'password'} disabled={isSubmitting} />
+                        <Field
+                            icon={faKey}
+                            type={'password'}
+                            name={'password'}
+                            disabled={isSubmitting}
+                            placeholder={'••••••••••••'}
+                        />
                     </div>
                     <div css={tw`mt-6`}>
-                        <Button type={'submit'} className={'w-full'} size={Button.Sizes.Large} disabled={isSubmitting}>
+                        <Button
+                            type={'submit'}
+                            loading={isSubmitting}
+                            className={'w-full'}
+                            size={Button.Sizes.Large}
+                            disabled={isSubmitting}
+                        >
                             Login
                         </Button>
                     </div>
@@ -130,30 +149,24 @@ function LoginContainer() {
                             }}
                         />
                     )}
-                    <p className={'text-xs text-gray-300 uppercase font-medium text-center my-3'}>
-                        Or, authenticate with
-                    </p>
-                    <div className={'w-full flex flex-wrap gap-4 grid-cols-6 justify-center items-center'}>
+                    {(modules.discord.enabled || modules.google.enabled || registration) && (
+                        <div className={'w-full text-center my-3 text-gray-400'}>OR</div>
+                    )}
+                    <div className={'mt-4 w-full grid gap-4 grid-cols-2'}>
                         {modules.discord.enabled && (
-                            <Tooltip content={'Register and login with Discord'}>
-                                <Button.Info onClick={() => useOauth('discord')} className={'w-12 h-12'}>
-                                    <FontAwesomeIcon icon={faDiscord} />
-                                </Button.Info>
-                            </Tooltip>
+                            <Button.Info onClick={() => useOauth('discord')} size={Button.Sizes.Small}>
+                                <FontAwesomeIcon icon={faDiscord} className={'mr-2 my-auto'} /> Use Discord SSO
+                            </Button.Info>
                         )}
                         {modules.google.enabled && (
-                            <Tooltip content={'Register and login with Google'}>
-                                <Button.Info onClick={() => useOauth('google')} className={'w-12 h-12'}>
-                                    <FontAwesomeIcon icon={faGoogle} />
-                                </Button.Info>
-                            </Tooltip>
+                            <Button.Text onClick={() => useOauth('google')} size={Button.Sizes.Small}>
+                                <FontAwesomeIcon icon={faGoogle} className={'mr-2 my-auto'} /> Use Google SSO
+                            </Button.Text>
                         )}
                         {registration && (
-                            <Tooltip content={'Register with your email address'}>
-                                <Button.Text onClick={() => navigate('/auth/register')} className={'w-12 h-12'}>
-                                    <FontAwesomeIcon icon={faEnvelope} />
-                                </Button.Text>
-                            </Tooltip>
+                            <Button.Text onClick={() => navigate('/auth/register')} size={Button.Sizes.Small}>
+                                <FontAwesomeIcon icon={faEnvelope} className={'mr-2 my-auto'} /> Register with Email
+                            </Button.Text>
                         )}
                     </div>
                 </LoginFormContainer>

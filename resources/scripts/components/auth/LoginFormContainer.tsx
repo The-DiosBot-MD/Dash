@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import * as React from 'react';
 import { Form } from 'formik';
 import styled from 'styled-components';
@@ -10,7 +10,10 @@ type Props = React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, 
     title?: string;
 };
 
-const Container = styled.div`
+const Container = styled.div<{ isVisible: boolean }>`
+    opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
+    transition: opacity 0.5s ease-in;
+
     ${breakpoint('sm')`
         ${tw`w-4/5 mx-auto`}
     `};
@@ -24,42 +27,42 @@ const Container = styled.div`
     `};
 
     ${breakpoint('xl')`
-        ${tw`w-full pt-32`}
+        ${tw`w-full my-auto`}
     `};
 `;
 
-export default forwardRef<HTMLFormElement, Props>(({ title, ...props }, ref) => (
-    <Container>
-        <div className={'w-full grid lg:grid-cols-2'}>
-            <div className={'lg:w-1/2 lg:mx-auto'}>
-                {title && <h2 css={tw`text-3xl text-center text-neutral-100 font-medium py-4`}>{title}</h2>}
-                <FlashMessageRender css={tw`mb-2 px-1`} />
-                <Form {...props} ref={ref}>
-                    <div css={tw`w-full bg-zinc-800/50 shadow-lg rounded-lg p-6 mx-1`}>
-                        <div css={tw`flex-1`}>{props.children}</div>
-                    </div>
-                </Form>
-                <p css={tw`text-center text-neutral-300 text-xs mt-4`}>
-                    &copy; {new Date().getFullYear()}&nbsp;
-                    <a
-                        rel={'noopener nofollow noreferrer'}
-                        href={'https://jexactyl.com'}
-                        target={'_blank'}
-                        css={tw`no-underline text-neutral-300 hover:text-green-400 duration-300`}
-                    >
-                        Jexactyl
-                    </a>
-                    , built on&nbsp;
-                    <a
-                        rel={'noopener nofollow noreferrer'}
-                        href={'https://pterodactyl.io'}
-                        target={'_blank'}
-                        css={tw`no-underline text-neutral-300 hover:text-green-400 duration-300`}
-                    >
-                        Pterodactyl.
-                    </a>
-                </p>
+export default forwardRef<HTMLFormElement, Props>(({ title, ...props }, ref) => {
+    const [visible, setVisible] = useState(false);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => setVisible(true), 50);
+        return () => clearTimeout(timeout);
+    }, []);
+
+    return (
+        <Container isVisible={visible}>
+            <div className={'w-full grid lg:grid-cols-2'}>
+                <div className={'lg:w-1/2 lg:mx-auto'}>
+                    {title && <h2 css={tw`text-3xl text-center text-neutral-100 font-medium py-4`}>{title}</h2>}
+                    <FlashMessageRender css={tw`mb-2 px-1`} />
+                    <Form {...props} ref={ref}>
+                        <div css={tw`w-full bg-zinc-800/50 shadow-lg rounded-lg p-6 mx-1`}>
+                            <div css={tw`flex-1`}>{props.children}</div>
+                        </div>
+                    </Form>
+                    <p css={tw`text-center text-neutral-300 text-xs mt-4`}>
+                        &copy; {new Date().getFullYear()}&nbsp;
+                        <a
+                            rel={'noopener nofollow noreferrer'}
+                            href={'https://jexactyl.com'}
+                            target={'_blank'}
+                            css={tw`no-underline text-neutral-300 hover:text-green-400 duration-300`}
+                        >
+                            Jexactyl Project
+                        </a>
+                    </p>
+                </div>
             </div>
-        </div>
-    </Container>
-));
+        </Container>
+    );
+});

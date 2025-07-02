@@ -40,7 +40,6 @@ const inputStyle = () => {
         ${tw`border-zinc-700 hover:border-neutral-400 text-neutral-200 shadow-none`};
 
         background-color: ${theme.colors.secondary};
-        filter: brightness(75%);
 
         & + .input-help {
             ${tw`mt-1 text-xs`};

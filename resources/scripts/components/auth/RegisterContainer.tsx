@@ -13,6 +13,7 @@ import { Button } from '@elements/button';
 import useFlash from '@/plugins/useFlash';
 import register from '@/api/auth/register';
 import { login } from '@/api/auth/login';
+import { faAt, faIdBadge, faKey, faUnlockKeyhole } from '@fortawesome/free-solid-svg-icons';
 
 interface Values {
     username: string;
@@ -79,23 +80,52 @@ function RegisterContainer() {
         >
             {({ isSubmitting, setSubmitting, submitForm }) => (
                 <LoginFormContainer title={`Create an Account`}>
-                    <Field type={'text'} label={'Username'} name={'username'} disabled={isSubmitting} />
+                    <Field
+                        type={'text'}
+                        label={'Username'}
+                        icon={faIdBadge}
+                        name={'username'}
+                        placeholder={'jexactyl_user'}
+                        disabled={isSubmitting}
+                    />
                     <div css={tw`mt-6`}>
-                        <Field type={'text'} label={'Email Address'} name={'email'} disabled={isSubmitting} />
+                        <Field
+                            type={'text'}
+                            label={'Email Address'}
+                            icon={faAt}
+                            name={'email'}
+                            placeholder={'user@jexactyl.com'}
+                            disabled={isSubmitting}
+                        />
                     </div>
                     <div css={tw`mt-6`}>
-                        <Field type={'password'} label={'Password'} name={'password'} disabled={isSubmitting} />
+                        <Field
+                            type={'password'}
+                            label={'Password'}
+                            icon={faKey}
+                            name={'password'}
+                            placeholder={'••••••••••••'}
+                            disabled={isSubmitting}
+                        />
                     </div>
                     <div css={tw`mt-6`}>
                         <Field
                             type={'password'}
                             label={'Confirm Password'}
+                            icon={faUnlockKeyhole}
                             name={'confirm_password'}
+                            placeholder={'••••••••••••'}
                             disabled={isSubmitting}
                         />
                     </div>
                     <div css={tw`mt-6`}>
-                        <Button type={'submit'} className={'w-full'} size={Button.Sizes.Large} disabled={isSubmitting}>
+                        <Button
+                            type={'submit'}
+                            loading={isSubmitting}
+                            className={'w-full'}
+                            size={Button.Sizes.Large}
+                            disabled={isSubmitting}
+                        >
                             Register
                         </Button>
                     </div>
