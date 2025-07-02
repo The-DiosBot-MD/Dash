@@ -17,9 +17,9 @@ const login = ({ username, password, recaptchaData }: LoginData): Promise<AuthRe
                 }
 
                 return resolve({
-                    complete: response.data.data.complete,
-                    intended: response.data.data.intended || undefined,
-                    confirmationToken: response.data.data.confirmation_token || undefined,
+                    complete: response.data.complete,
+                    intended: response.data.intended || undefined,
+                    confirmationToken: response.data.confirmation_token || undefined,
                 });
             })
             .catch(reject);
@@ -44,8 +44,8 @@ const checkpoint = (token: string, code: string, recoveryToken?: string): Promis
         })
             .then(response =>
                 resolve({
-                    complete: response.data.data.complete,
-                    intended: response.data.data.intended || undefined,
+                    complete: response.data.complete,
+                    intended: response.data.intended || undefined,
                 }),
             )
             .catch(reject);
