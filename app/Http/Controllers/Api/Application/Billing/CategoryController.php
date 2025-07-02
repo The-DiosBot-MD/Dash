@@ -128,7 +128,7 @@ class CategoryController extends ApplicationApiController
             foreach ($category->products()->get() as $product) {
                 $product->forceDelete();
             }
-        
+
             $category->forceDelete();
         });
 

@@ -3,7 +3,6 @@
 namespace Everest\Tests\Unit\Http\Middleware;
 
 use Everest\Models\User;
-use Everest\Models\AdminRole;
 use Everest\Http\Middleware\AdminAuthenticate;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
