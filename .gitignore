@@ -36,3 +36,6 @@ result
 docker-compose.yaml
 .pnpm-store
 
+# Caddy/SSL files
+Caddyfile
+*.pem
