@@ -1,3 +1,5 @@
+import { ElementType } from 'react';
+
 export enum Shape {
     Default,
     IconSquare,
@@ -21,4 +23,5 @@ export type ButtonProps = JSX.IntrinsicElements['button'] & {
     size?: Size;
     loading?: boolean;
     variant?: Variant;
+    icon?: ElementType;
 };

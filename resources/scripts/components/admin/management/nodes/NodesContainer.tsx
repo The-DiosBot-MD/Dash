@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import type { Filters } from '@/api/admin/servers/getServers';
 import getNodes, { Context as NodesContext } from '@/api/admin/nodes/getNodes';
 import FlashMessageRender from '@/components/FlashMessageRender';
@@ -21,12 +21,15 @@ import { Button } from '@elements/button';
 import CopyOnClick from '@elements/CopyOnClick';
 import { bytesToString, mbToBytes } from '@/lib/formatters';
 import { useStoreState } from '@/state/hooks';
+import { Dialog } from '@/components/elements/dialog';
+import NewNodeContainer from './NewNodeContainer';
 
 const NodesContainer = () => {
     const { colors } = useStoreState(state => state.theme.data!);
     const { setPage, setFilters, sort, setSort, sortDirection } = useContext(NodesContext);
     const { clearFlashes, clearAndAddHttpError } = useFlash();
     const { data: nodes, error, isValidating } = getNodes();
+    const [open, setOpen] = useState<boolean>(false);
 
     useEffect(() => {
         if (!error) {
@@ -52,6 +55,9 @@ const NodesContainer = () => {
 
     return (
         <AdminContentBlock title={'Nodes'}>
+            <Dialog title={'Create a New Node'} open={open} onClose={() => setOpen(false)} size={'xl'}>
+                <NewNodeContainer />
+            </Dialog>
             <div css={tw`w-full flex flex-row items-center mb-8`}>
                 <div css={tw`flex flex-col flex-shrink`} style={{ minWidth: '0' }}>
                     <h2 css={tw`text-2xl text-neutral-50 font-header font-medium`}>Nodes</h2>
@@ -63,11 +69,9 @@ const NodesContainer = () => {
                 </div>
 
                 <div css={tw`flex ml-auto pl-4`}>
-                    <NavLink to={`/admin/nodes/new`}>
-                        <Button type={'button'} css={tw`h-10 px-4 py-0 whitespace-nowrap`}>
-                            New Node
-                        </Button>
-                    </NavLink>
+                    <Button type={'button'} css={tw`h-10 px-4 py-0 whitespace-nowrap`} onClick={() => setOpen(true)}>
+                        New Node
+                    </Button>
                 </div>
             </div>
 

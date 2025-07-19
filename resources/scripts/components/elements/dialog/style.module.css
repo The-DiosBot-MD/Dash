@@ -3,12 +3,12 @@
 }
 
 .panel {
-    @apply relative bg-zinc-700 rounded max-w-xl w-full mx-auto shadow-lg text-left;
+    @apply relative bg-zinc-700 rounded w-full mx-auto shadow-lg text-left;
     @apply ring-4 ring-black ring-opacity-80;
 }
 
 .title {
-    @apply font-header text-xl font-medium mb-2 text-slate-50 pr-4;
+    @apply font-header text-xl font-medium mb-6 text-slate-50 pr-4;
 }
 
 .close_icon {

@@ -13,14 +13,13 @@ import AdminTable, {
 import { useContext } from 'react';
 import CopyOnClick from '@elements/CopyOnClick';
 import { Link } from 'react-router-dom';
-import AdminContentBlock from '@elements/AdminContentBlock';
 import { Button } from '@elements/button';
 import { useGetApiKeys, Context as ApiContext, ContextFilters } from '@/api/admin/api/getApiKeys';
 import { differenceInHours, format, formatDistanceToNow } from 'date-fns';
 import DeleteApiKeyButton from './DeleteApiKeyButton';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import { useStoreState } from '@/state/hooks';
-import Unfinished from '@elements/Unfinished';
+import { PlusIcon } from '@heroicons/react/outline';
 
 function ApiContainer() {
     const { data: apiKeys } = useGetApiKeys();
@@ -39,24 +38,12 @@ function ApiContainer() {
     };
 
     return (
-        <AdminContentBlock title={'API Keys'}>
-            <div css={tw`w-full flex flex-row items-center mb-8`}>
-                <div css={tw`flex flex-col flex-shrink`} style={{ minWidth: '0' }}>
-                    <h2 css={tw`text-2xl text-neutral-50 font-header font-medium`}>Application API</h2>
-                    <p
-                        css={tw`hidden lg:block text-base text-neutral-400 whitespace-nowrap overflow-ellipsis overflow-hidden`}
-                    >
-                        Create, update and delete administrative API keys for this Panel.
-                    </p>
-                </div>
-
-                <div css={tw`flex ml-auto pl-4`}>
-                    <Link to={'/admin/api/new'}>
-                        <Button>New API Key</Button>
-                    </Link>
-                </div>
+        <>
+            <div css={tw`flex ml-auto pl-4 mb-2`}>
+                <Link to={'/admin/api/new'}>
+                    <Button icon={PlusIcon}>New API Key</Button>
+                </Link>
             </div>
-            <Unfinished />
             <FlashMessageRender byKey={'api'} className={'my-4'} />
             <AdminTable>
                 <ContentWrapper onSearch={onSearch}>
@@ -123,7 +110,7 @@ function ApiContainer() {
                     </Pagination>
                 </ContentWrapper>
             </AdminTable>
-        </AdminContentBlock>
+        </>
     );
 }
 

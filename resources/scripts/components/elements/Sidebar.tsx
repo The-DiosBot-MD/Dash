@@ -2,6 +2,14 @@ import tw, { css, styled } from 'twin.macro';
 
 import { withSubComponents } from '@/components/helpers';
 import { SiteTheme } from '@/state/theme';
+import { useStoreState } from '@/state/hooks';
+import React from 'react';
+
+const Icon: React.FC<{ icon: React.ElementType }> = ({ icon: Icon }) => {
+    const theme = useStoreState(s => s.theme.data!);
+
+    return <Icon color={theme.colors.primary} />;
+};
 
 const Wrapper = styled.div<{ theme: SiteTheme; $admin?: boolean }>`
     ${tw`w-full flex flex-col px-4`};
@@ -24,6 +32,7 @@ const Wrapper = styled.div<{ theme: SiteTheme; $admin?: boolean }>`
         &.active {
             ${tw`bg-black/25 rounded-lg`};
             color: ${({ theme }) => theme.colors.primary};
+            filter: brightness(150%);
         }
     }
 `;
@@ -91,4 +100,4 @@ const Sidebar = styled.div<{ $collapsed?: boolean; theme: SiteTheme }>`
         `};
 `;
 
-export default withSubComponents(Sidebar, { Section, Wrapper, User });
+export default withSubComponents(Sidebar, { Section, Wrapper, User, Icon });

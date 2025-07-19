@@ -1,56 +1,64 @@
-import { NavLink } from 'react-router-dom';
-import tw from 'twin.macro';
 import type { Filters } from '@/api/admin/databases/getDatabases';
 import { Context as DatabasesContext } from '@/api/admin/databases/getDatabases';
-import FlashMessageRender from '@/components/FlashMessageRender';
-import AdminContentBlock from '@elements/AdminContentBlock';
 import { useTableHooks } from '@elements/AdminTable';
-import { Button } from '@elements/button';
-import { Size } from '@elements/button/types';
 import DatabasesTable from './DatabasesTable';
-import Unfinished from '@elements/Unfinished';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/elements/button';
+import { PlusIcon } from '@heroicons/react/outline';
+import AdminContentBlock from '@/components/elements/AdminContentBlock';
+import { Dialog } from '@/components/elements/dialog';
+import { useState } from 'react';
+import createDatabase from '@/api/admin/databases/createDatabase';
+import { useStoreActions } from '@/state/hooks';
+import { InformationContainer, Values } from '@admin/management/databases/DatabaseEditContainer';
+import { FormikHelpers } from 'formik';
 
 interface Props {
     filters?: Filters;
 }
 
-const DatabasesContainer = () => {
-    return (
-        <AdminContentBlock title={'Databases'}>
-            <div css={tw`w-full flex flex-row items-center mb-8`}>
-                <div css={tw`flex flex-col flex-shrink`} style={{ minWidth: '0' }}>
-                    <h2 css={tw`text-2xl text-neutral-50 font-header font-medium`}>Databases</h2>
-                    <p
-                        css={tw`hidden lg:block text-base text-neutral-400 whitespace-nowrap overflow-ellipsis overflow-hidden`}
-                    >
-                        Database hosts that servers can have databases created on.
-                    </p>
-                </div>
-
-                <div css={tw`flex ml-auto pl-4`}>
-                    <NavLink to="/admin/databases/new">
-                        <Button type="button" size={Size.Large} css={tw`h-10 px-4 py-0 whitespace-nowrap`}>
-                            New Database Host
-                        </Button>
-                    </NavLink>
-                </div>
-            </div>
-
-            <Unfinished untested />
-
-            <FlashMessageRender byKey={'databases'} css={tw`mb-4`} />
-
-            <DatabasesTable />
-        </AdminContentBlock>
-    );
-};
-
 export default ({ filters }: Props) => {
+    const navigate = useNavigate();
     const hooks = useTableHooks<Filters>(filters);
 
+    const [open, setOpen] = useState<boolean>(false);
+    const { clearFlashes, clearAndAddHttpError } = useStoreActions(actions => actions.flashes);
+
+    const submit = ({ name, host, port, username, password }: Values, { setSubmitting }: FormikHelpers<Values>) => {
+        clearFlashes('admin:databases');
+
+        createDatabase(name, host, port, username, password)
+            .then(database => navigate(`/admin/databases/${database.id}`))
+            .catch(error => clearAndAddHttpError({ key: 'admin:databases', error }))
+            .finally(() => setSubmitting(false));
+    };
+
     return (
-        <DatabasesContext.Provider value={hooks}>
-            <DatabasesContainer />
-        </DatabasesContext.Provider>
+        <AdminContentBlock>
+            <Dialog title={'Create a New Database'} open={open} onClose={() => setOpen(false)} size={'lg'}>
+                <InformationContainer title={'Information'} onSubmit={submit} />
+            </Dialog>
+            <div className={'w-full flex flex-row items-center mb-8'}>
+                <div className={'flex flex-col flex-shrink'} style={{ minWidth: '0' }}>
+                    <h2 className={'text-2xl text-neutral-50 font-header font-medium'}>Database Hosts</h2>
+                    <p className={'hidden lg:block text-base text-neutral-400 whitespace-nowrap'}>
+                        Modify node database hosts linked to the Panel.
+                    </p>
+                </div>
+                <div className={'w-full text-right mb-4'}>
+                    <Button
+                        icon={PlusIcon}
+                        size={Button.Sizes.Large}
+                        onClick={() => setOpen(true)}
+                        className={'h-10 px-4 py-0 whitespace-nowrap'}
+                    >
+                        New Database Host
+                    </Button>
+                </div>
+            </div>
+            <DatabasesContext.Provider value={hooks}>
+                <DatabasesTable />
+            </DatabasesContext.Provider>
+        </AdminContentBlock>
     );
 };

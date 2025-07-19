@@ -19,6 +19,7 @@ import Field from '@elements/Field';
 import SpinnerOverlay from '@elements/SpinnerOverlay';
 import DatabaseDeleteButton from '@admin/management/databases/DatabaseDeleteButton';
 import type { ApplicationStore } from '@/state';
+import { faDatabase } from '@fortawesome/free-solid-svg-icons';
 
 interface ctx {
     database: Database | undefined;
@@ -78,7 +79,7 @@ export const InformationContainer = ({ title, initialValues, children, onSubmit 
         >
             {({ isSubmitting, isValid }) => (
                 <>
-                    <AdminBox title={title} css={tw`relative`}>
+                    <AdminBox title={title} css={tw`relative`} icon={faDatabase}>
                         <SpinnerOverlay visible={isSubmitting} />
 
                         <Form css={tw`mb-0`}>

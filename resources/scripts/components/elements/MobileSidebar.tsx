@@ -1,7 +1,6 @@
-import { ReactNode, useState } from 'react';
+import { ElementType, ReactNode, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { withSubComponents } from '@/components/helpers';
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useStoreState } from '@/state/hooks';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
@@ -14,7 +13,17 @@ const MobileSidebar = ({ children }: { children: ReactNode[] }) => {
     );
 };
 
-const Link = ({ icon, text, linkTo, end }: { icon: IconDefinition; text?: string; linkTo: string; end?: boolean }) => {
+const Link = ({
+    icon: Icon,
+    text,
+    linkTo,
+    end,
+}: {
+    icon: ElementType;
+    text?: string;
+    linkTo: string;
+    end?: boolean;
+}) => {
     const [active, setActive] = useState<boolean>(false);
     const { colors } = useStoreState(s => s.theme.data!);
 
@@ -27,9 +36,9 @@ const Link = ({ icon, text, linkTo, end }: { icon: IconDefinition; text?: string
                     isActive ? setActive(true) : setActive(false)
                 }`
             }
-            style={{ color: active && colors.primary }}
+            style={{ color: active ? colors.primary : '' }}
         >
-            <FontAwesomeIcon icon={icon} className={'mr-2'} />
+            {Icon && <Icon className={'w-4 h-4 mr-2'} />}
             {text}
         </NavLink>
     );

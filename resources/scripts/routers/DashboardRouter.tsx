@@ -6,46 +6,25 @@ import Spinner from '@elements/Spinner';
 import routes from '@/routers/routes';
 import { useStoreState } from '@/state/hooks';
 import CollapsedIcon from '@/assets/images/logo.png';
-import TicketContainer from '@/components/dashboard/tickets/TicketContainer';
-import ViewTicketContainer from '@/components/dashboard/tickets/view/ViewTicketContainer';
 import { usePersistedState } from '@/plugins/usePersistedState';
 import Sidebar from '@elements/Sidebar';
-import {
-    CodeIcon,
-    CogIcon,
-    DesktopComputerIcon,
-    ExternalLinkIcon,
-    LogoutIcon,
-    ShoppingCartIcon,
-    TerminalIcon,
-    TicketIcon,
-    ViewListIcon,
-} from '@heroicons/react/outline';
+import { CogIcon, DesktopComputerIcon, ExternalLinkIcon, LogoutIcon, PuzzleIcon } from '@heroicons/react/outline';
 import Avatar from '@/components/Avatar';
 import MobileSidebar from '@elements/MobileSidebar';
-import { faCog, faKey, faShoppingBag, faTerminal, faTicket, faUser } from '@fortawesome/free-solid-svg-icons';
 import { CustomLink } from '@/api/admin/links';
 import { getLinks } from '@/api/getLinks';
 import http from '@/api/http';
-import ProductsContainer from '@/components/billing/ProductsContainer';
-import OrdersContainer from '@/components/billing/orders/OrdersContainer';
-import Processing from '@/components/billing/order/summary/Processing';
-import OrderContainer from '@/components/billing/order/OrderContainer';
-import Cancel from '@/components/billing/order/summary/Cancel';
-import Success from '@/components/billing/order/summary/Success';
 
 function DashboardRouter() {
     const user = useStoreState(s => s.user.data!);
     const { name } = useStoreState(s => s.settings.data!);
     const theme = useStoreState(state => state.theme.data!);
     const [links, setLinks] = useState<CustomLink[] | null>();
-    const { tickets, billing } = useStoreState(state => state.everest.data!);
+    const flags = useStoreState(state => state.everest.data!);
     const [collapsed, setCollapsed] = usePersistedState<boolean>(`sidebar_user_${user.uuid}`, false);
 
     useEffect(() => {
-        getLinks()
-            .then(data => setLinks(data))
-            .catch(error => console.error(error));
+        getLinks().then(setLinks).catch();
     }, []);
 
     const onTriggerLogout = () => {
@@ -55,24 +34,23 @@ function DashboardRouter() {
         });
     };
 
-    console.log(user);
-
     return (
         <div className={'h-screen flex'}>
             <MobileSidebar>
                 <MobileSidebar.Home />
-                <MobileSidebar.Link icon={faUser} text={'Account'} linkTo={'/account'} end />
-                <MobileSidebar.Link icon={faKey} text={'API'} linkTo={'/account/api'} />
-                <MobileSidebar.Link icon={faTerminal} text={'SSH'} linkTo={'/account/ssh'} />
-                {tickets.enabled && <MobileSidebar.Link icon={faTicket} text={'Tickets'} linkTo={'/account/tickets'} />}
-                {billing.enabled && (
-                    <>
-                        <MobileSidebar.Link icon={faShoppingBag} text={'Billing'} linkTo={'/billing/order'} />
-                        <MobileSidebar.Link icon={faShoppingBag} text={'Orders'} linkTo={'/billing/orders'} />
-                    </>
-                )}
+                {routes.account
+                    .filter(route => route.name && (!route.condition || route.condition(flags)))
+                    .map(route => (
+                        <MobileSidebar.Link
+                            key={route.route}
+                            icon={route.icon ?? PuzzleIcon}
+                            text={route.name}
+                            linkTo={route.path}
+                            end={route.end}
+                        />
+                    ))}
                 {(user.rootAdmin || user.admin_role_id) && (
-                    <MobileSidebar.Link icon={faCog} text={'Admin'} linkTo={'/admin'} />
+                    <MobileSidebar.Link icon={CogIcon} text={'Admin'} linkTo={'/admin'} />
                 )}
             </MobileSidebar>
             <Sidebar className={'flex-none'} $collapsed={collapsed} theme={theme}>
@@ -93,41 +71,14 @@ function DashboardRouter() {
                         <DesktopComputerIcon />
                         <span>Dashboard</span>
                     </NavLink>
-                    <Sidebar.Section>Account</Sidebar.Section>
-                    <NavLink to={'/account'} end>
-                        <Avatar.User />
-                        <span>Account</span>
-                    </NavLink>
-                    <NavLink to={'/account/api'}>
-                        <CodeIcon />
-                        <span>API Keys</span>
-                    </NavLink>
-                    <NavLink to={'/account/ssh'}>
-                        <TerminalIcon />
-                        <span>SSH Keys</span>
-                    </NavLink>
-                    {tickets.enabled && (
-                        <>
-                            <Sidebar.Section>Tickets</Sidebar.Section>
-                            <NavLink to={'/account/tickets'}>
-                                <TicketIcon />
-                                <span>Tickets</span>
+                    {routes.account
+                        .filter(route => route.name && (!route.condition || route.condition(flags)))
+                        .map(route => (
+                            <NavLink to={`/account/${route.path}`} key={route.path} end={route.end}>
+                                <Sidebar.Icon icon={route.icon ?? PuzzleIcon} />
+                                <span>{route.name}</span>
                             </NavLink>
-                        </>
-                    )}
-                    {billing.enabled && (
-                        <>
-                            <Sidebar.Section>Billing</Sidebar.Section>
-                            <NavLink to={'/billing/order'}>
-                                <ShoppingCartIcon />
-                                <span>Billing</span>
-                            </NavLink>
-                            <NavLink to={'/billing/orders'}>
-                                <ViewListIcon />
-                                <span>Orders</span>
-                            </NavLink>
-                        </>
-                    )}
+                        ))}
                 </Sidebar.Wrapper>
                 <span className={'mt-auto mb-3 mr-auto'}>
                     {!collapsed && (
@@ -171,30 +122,15 @@ function DashboardRouter() {
                 <Suspense fallback={<Spinner centered />}>
                     <Routes>
                         <Route path="" element={<DashboardContainer />} />
-
-                        {routes.account.map(({ route, component: Component }) => (
-                            <Route key={route} path={`/account/${route}`.replace(/\/$/, '')} element={<Component />} />
-                        ))}
-
-                        {tickets.enabled && (
-                            <>
-                                <Route path={'/account/tickets'} element={<TicketContainer />} />
-                                <Route path={'/account/tickets/:id'} element={<ViewTicketContainer />} />
-                            </>
-                        )}
-
-                        {billing.enabled && (
-                            <>
-                                <Route path={'/billing/order'} element={<ProductsContainer />} />
-                                <Route path={'/billing/order/:id'} element={<OrderContainer />} />
-                                <Route path={'/billing/orders'} element={<OrdersContainer />} />
-
-                                <Route path={'/billing/processing'} element={<Processing />} />
-                                <Route path={'/billing/success'} element={<Success />} />
-                                <Route path={'/billing/cancel'} element={<Cancel />} />
-                            </>
-                        )}
-
+                        {routes.account
+                            .filter(route => !route.condition || route.condition(flags))
+                            .map(({ route, component: Component }) => (
+                                <Route
+                                    key={route}
+                                    path={`/account/${route}`.replace(/\/$/, '')}
+                                    element={<Component />}
+                                />
+                            ))}
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </Suspense>

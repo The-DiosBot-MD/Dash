@@ -10,6 +10,8 @@ export interface DialogProps {
 
 export type IconPosition = 'title' | 'container' | undefined;
 
+export type DialogSize = 'sm' | 'md' | 'lg' | 'xl';
+
 export interface DialogIconProps {
     type: 'danger' | 'info' | 'success' | 'warning';
     position?: IconPosition;
@@ -23,6 +25,7 @@ export interface RenderDialogProps extends DialogProps {
     subDialog?: boolean;
     description?: string | undefined;
     children?: React.ReactNode;
+    size?: DialogSize;
 }
 
 export type WrapperProps = Omit<RenderDialogProps, 'children' | 'open' | 'onClose'>;

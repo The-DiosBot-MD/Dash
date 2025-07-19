@@ -4,7 +4,6 @@ import type { FormikHelpers } from 'formik';
 import { Form, Formik } from 'formik';
 import Field from '@elements/Field';
 import tw from 'twin.macro';
-import AdminContentBlock from '@elements/AdminContentBlock';
 import { Button } from '@elements/button';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import type { ApplicationStore } from '@/state';
@@ -18,6 +17,8 @@ import { useStoreState } from '@/state/hooks';
 import { useState } from 'react';
 import { Dialog } from '@/components/elements/dialog';
 import CopyOnClick from '@/components/elements/CopyOnClick';
+import { Link } from 'react-router-dom';
+import { XIcon } from '@heroicons/react/solid';
 
 const initialValues: Values = {
     memo: 'Your API Key',
@@ -55,18 +56,12 @@ export default () => {
     };
 
     return (
-        <AdminContentBlock title={'New API Key'}>
-            <div css={tw`w-full flex flex-row items-center mb-8`}>
-                <div css={tw`flex flex-col flex-shrink`} style={{ minWidth: '0' }}>
-                    <h2 css={tw`text-2xl text-neutral-50 font-header font-medium`}>New Api Key</h2>
-                    <p
-                        css={tw`hidden md:block text-base text-neutral-400 whitespace-nowrap overflow-ellipsis overflow-hidden`}
-                    >
-                        Add a new API key to the panel.
-                    </p>
-                </div>
+        <>
+            <div css={tw`flex ml-auto pl-4 mb-2`}>
+                <Link to={'/admin/api'}>
+                    <Button.Text icon={XIcon}>Cancel</Button.Text>
+                </Link>
             </div>
-
             <FlashMessageRender byKey={'api:create'} />
             {visible && (
                 <Dialog open={Boolean(visible)} onClose={() => setVisible(null)} title={'Your API Key'}>
@@ -83,22 +78,22 @@ export default () => {
                 onSubmit={submit}
                 initialValues={initialValues}
                 /*
-                validationSchema={object().shape({
-                    memo: string().required().max(191).min(3),
-                    permissions: array().of(
-                        object().shape({
-                            allocations: number().required(),
-                            database_hosts: number().required(),
-                            eggs: number().required(),
-                            locations: number().required(),
-                            nests: number().required(),
-                            nodes: number().required(),
-                            server_databases: number().required(),
-                            servers: number().required(),
-                            users: number().required(),
-                        }),
-                    ),
-                })}
+                    validationSchema={object().shape({
+                        memo: string().required().max(191).min(3),
+                        permissions: array().of(
+                            object().shape({
+                                allocations: number().required(),
+                                database_hosts: number().required(),
+                                eggs: number().required(),
+                                locations: number().required(),
+                                nests: number().required(),
+                                nodes: number().required(),
+                                server_databases: number().required(),
+                                servers: number().required(),
+                                users: number().required(),
+                            }),
+                        ),
+                    })}
                 */
             >
                 {({ isSubmitting, isValid }) => (
@@ -144,6 +139,6 @@ export default () => {
                     </Form>
                 )}
             </Formik>
-        </AdminContentBlock>
+        </>
     );
 };
