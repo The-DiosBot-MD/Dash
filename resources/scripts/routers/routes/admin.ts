@@ -1,26 +1,20 @@
 import { lazy } from 'react';
 import * as Icon from '@heroicons/react/outline';
 import { route, type AdminRouteDefinition } from '@/routers/routes/utils';
-import NestsContainer from '@/components/admin/service/nests/NestsContainer';
-import NestEditContainer from '@/components/admin/service/nests/NestEditContainer';
-import NewEggContainer from '@/components/admin/service/nests/NewEggContainer';
-import EggRouter from '@/components/admin/service/nests/eggs/EggRouter';
-import MountsContainer from '@/components/admin/service/mounts/MountsContainer';
-import NewMountContainer from '@/components/admin/service/mounts/NewMountContainer';
-import MountEditContainer from '@/components/admin/service/mounts/MountEditContainer';
 
 const OverviewContainer = lazy(() => import('@/components/admin/general/overview/OverviewContainer'));
 const SettingsRouter = lazy(() => import('@/components/admin/general/settings/SettingsRouter'));
 const ActivityContainer = lazy(() => import('@/components/admin/general/ActivityContainer'));
 const ApplicationApiRouter = lazy(() => import('@/components/admin/general/api/ApplicationApiRouter'));
+
 const AuthContainer = lazy(() => import('@/components/admin/modules/auth/AuthContainer'));
 const BillingRouter = lazy(() => import('@/components/admin/modules/billing/BillingRouter'));
 const TicketRouter = lazy(() => import('@/components/admin/modules/tickets/TicketRouter'));
 const AIRouter = lazy(() => import('@/components/admin/modules/ai/AIRouter'));
 const WebhookRouter = lazy(() => import('@/components/admin/modules/webhooks/WebhookRouter'));
-const Unfinished = lazy(() => import('@/components/elements/Unfinished'));
 const ThemeContainer = lazy(() => import('@/components/admin/modules/theme/ThemeContainer'));
 const AlertRouter = lazy(() => import('@/components/admin/modules/alert/AlertRouter'));
+
 const NodeRouter = lazy(() => import('@/components/admin/management/nodes/NodeRouter'));
 const NodesContainer = lazy(() => import('@/components/admin/management/nodes/NodesContainer'));
 const NewNodeContainer = lazy(() => import('@/components/admin/management/nodes/NewNodeContainer'));
@@ -35,6 +29,14 @@ const NewUserContainer = lazy(() => import('@/components/admin/management/users/
 const UserRouter = lazy(() => import('@/components/admin/management/users/UserRouter'));
 const RolesContainer = lazy(() => import('@/components/admin/management/roles/RolesContainer'));
 const RoleEditContainer = lazy(() => import('@/components/admin/management/roles/RoleEditContainer'));
+
+const NestsContainer = lazy(() => import('@/components/admin/service/nests/NestsContainer'));
+const NestEditContainer = lazy(() => import('@/components/admin/service/nests/NestEditContainer'));
+const NewEggContainer = lazy(() => import('@/components/admin/service/nests/NewEggContainer'));
+const EggRouter = lazy(() => import('@/components/admin/service/nests/eggs/EggRouter'));
+const MountsContainer = lazy(() => import('@/components/admin/service/mounts/MountsContainer'));
+const NewMountContainer = lazy(() => import('@/components/admin/service/mounts/NewMountContainer'));
+const MountEditContainer = lazy(() => import('@/components/admin/service/mounts/MountEditContainer'));
 
 const admin: AdminRouteDefinition[] = [
     /**
@@ -58,7 +60,6 @@ const admin: AdminRouteDefinition[] = [
         category: 'modules',
         advanced: true,
     }),
-    route('workflows/*', Unfinished, { name: 'Workflows', icon: Icon.QrcodeIcon, category: 'modules', advanced: true }),
 
     /**
      * Admin - Appearance Routes
