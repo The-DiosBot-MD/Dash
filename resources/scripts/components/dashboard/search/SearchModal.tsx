@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
-import Modal, { RequiredModalProps } from '@elements/Modal';
+import { useEffect, useState } from 'react';
 import { Field, Form, Formik, FormikHelpers, useFormikContext } from 'formik';
 import { Actions, useStoreActions, useStoreState } from 'easy-peasy';
 import { object, string } from 'yup';
@@ -7,15 +6,16 @@ import debounce from 'debounce';
 import FormikFieldWrapper from '@elements/FormikFieldWrapper';
 import InputSpinner from '@elements/InputSpinner';
 import getServers from '@/api/getServers';
-import { Server } from '@/api/server/getServer';
 import { ApplicationStore } from '@/state';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import Input from '@elements/Input';
 import { ip } from '@/lib/formatters';
+import { Dialog, DialogProps } from '@/components/elements/dialog';
+import { Server } from '@/api/definitions/server';
+import Input from '@/components/elements/Input';
 
-type Props = RequiredModalProps;
+type Props = DialogProps;
 
 interface Values {
     term: string;
@@ -46,7 +46,6 @@ const SearchWatcher = () => {
 };
 
 export default ({ ...props }: Props) => {
-    const ref = useRef<HTMLInputElement>(null);
     const isAdmin = useStoreState(state => state.user.data!.rootAdmin);
     const [servers, setServers] = useState<Server[]>([]);
     const { clearAndAddHttpError, clearFlashes } = useStoreActions(
@@ -63,18 +62,8 @@ export default ({ ...props }: Props) => {
                 console.error(error);
                 clearAndAddHttpError({ key: 'search', error });
             })
-            .then(() => setSubmitting(false))
-            .then(() => ref.current?.focus());
+            .then(() => setSubmitting(false));
     }, 500);
-
-    useEffect(() => {
-        if (props.visible) {
-            if (ref.current) ref.current.focus();
-        }
-    }, [props.visible]);
-
-    // Formik does not support an innerRef on custom components.
-    const InputWithRef = (props: any) => <Input autoFocus {...props} ref={ref} />;
 
     return (
         <Formik
@@ -85,7 +74,7 @@ export default ({ ...props }: Props) => {
             initialValues={{ term: '' } as Values}
         >
             {({ isSubmitting }) => (
-                <Modal {...props}>
+                <Dialog {...props}>
                     <Form>
                         <FormikFieldWrapper
                             name={'term'}
@@ -94,7 +83,7 @@ export default ({ ...props }: Props) => {
                         >
                             <SearchWatcher />
                             <InputSpinner visible={isSubmitting}>
-                                <Field as={InputWithRef} name={'term'} />
+                                <Field as={Input} name={'term'} />
                             </InputSpinner>
                         </FormikFieldWrapper>
                     </Form>
@@ -104,7 +93,7 @@ export default ({ ...props }: Props) => {
                                 <ServerResult
                                     key={server.uuid}
                                     to={`/server/${server.id}`}
-                                    onClick={() => props.onDismissed()}
+                                    onClick={() => props.onClose()}
                                 >
                                     <div css={tw`flex-1 mr-4`}>
                                         <p css={tw`text-sm`}>{server.name}</p>
@@ -127,7 +116,7 @@ export default ({ ...props }: Props) => {
                             ))}
                         </div>
                     )}
-                </Modal>
+                </Dialog>
             )}
         </Formik>
     );

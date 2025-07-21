@@ -14,6 +14,7 @@ import MobileSidebar from '@elements/MobileSidebar';
 import { CustomLink } from '@/api/admin/links';
 import { getLinks } from '@/api/getLinks';
 import http from '@/api/http';
+import NavigationBar from '@/components/NavigationBar';
 
 function DashboardRouter() {
     const user = useStoreState(s => s.user.data!);
@@ -36,6 +37,7 @@ function DashboardRouter() {
 
     return (
         <div className={'h-screen flex'}>
+            {' '}
             <MobileSidebar>
                 <MobileSidebar.Home />
                 {routes.account
@@ -118,7 +120,8 @@ function DashboardRouter() {
                     </div>
                 </Sidebar.User>
             </Sidebar>
-            <div className={'flex-1 overflow-x-hidden p-4 lg:p-8'}>
+            <div className={'flex-1 overflow-x-hidden'}>
+                <NavigationBar />
                 <Suspense fallback={<Spinner centered />}>
                     <Routes>
                         <Route path="" element={<DashboardContainer />} />

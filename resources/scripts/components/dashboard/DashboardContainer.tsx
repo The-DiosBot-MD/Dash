@@ -19,17 +19,14 @@ import DashboardAlert from '@/components/dashboard/DashboardAlert';
 import ServerSvg from '@/assets/images/themed/ServerSvg';
 import { Button } from '@elements/button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleArrowRight, faEye, faHeart, faList, faLock } from '@fortawesome/free-solid-svg-icons';
+import { faCircleArrowRight, faList } from '@fortawesome/free-solid-svg-icons';
 import { getServerGroups } from '@/api/server/groups';
 import { type ServerGroup } from '@/api/definitions/server';
 import ServerGroupDialog, { VisibleDialog } from '@/components/dashboard/groups/ServerGroupDialog';
-import TitledGreyBox from '../elements/TitledGreyBox';
-import { useActivityLogs } from '@/api/account/activity';
 import ActivityLogContainer from './activity/ActivityLogContainer';
 
 export default () => {
     const { search } = useLocation();
-    const activity = useActivityLogs();
     const defaultPage = Number(new URLSearchParams(search).get('page') || '1');
 
     const [open, setOpen] = useState<VisibleDialog>({ open: 'none', serverId: undefined });
@@ -74,8 +71,6 @@ export default () => {
         if (!error) clearFlashes('dashboard');
     }, [error]);
 
-    const latestEvent = activity.data?.items[activity.data.items.length - 1];
-
     return (
         <PageContentBlock title={'Dashboard'}>
             <DashboardAlert />
@@ -83,33 +78,6 @@ export default () => {
             <div className={'text-3xl lg:text-5xl font-bold mt-8 mb-12'}>
                 Welcome to {name}
                 <p className={'text-gray-400 font-normal text-sm mt-1'}>Signed in as {user.email}</p>
-            </div>
-            <div className={'hidden lg:grid grid-cols-4 gap-8 my-12'}>
-                <TitledGreyBox title={'Support PIN'} icon={faLock}>
-                    <p className={'text-2xl font-bold text-center py-4'}>{user.uuid.slice(0, 8)}</p>
-                </TitledGreyBox>
-                <TitledGreyBox title={'Account State'} icon={faHeart}>
-                    <p className={'text-2xl font-bold text-center py-4 text-green-300'}>
-                        {user.state !== 'suspended' ? 'Normal' : 'Suspended'}
-                        <span className={'text-gray-400 text-sm italic font-normal ml-2'}>
-                            2FA is {user.useTotp ? 'enabled' : 'disabled'}
-                        </span>
-                    </p>
-                </TitledGreyBox>
-                <TitledGreyBox title={'Latest Activity'} icon={faEye}>
-                    <p className={'text-2xl font-bold text-center py-4'}>
-                        {!latestEvent ? (
-                            'Unknown'
-                        ) : (
-                            <>
-                                {latestEvent.event}
-                                <span className={'text-gray-400 text-sm italic font-normal ml-2'}>
-                                    {latestEvent.timestamp.toLocaleTimeString()}, {latestEvent.timestamp.toDateString()}
-                                </span>
-                            </>
-                        )}
-                    </p>
-                </TitledGreyBox>
             </div>
             <FlashMessageRender className={'my-4'} byKey={'dashboard'} />
             <div className={'grid lg:grid-cols-3 gap-4'}>
