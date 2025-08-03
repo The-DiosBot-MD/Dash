@@ -1,3 +1,3 @@
 # Jexactyl v4
-This software is in development and not ready for release just yet.
-Check in on our Discord for more information.
+Este software está en desarrollo y aún no está listo para su lanzamiento.
+Visita nuestro Discord para más información.
